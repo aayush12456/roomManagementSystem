@@ -9,9 +9,12 @@ import {Picker} from '@react-native-picker/picker';
 import { HotelImages, pickerList, staffPostList } from '../../utils/signUpData';
 import avatar from '../../../assets/AllIcons/avatar.png'
 import * as ImagePicker from 'expo-image-picker';
-
+// import axios from 'axios';
+import {  useDispatch } from 'react-redux';
+import { hotelRegisterAsync } from '../../Redux/Slice/hotelRegisterSlice';
 
 const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view ko distance pe rakhne ke liye
+  const dispatch=useDispatch()
   const [selectedOwnerList, setSelectedOwnerList] = useState('Hotel Owner');
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const [ownerNames, setOwnerNames] = useState([]);
@@ -213,26 +216,114 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
       console.log('Error during image picking:', error);
     }
   };
-  const registerFormSubmitHandler=()=>{
+  // const registerFormSubmitHandler=()=>{
    
-    const errors = {};
+  //   const errors = {};
 
-    // ----------- Hotel Name Validation -----------
+  //   // ----------- Hotel Name Validation -----------
+  //   if (!hotelName || hotelName.trim().length < 2 || hotelName.trim().length > 64) {
+  //     errors.hotelName = "Hotel name is required and must be between 2-64 characters.";
+  //   }
+  
+  //   // ----------- Owners Validation -----------
+  //   if (Object.keys(ownerNames).length === 0) {
+  //     errors.owners = "At least one hotel owner is required.";
+  //   } else {
+  //     for (const key in ownerNames) {
+  //       const owner = ownerNames[key];
+  //       if (!owner.name || owner.name.trim().length < 2 || owner.name.trim().length > 64) {
+  //         errors[`ownerName_${key}`] = `${key} name is required and must be 2–64 characters.`;
+  //       }
+  //       if (!owner.phone || !/^\d{10}$/.test(owner.phone)) {
+  //         errors[`ownerPhone_${key}`] = `${key} phone is required and must be a 10-digit number.`;
+  //       }
+  //       if (!owner.image) {
+  //         errors[`ownerImage_${key}`] = `${key} image is required.`;
+  //       }
+  //     }
+  //   }
+  
+  //   // ----------- Staff Validation -----------
+  //   if (Object.keys(staffNamesArray).length === 0) {
+  //     errors.staff = "At least one staff member is required.";
+  //   } else {
+  //     for (const key in staffNamesArray) {
+  //       const staff = staffNamesArray[key];
+  //       if (!staff.name || staff.name.trim().length < 2 || staff.name.trim().length > 64) {
+  //         errors[`staffName_${key}`] = `${key} name is required and must be 2–64 characters.`;
+  //       }
+  //       if (!staff.phone || !/^\d{10}$/.test(staff.phone)) {
+  //         errors[`staffPhone_${key}`] = `${key} phone is required and must be a 10-digit number.`;
+  //       }
+  //       if (!staff.post) {
+  //         errors[`staffPost_${key}`] = `${key} designation is required.`;
+  //       }
+  //       if (!staff.image) {
+  //         errors[`staffImage_${key}`] = `${key} image is required.`;
+  //       }
+  //     }
+  //   }
+  
+  //   // ----------- Hotel Images Validation -----------
+  //   if (Object.keys(hotelImagesArray).length === 0) {
+  //     errors.hotelImages = "At least one hotel image is required.";
+  //   } else {
+  //     for (const key in hotelImagesArray) {
+  //       const img = hotelImagesArray[key];
+  //       if (!img.image) {
+  //         errors[`hotelImage_${key}`] = `Hotel image  is required.`;
+  //       }
+  //     }
+  //   }
+  
+  //   // 🛑 If any errors, show them and stop submission
+  //   if (Object.keys(errors).length > 0) {
+  //     setFormErrors(errors);
+  //     return;
+  //   }
+  
+  //   // ✅ If no errors, clear error state & submit
+  //   setFormErrors({});
+  //   const formData = new FormData()
+  //   formData.append('hotelName', hotelName);
+  //   formData.append('owners',ownerNames)
+  //   formData.append('staff',staffNamesArray)
+  //   formData.append('hotelImages',hotelImagesArray)
+    
+  //   // const formData = {
+  //   //   hotelName: hotelName,
+  //   //   owners: ownerNames,
+  //   //   staff: staffNamesArray,
+  //   //   hotelImages: hotelImagesArray,
+  //   // };
+  
+  //   console.log("📦 Complete Form Data:", JSON.stringify(formData, null, 2));
+  //   setHotelName('');
+  //   setSelectedOwnerList('Hotel Owner'); // default value
+  //   setOwnerNames({});
+  //   setTotalStaff('');
+  //   setStaffNamesArray({});
+  //   setHotelImagesList('Hotel Images'); // default value
+  //   setHotelImagesArray({});
+  // }
+  const registerFormSubmitHandler = async () => {
+    const errors = {};
+  
+    // ✅ VALIDATIONS
     if (!hotelName || hotelName.trim().length < 2 || hotelName.trim().length > 64) {
       errors.hotelName = "Hotel name is required and must be between 2-64 characters.";
     }
   
-    // ----------- Owners Validation -----------
     if (Object.keys(ownerNames).length === 0) {
       errors.owners = "At least one hotel owner is required.";
     } else {
       for (const key in ownerNames) {
         const owner = ownerNames[key];
-        if (!owner.name || owner.name.trim().length < 2 || owner.name.trim().length > 64) {
-          errors[`ownerName_${key}`] = `${key} name is required and must be 2–64 characters.`;
+        if (!owner.name || owner.name.trim().length < 2) {
+          errors[`ownerName_${key}`] = `${key} name is invalid.`;
         }
         if (!owner.phone || !/^\d{10}$/.test(owner.phone)) {
-          errors[`ownerPhone_${key}`] = `${key} phone is required and must be a 10-digit number.`;
+          errors[`ownerPhone_${key}`] = `${key} phone must be 10 digits.`;
         }
         if (!owner.image) {
           errors[`ownerImage_${key}`] = `${key} image is required.`;
@@ -240,20 +331,19 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
       }
     }
   
-    // ----------- Staff Validation -----------
     if (Object.keys(staffNamesArray).length === 0) {
       errors.staff = "At least one staff member is required.";
     } else {
       for (const key in staffNamesArray) {
         const staff = staffNamesArray[key];
-        if (!staff.name || staff.name.trim().length < 2 || staff.name.trim().length > 64) {
-          errors[`staffName_${key}`] = `${key} name is required and must be 2–64 characters.`;
+        if (!staff.name || staff.name.trim().length < 2) {
+          errors[`staffName_${key}`] = `${key} name is invalid.`;
         }
         if (!staff.phone || !/^\d{10}$/.test(staff.phone)) {
-          errors[`staffPhone_${key}`] = `${key} phone is required and must be a 10-digit number.`;
+          errors[`staffPhone_${key}`] = `${key} phone must be 10 digits.`;
         }
         if (!staff.post) {
-          errors[`staffPost_${key}`] = `${key} designation is required.`;
+          errors[`staffPost_${key}`] = `${key} post is required.`;
         }
         if (!staff.image) {
           errors[`staffImage_${key}`] = `${key} image is required.`;
@@ -261,43 +351,101 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
       }
     }
   
-    // ----------- Hotel Images Validation -----------
     if (Object.keys(hotelImagesArray).length === 0) {
       errors.hotelImages = "At least one hotel image is required.";
     } else {
       for (const key in hotelImagesArray) {
         const img = hotelImagesArray[key];
         if (!img.image) {
-          errors[`hotelImage_${key}`] = `Hotel image  is required.`;
+          errors[`hotelImage_${key}`] = `Hotel image ${key} is required.`;
         }
       }
     }
   
-    // 🛑 If any errors, show them and stop submission
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
       return;
     }
   
-    // ✅ If no errors, clear error state & submit
     setFormErrors({});
-
-    const formData = {
-      hotelName: hotelName,
-      owners: ownerNames,
-      staff: staffNamesArray,
-      hotelImages: hotelImagesArray,
-    };
+    const formData = new FormData();
   
-    console.log("📦 Complete Form Data:", JSON.stringify(formData, null, 2));
-    setHotelName('');
+    // 🏨 Append Hotel Name
+    formData.append('hotelName', hotelName);
+  
+    // 👤 Append Owners
+    Object.keys(ownerNames).forEach((key, index) => {
+      const owner = ownerNames[key];
+      formData.append(`owner${index + 1}`, JSON.stringify({
+        name: owner.name,
+        phone: owner.phone,
+      }));
+      formData.append('ownerImages', {
+        uri: owner.image,
+        name: `owner_${index + 1}.jpg`,
+        type: 'image/jpeg',
+      });
+    });
+  
+    // 👷‍♂️ Append Staff Members
+    Object.keys(staffNamesArray).forEach((key, index) => {
+      const staff = staffNamesArray[key];
+      formData.append(`staff${index + 1}`, JSON.stringify({
+        name: staff.name,
+        phone: staff.phone,
+        post: staff.post,
+      }));
+      formData.append('staffImages', {
+        uri: staff.image,
+        name: `staff_${index + 1}.jpg`,
+        type: 'image/jpeg',
+      });
+    });
+  
+    // 🏨 Append Hotel Images
+    Object.keys(hotelImagesArray).forEach((key, index) => {
+      const img = hotelImagesArray[key];
+      formData.append('hotelImages', {
+        uri: img.image,
+        name: `hotelImg_${index + 1}.jpg`,
+        type: 'image/jpeg',
+      });
+    });
+  
+    // 📤 Axios Post
+    try {
+      // const response = await axios.post(
+      //   'http://yourserverurl.com/api/hotel/register', // replace with your API
+      //   formData,
+      //   {
+      //     headers: {
+      //       'Content-Type': 'multipart/form-data',
+      //     },
+      //   }
+      // );
+      // console.log("✅ Response:", response.data);
+      // alert("Hotel registered successfully");
+  
+      // Clear form
+      dispatch(hotelRegisterAsync(formData))
+      // setHotelName('');
+      // setOwnerNames({});
+      // setStaffNamesArray({});
+      // setHotelImagesArray({});
+
+
+  setHotelName('');
     setSelectedOwnerList('Hotel Owner'); // default value
     setOwnerNames({});
     setTotalStaff('');
     setStaffNamesArray({});
     setHotelImagesList('Hotel Images'); // default value
     setHotelImagesArray({});
-  }
+    } catch (error) {
+      console.log("❌ Error submitting form:", error.response?.data || error.message);
+      alert("Something went wrong");
+    }
+  };
 return (
     <>
    <KeyboardAvoidingView
