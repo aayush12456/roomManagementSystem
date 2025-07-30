@@ -11,7 +11,7 @@ import avatar from '../../../assets/AllIcons/avatar.png'
 import * as ImagePicker from 'expo-image-picker';
 // import axios from 'axios';
 import {  useDispatch } from 'react-redux';
-import { hotelRegisterAsync } from '../../Redux/Slice/hotelRegisterSlice';
+import { hotelRegisterAsync } from '../../Redux/Slice/hotelRegisterSlice/hotelRegisterSlice';
 
 const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view ko distance pe rakhne ke liye
   const dispatch=useDispatch()

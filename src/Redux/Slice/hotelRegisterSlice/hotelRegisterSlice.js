@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from '../../Redux/axios/axios'
+import axios from '../../axios/axios'
 export const hotelRegisterAsync = createAsyncThunk(
   'hotelRegister/userRegisterAsync',
   async (hotelRegisterObj, { rejectWithValue }) => {
