@@ -1,9 +1,11 @@
 import GetOtpInput from "../../components/getOtpInput/getOtpInput"
 
-const GetOtpPage=()=>{
+const GetOtpPage=({route})=>{
+    const { formData } = route?.params
+    console.log('form data page',formData)
 return(
     <>
-    <GetOtpInput/>
+    <GetOtpInput hotelName={formData}/>
     </>
 )
 }
