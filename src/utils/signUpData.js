@@ -20,3 +20,15 @@ export const HotelImages=[
     { label: '3', value: '3' },
     { label: '4', value: '4' }
 ]
+export const roomType=[
+    { label: 'Select Type Of Room', value: '' },
+    {label:'Ac',value:'Ac'},
+    {label:'Non Ac',value:'Non Ac'}
+]
+export const bedType=[
+    { label: 'Select Type Of Bed', value: '' },
+    {label:'Single Bed',value:'Single Bed'},
+    {label:'Double Bed',value:'Double Bed'},
+    {label:'Tripple Bed',value:'Tripple Bed'},
+    {label:'Hall',value:'Hall'}
+]

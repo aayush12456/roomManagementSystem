@@ -6,12 +6,14 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import SignUpImage from '../../../assets/AllIcons/signupImage.jpeg'
 import hotel from '../../../assets/AllIcons/hotel.png'
 import {Picker} from '@react-native-picker/picker';
-import { HotelImages, pickerList, staffPostList } from '../../utils/signUpData';
+import { HotelImages, bedType, pickerList, roomType, staffPostList } from '../../utils/signUpData';
 import avatar from '../../../assets/AllIcons/avatar.png'
 import * as ImagePicker from 'expo-image-picker';
 // import axios from 'axios';
+import { ToWords } from 'to-words';
 import {  useDispatch } from 'react-redux';
 import { hotelRegisterAsync } from '../../Redux/Slice/hotelRegisterSlice/hotelRegisterSlice';
+
 
 const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view ko distance pe rakhne ke liye
   const dispatch=useDispatch()
@@ -19,13 +21,45 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const [ownerNames, setOwnerNames] = useState([]);
   const [staffNamesArray,setStaffNamesArray]=useState([])
+  const [roomNamesArray,setRoomNamesArray]=useState([])
+  const [totalFloorArray,setTotalFloorArray]=useState([])
   const [hotelImagesArray,setHotelImagesArray]=useState([])
   const [totalStaff,setTotalStaff]=useState('')
+  const [totalRooms,setTotalRooms]=useState('')
+  const [totalFloors,setTotalFloors]=useState('')
   const [hotelName,setHotelName]=useState('')
   const [selectedStaffList, setSelectedStaffList] = useState('Designation');
   const [hotelImagesList, setHotelImagesList] = useState('Hotel Images');
   const [formErrors,setFormErrors]=useState({})
+  const [floorData, setFloorData] = useState({});
+  const [floorObj, setFloorObj] = useState({});
 
+  const floorNames = ['Ground Floor'];
+  const toWords = new ToWords({
+    localeCode: 'en-IN',
+    converterOptions: {
+      convertNumberToOrdinal: true,
+    },
+  });
+  // useEffect(()=>{
+  //   for (let i = 1; i < totalFloors; i++) {
+  //     const word = toWords.convert(i);
+  //     floorNames.push(`${word} Floor`);
+  //   }
+  //   setFloorData(floorNames)
+  // },[totalFloors])
+  const getFloorName = (index) => {
+    if (index === 0) return 'Ground Floor';
+    return `${toWords.convert(index)} Floor`;
+  };
+  
+  useEffect(() => {
+    const floorNames = [];
+    for (let i = 0; i < totalFloors; i++) {
+      floorNames.push(getFloorName(i));
+    }
+    setFloorData(floorNames);
+  }, [totalFloors]);
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
       'keyboardDidShow',
@@ -68,6 +102,8 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
     }
   }, [totalStaff]);
 
+  
+
   useEffect(() => {
     const hotelImageCount = parseInt(hotelImagesList);
     if (!isNaN(hotelImageCount) && hotelImageCount > 0) {
@@ -102,7 +138,39 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
       },
     }));
   };
+
+  // const handleRoomDataChange = (roomKey, type, value) => {
+  //   setRoomNamesArray(prev => ({
+  //     ...prev,
+  //     [roomKey]: {
+  //       ...prev[roomKey],
+  //       [type]: value
+  //     }
+  //   }));
+  // };
+  const handleRoomDataChange = (roomKey, type, value) => {
+    // setRoomNamesArray(prev => {
+    //   const updated = {
+    //     ...prev,
+    //     [roomKey]: {
+    //       ...prev[roomKey],
+    //       [type]: value
+    //     }
+    //   };
+    //   // console.log('📦 Updated roomData:', updated);
+    //   return updated;
+    // });
+    const updated = { ...roomNamesArray }; // copy current state
+    if (!updated[roomKey]) {
+      updated[roomKey] = {}; // initialize if not present
+    }
+    updated[roomKey][type] = value; // update the specific field
   
+    console.log('📦 Updated roomData:', updated);
+    setRoomNamesArray(updated); // update state
+  };
+  console.log('staff name array',staffNamesArray)
+  console.log('room name array',roomNamesArray)
   const uploadImage = async (ownerKey,setFieldValue) => {
     try {
       const maxFileSize = 5 * 1024 * 1024; // 5MB
@@ -178,8 +246,72 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
       console.log('Error during image picking:', error);
     }
   };
+    const floorSelect=(val,floor)=>{
+    setFloorObj((prev) => ({
+      ...prev,
+      [floor]: {
+        floorNumber: val,
+      },
+    }));
+    }
+    console.log('floor obj',floorObj)
 
-
+    // useEffect(() => {
+    //   const floorCount = parseInt(floorObj.floorNumber);
+    //   if (!isNaN(floorCount) && floorCount > 0) {
+    //     const floorDataObj = {};
+    //     const name = floorObj.floorName;
+    //     for (let i = 1; i <= floorCount; i++) {
+    //       floorDataObj[`${name} Room ${i}`] = {roomType:'',bedType:''};
+    //     }
+    //     setTotalFloorArray((prev) => ({
+    //       ...prev,
+    //       ...floorDataObj,
+    //     }));
+    //   } 
+    //   else{
+    //     // setTotalFloorArray((prev) => {
+    //     //   const updated = { ...prev };
+    //     //   Object.keys(updated).forEach((key) => {
+    //     //     if (key.startsWith(`${floorName} Room`)) {
+    //     //       delete updated[key];
+    //     //     }
+    //     //   });
+    //     //   return updated;
+    //     // });
+    //   }
+    // }, [floorObj.floorNumber,floorObj.floorName]);
+    useEffect(() => {
+      Object.entries(floorObj).forEach(([floorName, floorData]) => {
+        const floorCount = parseInt(floorData.floorNumber);
+    
+        if (!isNaN(floorCount) && floorCount > 0) {
+          const floorDataObj = {};
+          for (let i = 1; i <= floorCount; i++) {
+            floorDataObj[`${floorName} Room ${i}`] = { roomType: '', bedType: '' };
+          }
+    
+          setTotalFloorArray((prev) => ({
+            ...prev,
+            ...floorDataObj,
+          }));
+        } else {
+          // Remove old room entries of this floor
+          setTotalFloorArray((prev) => {
+            const updated = { ...prev };
+            Object.keys(updated).forEach((key) => {
+              if (key.startsWith(`${floorName} Room`)) {
+                delete updated[key];
+              }
+            });
+            return updated;
+          });
+        }
+      });
+    }, [floorObj]);
+    
+    console.log('total floor array',totalFloorArray)
+  console.log('floor data is',floorData)
   const uploadHotelImage = async (hotelKey) => {
     try {
       const maxFileSize = 5 * 1024 * 1024; // 5MB
@@ -216,6 +348,7 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
       console.log('Error during image picking:', error);
     }
   };
+
   // const registerFormSubmitHandler=()=>{
    
   //   const errors = {};
@@ -411,7 +544,17 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
         type: 'image/jpeg',
       });
     });
-  
+
+    //✅ roomNamesArray - room data
+  Object.keys(roomNamesArray).forEach((roomKey, index) => {
+    const room = roomNamesArray[roomKey];
+    formData.append(`room${index + 1}`, JSON.stringify({
+      roomKey,
+      roomType: room.roomType,
+      bedType: room.bedType
+    }));
+  });
+  console.log('form data is',formData)
     // 📤 Axios Post
     try {
       // const response = await axios.post(
@@ -427,7 +570,7 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
       // alert("Hotel registered successfully");
   
       // Clear form
-      dispatch(hotelRegisterAsync(formData))
+      // dispatch(hotelRegisterAsync(formData))
       // setHotelName('');
       // setOwnerNames({});
       // setStaffNamesArray({});
@@ -439,8 +582,13 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
     setOwnerNames({});
     setTotalStaff('');
     setStaffNamesArray({});
+    setRoomNamesArray({});
     setHotelImagesList('Hotel Images'); // default value
     setHotelImagesArray({});
+    setTotalFloorArray({})
+    setTotalFloors('')
+    setTotalRooms({})
+    setFloorObj({})
     } catch (error) {
       console.log("❌ Error submitting form:", error.response?.data || error.message);
       alert("Something went wrong");
@@ -744,12 +892,116 @@ return (
     {formErrors[`staffImage_${key}`]}
   </Text>
 )}
-
 </View>
           </View>
         )
       })
     }
+    {Object.keys(staffNamesArray).length>0?<View style={{ paddingHorizontal: 16, marginBottom: 10 }}>
+        <TextInput
+          label={`Total Rooms`}
+          mode="outlined"
+          onChangeText={(text)=>setTotalRooms(text)}         
+        />
+      </View>:null}
+
+      {totalRooms.length>0?<View style={{ paddingHorizontal: 16, marginBottom: 10 }}>
+        <TextInput
+          label={`Total Floors`}
+          mode="outlined"
+          value={totalFloors}
+          onChangeText={(val) =>setTotalFloors(val) }    
+        />
+      </View>:null}
+      {
+       totalFloors? floorData.map((floorItem,index)=>{
+          return (
+            <View key={index} style={{ paddingHorizontal: 16, marginBottom: 10 }}>
+               <TextInput
+          label={`${floorItem}`}
+          mode="outlined"
+          onChangeText={(val)=>floorSelect(val,floorItem)}   
+          value={floorObj[floorItem]?.floorNumber || ''}  
+        />
+            </View>
+          )
+        }):null
+      }
+
+      {
+        Object.entries(totalFloorArray).map(([roomKey,values],index)=>{
+          console.log('data is',roomKey)
+          console.log('data obj is',values)
+          return (
+      <View 
+      key={roomKey}
+      style={{
+      flex: 1,
+      justifyContent: 'center',
+      paddingHorizontal: 15,
+      marginTop:15
+    }}>
+             <Text style={{ fontWeight: '400', fontSize: 16, marginBottom: 5 }}>
+          {roomKey}
+        </Text>
+      <View style={{
+        borderWidth: 1,
+        borderColor: '#888',
+        borderRadius: 8,
+        backgroundColor: '#fff',
+        overflow: 'hidden'
+      }}>
+           <Picker
+           label={roomKey}
+           selectedValue={roomNamesArray[roomKey]?.roomType || ''}
+           onValueChange={(itemValue) => handleRoomDataChange(roomKey, 'roomType', itemValue)}
+           >
+           {
+            roomType.map((roomItem,index)=>{
+              console.log('room item',roomItem)
+              return (
+               <Picker.Item 
+                key={roomItem.value}
+                label={roomItem.label}
+                value={roomItem.value}
+            />
+              )
+            })
+           }
+           </Picker>
+            </View>
+
+            <View style={{
+        borderWidth: 1,
+        borderColor: '#888',
+        borderRadius: 8,
+        backgroundColor: '#fff',
+        overflow: 'hidden',
+        marginTop:8
+      }}>
+           <Picker
+           label={roomKey}
+           selectedValue={roomNamesArray[roomKey]?.bedType || ''}
+           onValueChange={(itemValue) => handleRoomDataChange(roomKey, 'bedType', itemValue)}
+           >
+           {
+            bedType.map((bedItem,index)=>{
+              console.log('room item',bedItem)
+              return (
+               <Picker.Item 
+                key={bedItem.value}
+                label={bedItem.label}
+                value={bedItem.value}
+            />
+              )
+            })
+           }
+           </Picker>
+            </View>
+            </View>
+          )
+        })
+      }
     { Object.keys(staffNamesArray).length>0?
     <View style={{ paddingHorizontal: 16, marginBottom: 10,marginTop:6 }}>
       <View style={{
