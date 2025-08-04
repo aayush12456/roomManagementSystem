@@ -446,7 +446,11 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
     if (!hotelName || hotelName.trim().length < 2 || hotelName.trim().length > 64) {
       errors.hotelName = "Hotel name is required and must be between 2-64 characters.";
     }
-  
+
+    if (!totalFloors || totalFloors.trim().length === 0) {
+      errors.totalFloors = "Total number of floors is required.";
+    }
+
     if (Object.keys(ownerNames).length === 0) {
       errors.owners = "At least one hotel owner is required.";
     } else {
@@ -494,6 +498,21 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
         }
       }
     }
+
+    Object.entries(floorObj).forEach(([floorName, data]) => {
+      if (!data.floorNumber || data.floorNumber.trim() === '') {
+        errors[`floorNumber_${floorName}`] = `${floorName} floor number is required.`;
+      }
+    });
+
+    Object.entries(roomNamesArray).forEach(([roomKey, roomData]) => {
+      if (!roomData.roomType || roomData.roomType.trim().length === 0) {
+        errors[`roomType_${roomKey}`] = `${roomKey} room type is required.`;
+      }
+      if (!roomData.bedType || roomData.bedType.trim().length === 0) {
+        errors[`bedType_${roomKey}`] = `${roomKey} bed type is required.`;
+      }
+    });
   
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
@@ -546,14 +565,17 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
     });
 
     //✅ roomNamesArray - room data
-  Object.keys(roomNamesArray).forEach((roomKey, index) => {
-    const room = roomNamesArray[roomKey];
-    formData.append(`room${index + 1}`, JSON.stringify({
-      roomKey,
-      roomType: room.roomType,
-      bedType: room.bedType
-    }));
-  });
+  // Object.keys(roomNamesArray).forEach((roomKey, index) => {
+  //   const room = roomNamesArray[roomKey];
+  //   formData.append(`room${index + 1}`, JSON.stringify({
+  //     roomKey,
+  //     roomType: room.roomType,
+  //     bedType: room.bedType
+  //   }));
+  // });
+  formData.append('roomData', JSON.stringify(roomNamesArray));
+  formData.append('totalRoom', totalRooms);
+  formData.append('totalFloor', totalFloors);
   console.log('form data is',formData)
     // 📤 Axios Post
     try {
@@ -570,7 +592,7 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
       // alert("Hotel registered successfully");
   
       // Clear form
-      // dispatch(hotelRegisterAsync(formData))
+      dispatch(hotelRegisterAsync(formData))
       // setHotelName('');
       // setOwnerNames({});
       // setStaffNamesArray({});
@@ -912,6 +934,11 @@ return (
           value={totalFloors}
           onChangeText={(val) =>setTotalFloors(val) }    
         />
+         {formErrors.totalFloors && (
+    <Text style={{ color: 'red', fontSize: 12, marginTop: 4 }}>
+      {formErrors.totalFloors}
+    </Text>
+  )}
       </View>:null}
       {
        totalFloors? floorData.map((floorItem,index)=>{
@@ -923,6 +950,11 @@ return (
           onChangeText={(val)=>floorSelect(val,floorItem)}   
           value={floorObj[floorItem]?.floorNumber || ''}  
         />
+         {formErrors[`floorNumber_${floorItem}`] && (
+    <Text style={{ color: 'red', fontSize: 12, marginTop: 4 }}>
+      {formErrors[`floorNumber_${floorItem}`]}
+    </Text>
+  )}
             </View>
           )
         }):null
@@ -970,6 +1002,11 @@ return (
            }
            </Picker>
             </View>
+            {formErrors[`roomType_${roomKey}`] && (
+  <Text style={{ color: 'red', fontSize: 12, marginTop: 4 }}>
+    {formErrors[`roomType_${roomKey}`]}
+  </Text>
+)}
 
             <View style={{
         borderWidth: 1,
@@ -998,6 +1035,11 @@ return (
            }
            </Picker>
             </View>
+            {formErrors[`bedType_${roomKey}`] && (
+  <Text style={{ color: 'red', fontSize: 12, marginTop: 4 }}>
+    {formErrors[`bedType_${roomKey}`]}
+  </Text>
+)}
             </View>
           )
         })
