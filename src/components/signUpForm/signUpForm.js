@@ -450,6 +450,14 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
     if (!totalFloors || totalFloors.trim().length === 0) {
       errors.totalFloors = "Total number of floors is required.";
     }
+    
+    if (!totalRooms || totalRooms.trim().length === 0) {
+      errors.totalRooms = "Total number of rooms is required.";
+    }
+
+    if (!totalStaff || totalStaff.trim().length === 0) {
+      errors.totalStaff = "Total number of staff is required.";
+    }
 
     if (Object.keys(ownerNames).length === 0) {
       errors.owners = "At least one hotel owner is required.";
@@ -499,13 +507,17 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
       }
     }
 
-    Object.entries(floorObj).forEach(([floorName, data]) => {
-      if (!data.floorNumber || data.floorNumber.trim() === '') {
-        errors[`floorNumber_${floorName}`] = `${floorName} floor number is required.`;
+   
+    floorData.forEach((floorName) => {
+      const data = floorObj[floorName];
+      if (!data || !data.floorNumber || data.floorNumber.trim() === '') {
+        errors[`floorNumber_${floorName}`] = `${floorName}is required.`;
       }
     });
-
+    
     Object.entries(roomNamesArray).forEach(([roomKey, roomData]) => {
+      console.log('room key',roomKey)
+      console.log('room data',roomData)
       if (!roomData.roomType || roomData.roomType.trim().length === 0) {
         errors[`roomType_${roomKey}`] = `${roomKey} room type is required.`;
       }
@@ -789,6 +801,11 @@ return (
           mode="outlined"
           onChangeText={(text)=>setTotalStaff(text)}         
         />
+        {formErrors.totalStaff && (
+    <Text style={{ color: 'red', marginTop: 4 }}>
+      {formErrors.totalStaff}
+    </Text>
+  )}
       </View>:null}
 
       {Object.keys(staffNamesArray).map((key, index) => {
@@ -925,6 +942,11 @@ return (
           mode="outlined"
           onChangeText={(text)=>setTotalRooms(text)}         
         />
+         {formErrors.totalRooms && (
+    <Text style={{ color: 'red', marginTop: 4 }}>
+      {formErrors.totalRooms}
+    </Text>
+  )}
       </View>:null}
 
       {totalRooms.length>0?<View style={{ paddingHorizontal: 16, marginBottom: 10 }}>
@@ -935,7 +957,7 @@ return (
           onChangeText={(val) =>setTotalFloors(val) }    
         />
          {formErrors.totalFloors && (
-    <Text style={{ color: 'red', fontSize: 12, marginTop: 4 }}>
+    <Text style={{ color: 'red', marginTop: 4 }}>
       {formErrors.totalFloors}
     </Text>
   )}
@@ -1003,7 +1025,7 @@ return (
            </Picker>
             </View>
             {formErrors[`roomType_${roomKey}`] && (
-  <Text style={{ color: 'red', fontSize: 12, marginTop: 4 }}>
+  <Text style={{ color: 'red', marginTop: 4 }}>
     {formErrors[`roomType_${roomKey}`]}
   </Text>
 )}
