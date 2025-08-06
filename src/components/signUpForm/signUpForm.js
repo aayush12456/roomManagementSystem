@@ -5,18 +5,25 @@ import { View,Image, ScrollView,Text,KeyboardAvoidingView, Platform, Keyboard, D
 import { SafeAreaView } from 'react-native-safe-area-context';
 import SignUpImage from '../../../assets/AllIcons/signupImage.jpeg'
 import hotel from '../../../assets/AllIcons/hotel.png'
+import success from '../../../assets/AllIcons/success.png'
 import {Picker} from '@react-native-picker/picker';
 import { HotelImages, bedType, pickerList, roomType, staffPostList } from '../../utils/signUpData';
 import avatar from '../../../assets/AllIcons/avatar.png'
 import * as ImagePicker from 'expo-image-picker';
+import { useNavigation } from '@react-navigation/native';
 // import axios from 'axios';
+import AwesomeAlert from 'react-native-awesome-alerts';
 import { ToWords } from 'to-words';
-import {  useDispatch } from 'react-redux';
-import { hotelRegisterAsync } from '../../Redux/Slice/hotelRegisterSlice/hotelRegisterSlice';
+import {  useDispatch,useSelector } from 'react-redux';
+import { hotelRegisterAsync, hotelRegisterSliceAction } from '../../Redux/Slice/hotelRegisterSlice/hotelRegisterSlice';
 
 
 const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view ko distance pe rakhne ke liye
   const dispatch=useDispatch()
+  const navigation = useNavigation();
+  const registerFormSelector=useSelector((state)=>state?.hotelRegisterData?.registerDataObj?.registerData)
+  console.log('register form selector in signup',registerFormSelector)
+  const [showAlert, setShowAlert] = useState(false);
   const [selectedOwnerList, setSelectedOwnerList] = useState('Hotel Owner');
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const [ownerNames, setOwnerNames] = useState([]);
@@ -48,6 +55,18 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
   //   }
   //   setFloorData(floorNames)
   // },[totalFloors])
+
+  useEffect(() => {
+    if (registerFormSelector) {  
+      setShowAlert(true); // ✅ Show Alert
+
+      setTimeout(() => {
+        setShowAlert(false); // ❌ Hide alert
+        dispatch(hotelRegisterSliceAction.resetRegisterData()); // 🔄 Reset
+        navigation.navigate('LoginPage'); // 🚀 Navigate
+      }, 3000);
+    }
+  }, [registerFormSelector]);
   const getFloorName = (index) => {
     if (index === 0) return 'Ground Floor';
     return `${toWords.convert(index)} Floor`;
@@ -1166,6 +1185,30 @@ return (
       </ScrollView>
     </SafeAreaView>
     </KeyboardAvoidingView>
+    <AwesomeAlert
+        show={showAlert}
+        showProgress={false}
+        title="Hotel Registered Successfully!"
+        message="You will be redirected to login."
+        closeOnTouchOutside={false}
+        closeOnHardwareBackPress={false}
+        showConfirmButton={false}
+        contentContainerStyle={{
+          borderWidth: 1,
+          borderColor: '#4BB543',
+          padding: 15,
+          alignItems: 'center',
+        }}
+        titleStyle={{ color: '#4BB543', fontWeight: 'bold', fontSize: 18 }}
+        messageStyle={{ color: '#333', fontSize: 15 }}
+        customView={
+          <Image
+            source={success}
+            style={{ width: 60, height: 60, marginBottom: 10 }}
+            resizeMode="contain"
+          />
+        }
+      />
     </>
 )
 }

@@ -52,7 +52,11 @@ const hotelRegisterSlice = createSlice({
 
 
   },
-  reducers: {},
+  reducers: {
+    resetRegisterData: (state) => {
+      state.registerDataObj = null;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(hotelRegisterAsync.fulfilled, (state, action) => {
       state.registerDataObj = action.payload; // Update responseData in the state after successful login
