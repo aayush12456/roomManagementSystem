@@ -183,22 +183,22 @@ return (
            {phoneNameObj?.matchedNames?.length>0?<Text style={{ fontSize: 18, fontWeight: '800' }}>
              Your Hotel Name:
             </Text>:null}
+            <ScrollView>
             {
                   phoneNameObj?.matchedNames?.length>0? phoneNameObj?.matchedNames?.map((hotelName,index)=>{
                 return (
-                  <ScrollView>
-                 <View key={index}>
+                 <View key={hotelName}>
                   <Text style={{ marginTop: 10,fontSize:16 }} onPress={()=>hotelClickHandler(hotelName)}>
                   {hotelName}
                 </Text>
                 </View>
-                  </ScrollView>
                 )
               }):
               <Text style={{ marginTop: 10 ,fontSize:14,textAlign:'center'}}>
           No phone number registered in any hotel
             </Text>
             }
+            </ScrollView>
             <Button
               mode="outlined"
               onPress={() => {setModalVisible(false),setPhoneNameObj({}),dispatch(clearHotelNameData())}}

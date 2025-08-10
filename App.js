@@ -10,6 +10,7 @@ import DashboardPage from './src/Pages/dashboardPage/dashboardPage';
 import * as SecureStore from 'expo-secure-store';
 import { useEffect,useState } from 'react';
 import { ActivityIndicator, View } from 'react-native';
+import HeaderPage from './src/Pages/headerPage/headerPage';
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -54,7 +55,7 @@ export default function App() {
   return (
     <Provider store={store}>
  <NavigationContainer>
-      <Stack.Navigator initialRouteName={isLoggedIn ? "DashboardPage" : "LoginPage"}>
+      <Stack.Navigator initialRouteName={isLoggedIn ? "HeaderPage" : "LoginPage"}>
       <Stack.Screen
         name="DashboardPage"
         component={DashboardPage}
@@ -73,6 +74,11 @@ export default function App() {
           <Stack.Screen
           name="GetOtpPage"
           component={GetOtpPage}
+          options={{ headerShown: false }}
+        />
+           <Stack.Screen
+          name="HeaderPage"
+          component={HeaderPage}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

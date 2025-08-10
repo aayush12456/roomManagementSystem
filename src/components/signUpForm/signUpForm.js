@@ -1,18 +1,19 @@
 import * as React from 'react';
 import { useState,useEffect } from 'react';
 import { TextInput,Button } from 'react-native-paper';
-import { View,Image, ScrollView,Text,KeyboardAvoidingView, Platform, Keyboard, Dimensions} from 'react-native';
+import { Image } from 'expo-image';
+import { View, ScrollView,Text,KeyboardAvoidingView, Platform, Keyboard,Modal, Dimensions} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import SignUpImage from '../../../assets/AllIcons/signupImage.jpeg'
 import hotel from '../../../assets/AllIcons/hotel.png'
-import success from '../../../assets/AllIcons/success.png'
+
+import successImg from '../../../assets/AllIcons/successImg.gif'
 import {Picker} from '@react-native-picker/picker';
 import { HotelImages, bedType, pickerList, roomType, staffPostList } from '../../utils/signUpData';
 import avatar from '../../../assets/AllIcons/avatar.png'
 import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from '@react-navigation/native';
 // import axios from 'axios';
-import AwesomeAlert from 'react-native-awesome-alerts';
 import { ToWords } from 'to-words';
 import {  useDispatch,useSelector } from 'react-redux';
 import { hotelRegisterAsync, hotelRegisterSliceAction } from '../../Redux/Slice/hotelRegisterSlice/hotelRegisterSlice';
@@ -56,6 +57,8 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
   //   setFloorData(floorNames)
   // },[totalFloors])
 
+ 
+  
   useEffect(() => {
     if (registerFormSelector) {  
       setShowAlert(true); // ✅ Show Alert
@@ -1185,30 +1188,51 @@ return (
       </ScrollView>
     </SafeAreaView>
     </KeyboardAvoidingView>
-    <AwesomeAlert
-        show={showAlert}
-        showProgress={false}
-        title="Hotel Registered Successfully!"
-        message="You will be redirected to login."
-        closeOnTouchOutside={false}
-        closeOnHardwareBackPress={false}
-        showConfirmButton={false}
-        contentContainerStyle={{
-          borderWidth: 1,
-          borderColor: '#4BB543',
-          padding: 15,
+    
+    <Modal visible={showAlert} transparent animationType="fade">
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: 'rgba(0,0,0,0.4)',
+          justifyContent: 'center',
           alignItems: 'center',
         }}
-        titleStyle={{ color: '#4BB543', fontWeight: 'bold', fontSize: 18 }}
-        messageStyle={{ color: '#333', fontSize: 15 }}
-        customView={
+      >
+        <View
+          style={{
+            backgroundColor: 'white',
+            padding: 25,
+            borderRadius: 10,
+            alignItems: 'center',
+            borderWidth: 1,
+            width: 300,
+          }}
+        >
           <Image
-            source={success}
-            style={{ width: 60, height: 60, marginBottom: 10 }}
+            source={successImg}
+            style={{
+              width: 160,
+              height: 160,
+              marginBottom: 10,
+              marginTop:-20
+            }}
             resizeMode="contain"
           />
-        }
-      />
+          <Text
+            style={{
+              fontWeight: '700',
+              fontSize: 17,
+              textAlign: 'center',
+              marginBottom: 10,
+              position:'relative',
+              top:-30
+            }}
+          >
+            Hotel Registered Successfully!
+          </Text>
+        </View>
+      </View>
+    </Modal>
     </>
 )
 }
