@@ -4,13 +4,15 @@ import getHotelNameSlice from "../Slice/getHotelNameSlice/getHotelNameSlice"
 import getPhoneOtpSlice from "../Slice/getPhoneOtpSlice/getPhoneOtpSlice"
 import compareOtpSlice from "../Slice/compareOtpSlice/compareOtpSlice"
 import getHotelDetailSlice from "../Slice/getHotelDetailSlice/getHotelDetailSlice"
+import customerModalSlice from "../Slice/customerModalSlice/customerModalSlice"
 const store=configureStore({
     reducer:{
         hotelRegisterData:hotelRegisterSlice,
         getHotelNameData:getHotelNameSlice,
         getPhoneOtpData:getPhoneOtpSlice,
         compareOtpData:compareOtpSlice,
-        getHotelDetails:getHotelDetailSlice
+        getHotelDetails:getHotelDetailSlice,
+        customerModal:customerModalSlice
     }
 })
 export default store

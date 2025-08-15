@@ -39,3 +39,16 @@ export const getDynamicSignUpSchema = (ownerCount = 0,staffCount=0) => {
     staffNames: Yup.object().shape(staffSchema),
   });
 };
+export const customerDetailsSchema=Yup.object({
+  customerName:Yup.string().min(2).max(50).required("Please enter customer name"),
+  customerAddress:Yup.string().min(2).required("Please enter customer address"),
+  customerPhoneNumber:Yup.string().min(2).required("Please enter customer phone number"),
+  totalCustomer:Yup.string().min(1).required("Please enter total customer"),
+  customerAadharNumber:Yup.string().min(12).required("Please enter customer aadhar number"),
+  customerCity:Yup.string().min(2).required("Please enter customer city"),
+  checkInDate:Yup.string().min(2).required("Please enter checkInDate"),
+  checkInTime:Yup.string().min(2).required("Please enter checkInTime"),
+  checkOutDate:Yup.string().min(2).required("Please enter checkOutDate"),
+  checkOutTime:Yup.string().min(2).required("Please enter checkOutTime"),
+  executiveName:Yup.string().min(2).max(50).required("Please enter front desk executive name")
+})
