@@ -26,6 +26,7 @@
     "formik": "^2.4.6",
     "react": "19.0.0",
     "react-native": "0.79.5",
+    "react-native-alert-notification": "^0.4.2",
     "react-native-gesture-handler": "~2.24.0",
     "react-native-modal": "^14.0.0-rc.1",
     "react-native-otp-entry": "^1.8.5",

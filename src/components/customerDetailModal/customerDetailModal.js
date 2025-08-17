@@ -1,14 +1,16 @@
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { useState,useRef } from "react";
+import { useState,useRef ,useEffect } from "react";
 import { Text,TextInput,Button } from "react-native-paper"
 import { Formik } from 'formik';
+import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import { customerDetailsSchema } from "../../schemas";
 import { View,Pressable,Modal,Dimensions, ScrollView } from "react-native";
 import {useSelector} from 'react-redux'
-// import io from "socket.io-client";
+import io from "socket.io-client";
 import axios from "axios";
-// const socket = io.connect("http://192.168.29.169:4000")
-const CustomerDetailModal=({showAlert,setShowAlert,selectedRoomId})=>{
+const socket = io.connect("http://192.168.29.169:4000")
+const CustomerDetailModal=({showAlert,setShowAlert,selectedRoomId,customerArray})=>{
+  console.log('customer array',customerArray)
   const BASE_URL = "http://192.168.29.169:4000";
   const hotelDetailSelector=useSelector((state)=>state.getHotelDetails.getHotelDetailsObj.hotelObj)
     const screenWidth = Dimensions.get("window").width;
@@ -16,7 +18,45 @@ const CustomerDetailModal=({showAlert,setShowAlert,selectedRoomId})=>{
     const [showTimePicker, setShowTimePicker] = useState(false);
     const [showDatesPicker, setShowDatesPicker] = useState(false);
     const [showTimesPicker, setShowTimesPicker] = useState(false);
-    const formikRef = useRef(null); 
+    const [filterCustomerObj,setFilterCustomerObj]=useState({})
+    const [matchRoomResponse,setMatchRoomResponse]=useState(null)
+    const formikRef = useRef(null);
+  
+    useEffect(()=>{
+    if(selectedRoomId){
+    const matchRoom=customerArray.some((item)=>item.roomId==selectedRoomId)
+    console.log('match room',matchRoom)
+     setMatchRoomResponse(matchRoom)
+    }
+    },[selectedRoomId,customerArray])
+
+    useEffect(()=>{
+      if(selectedRoomId){
+      const customerObj=customerArray.find((item)=>item.roomId==selectedRoomId)
+      console.log('customer obj',customerObj)
+      setFilterCustomerObj(customerObj)
+      }
+      },[selectedRoomId,customerArray])
+
+      const deleteCustomerDetails=async(customerId)=>{
+        const deleteObj={
+        id:hotelDetailSelector?._id,
+        customerId:customerId
+        }
+        try {
+          const response = await axios.post(`${BASE_URL}/hotel/deleteCustomerDetails/${deleteObj.id}`,deleteObj);
+          console.log('response in delete obj is',response?.data)
+          Toast.show({
+            type: ALERT_TYPE.SUCCESS,
+            title: "Customer deleted Successfully",
+            autoClose: 10000, // 10 sec me band hoga
+          });
+          socket.emit('deleteCustomerDetails', response?.data?.getCustomerDetailsArray)
+      } catch (error) {
+          // console.error('Error sending activate', error);
+      }
+      setShowAlert(false)
+      }
 return (
     <>
       <Formik  initialValues={{
@@ -63,21 +103,26 @@ return (
       }
       try {
         const response = await axios.post(`${BASE_URL}/hotel/addCustomerDetails/${customerDetailsObj.id}`,customerDetailsObj);
-        // console.log('response in deactivate obj is',response?.data)
-        // socket.emit('addCustomerDetails', response?.data)
+        console.log('response in deactivate obj is',response?.data)
+        Toast.show({
+          type: ALERT_TYPE.SUCCESS,
+          title: "Customer Added Successfully",
+          autoClose: 10000, // 10 sec me band hoga
+        });
+        socket.emit('addCustomerDetails', response?.data?.getCustomerDetailsArray)
     } catch (error) {
         // console.error('Error sending activate', error);
     }
 console.log('customer',customerDetailsObj)
         resetForm()
-        // setShowAlert(false)
+        setShowAlert(false)
       }}
       innerRef={formikRef}
       >
 
  {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue })=>(
   <>
-    <Modal visible={showAlert} transparent animationType="fade">
+ <Modal visible={showAlert} transparent animationType="fade">
   <View
     style={{
       flex: 1,
@@ -96,7 +141,11 @@ console.log('customer',customerDetailsObj)
       }}
     >
       {/* 🔹 Scroll starts from Customer Name */}
-      <Text style={{textAlign:'center'}}>Enter Customer Details</Text>
+     { matchRoomResponse===false?<Text style={{textAlign:'center'}}>Enter Customer Details</Text>
+       :
+       <Text style={{textAlign:'center'}}>Customer Details Preview</Text>     
+    }
+      {matchRoomResponse===false?
       <ScrollView
         contentContainerStyle={{
           padding: 20,
@@ -334,8 +383,63 @@ console.log('customer',customerDetailsObj)
         {touched.executiveName && errors.executiveName && <Text style={{ color: 'red', marginLeft: 12 }}>{errors.executiveName}</Text>}
         </View>:null}
       </ScrollView>
+      :
+      <ScrollView 
+      contentContainerStyle={{
+        padding: 20,
+        alignItems: "center",
+      }}
+      >
+     <View>
+      <View style={{flexDirection:"row",gap:6,paddingTop:10}}>
+        <Text>Customer Name : </Text>
+       <Text>{filterCustomerObj.customerName}</Text>
+      </View>
+      <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
+        <Text>Customer Address : </Text>
+       <Text>{filterCustomerObj.customerAddress}</Text>
+      </View>
+      <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
+        <Text>Customer Phone Number : </Text>
+       <Text>{filterCustomerObj.customerPhoneNumber}</Text>
+      </View>
+      <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
+        <Text>Total Customer : </Text>
+       <Text>{filterCustomerObj.totalCustomer}</Text>
+      </View>
+      <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
+        <Text>Customer Aadhar Number : </Text>
+       <Text>{filterCustomerObj.customerAadharNumber}</Text>
+      </View>
+      <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
+        <Text>Customer City : </Text>
+       <Text>{filterCustomerObj.customerCity}</Text>
+      </View>
+      <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
+        <Text>Check In Date : </Text>
+       <Text>{filterCustomerObj.checkInDate}</Text>
+      </View>
+      <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
+        <Text>check In Time : </Text>
+       <Text>{filterCustomerObj.checkInTime}</Text>
+      </View>
+      <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
+        <Text>check Out Date : </Text>
+       <Text>{filterCustomerObj.checkOutDate}</Text>
+      </View>
+      <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
+        <Text>check Out Time : </Text>
+       <Text>{filterCustomerObj.checkOutTime}</Text>
+      </View>
+      <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
+        <Text>Front Desk Executive Name : </Text>
+       <Text>{filterCustomerObj.frontDeskExecutiveName}</Text>
+      </View>
+     </View> 
+      </ScrollView>
+      }
         <View style={{flexDirection:"row",justifyContent:'space-between'}}>
-        <View style={{ width: '50%', overflow: 'hidden' }}>
+       {matchRoomResponse===false?<View style={{ width: '50%', overflow: 'hidden' }}>
             <Button
                       mode="contained"
                       onPress={handleSubmit}
@@ -351,10 +455,50 @@ console.log('customer',customerDetailsObj)
                       }}
                       buttonColor="rgba(234, 88, 12, 1)"
                     >
-           SUBMIT
+           Submit
                     </Button>
-          </View>
+          </View>:
           <View style={{ width: '50%', overflow: 'hidden' }}>
+          <Button
+                    mode="contained"
+                    style={{
+                      height: 50, // Set the desired height
+                      borderRadius:11,
+                      color: '#FFFFFF',
+                       fontSize: 16, 
+                       justifyContent:'center',
+                       marginTop: 20,
+                       marginLeft: 12,
+                       marginRight: 20,
+                    }}
+                    buttonColor="rgba(234, 88, 12, 1)"
+                  >
+         Update
+                  </Button>
+        </View>
+          }
+          {
+            matchRoomResponse===true?   <View style={{ width: '50%', overflow: 'hidden' }}>
+            <Button
+                      mode="contained"
+                      style={{
+                        height: 50, // Set the desired height
+                        borderRadius:11,
+                        color: '#FFFFFF',
+                         fontSize: 16, 
+                         justifyContent:'center',
+                         marginTop: 20,
+                         marginLeft: 12,
+                         marginRight: 20,
+                      }}
+                      buttonColor="rgba(234, 88, 12, 1)"
+                      onPress={()=>deleteCustomerDetails(filterCustomerObj?._id)}
+                    >
+           Delete
+                    </Button>
+          </View>:null
+          }
+          {matchRoomResponse===false?<View style={{ width: '50%', overflow: 'hidden' }}>
             <Button
                       mode="contained"
                       style={{
@@ -375,13 +519,40 @@ console.log('customer',customerDetailsObj)
                     >
      Close
                     </Button>
-          </View>
+          </View>:null}
         </View>
-        
+        <View style={{flexDirection:'row',justifyContent:'center'}}>
+        {matchRoomResponse===true?<View style={{ width: '50%', overflow: 'hidden' }}>
+            <Button
+                      mode="contained"
+                      style={{
+                        height: 50, // Set the desired height
+                        borderRadius:11,
+                        color: '#FFFFFF',
+                         fontSize: 16, 
+                         justifyContent:'center',
+                         marginTop: 20,
+                         marginLeft: 12,
+                         marginRight: 20,
+                      }}
+                      buttonColor="rgba(234, 88, 12, 1)"
+                      onPress={() => {
+                        setShowAlert(false)
+                        formikRef.current?.resetForm(); // Form reset
+                      }}
+                    >
+     Close
+                    </Button>
+          </View>:null}
+        </View>
+       
     </View>
   </View>
+
   
 </Modal>
+
+
   </>
  )}
     </Formik>
