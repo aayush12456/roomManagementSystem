@@ -20,6 +20,8 @@ const CustomerDetailModal=({showAlert,setShowAlert,selectedRoomId,customerArray}
     const [showTimesPicker, setShowTimesPicker] = useState(false);
     const [filterCustomerObj,setFilterCustomerObj]=useState({})
     const [matchRoomResponse,setMatchRoomResponse]=useState(null)
+    const [roomId,setRoomId]=useState('')
+    const [showTextField,setShowTextField]=useState(false)
     const formikRef = useRef(null);
   
     useEffect(()=>{
@@ -45,10 +47,10 @@ const CustomerDetailModal=({showAlert,setShowAlert,selectedRoomId,customerArray}
         }
         try {
           const response = await axios.post(`${BASE_URL}/hotel/deleteCustomerDetails/${deleteObj.id}`,deleteObj);
-          console.log('response in delete obj is',response?.data)
+          // console.log('response in delete obj is',response?.data)
           Toast.show({
             type: ALERT_TYPE.SUCCESS,
-            title: "Customer deleted Successfully",
+            title: "Customer Details Deleted Successfully",
             autoClose: 10000, // 10 sec me band hoga
           });
           socket.emit('deleteCustomerDetails', response?.data?.getCustomerDetailsArray)
@@ -57,21 +59,31 @@ const CustomerDetailModal=({showAlert,setShowAlert,selectedRoomId,customerArray}
       }
       setShowAlert(false)
       }
+
+      const updateCustomerDetailsData=(roomId)=>{
+        console.log('hello')
+        setShowTextField(true)
+        setRoomId(roomId)
+      }
 return (
     <>
       <Formik  initialValues={{
-      customerName: '',
-      customerAddress: '',
-      customerPhoneNumber: '',
-      totalCustomer: '',
-      customerAadharNumber: '',
-      customerCity: '',
-      checkInDate: '',
-      checkInTime: '',
-      checkOutDate: '',
-      checkOutTime: '',
-      executiveName:''
+ customerName: filterCustomerObj?.customerName || '',
+ customerAddress: filterCustomerObj?.customerAddress || '',
+ customerPhoneNumber: filterCustomerObj?.customerPhoneNumber || '',
+ totalCustomer: filterCustomerObj?.totalCustomer || '',
+ customerAadharNumber: filterCustomerObj?.customerAadharNumber || '',
+ customerCity: filterCustomerObj?.customerCity || '',
+ checkInDate: filterCustomerObj?.checkInDate || '',
+ checkInTime: filterCustomerObj?.checkInTime || '',
+ checkOutDate: filterCustomerObj?.checkOutDate || '',
+ checkOutTime: filterCustomerObj?.checkOutTime || '',
+ totalPayment: filterCustomerObj?.totalPayment || '',
+ paymentPaid: filterCustomerObj?.paymentPaid || '',
+ paymentDue: filterCustomerObj?.paymentDue || '',
+ executiveName: filterCustomerObj?.frontDeskExecutiveName || ''
       }}
+      enableReinitialize 
       validationSchema={customerDetailsSchema}
       onSubmit={async(values,{ resetForm }) => {
         const checkInTime=new Date(values.checkInTime).toLocaleTimeString("en-IN", {
@@ -99,23 +111,47 @@ return (
         checkInTime:checkInTime,
         checkOutDate:values.checkOutDate,
         checkOutTime:checkOutTime,
+        totalPayment:values.totalPayment,
+        paymentPaid:values.paymentPaid,
+        paymentDue:values.paymentDue,
         frontDeskExecutiveName:values.executiveName
       }
       try {
-        const response = await axios.post(`${BASE_URL}/hotel/addCustomerDetails/${customerDetailsObj.id}`,customerDetailsObj);
-        console.log('response in deactivate obj is',response?.data)
-        Toast.show({
-          type: ALERT_TYPE.SUCCESS,
-          title: "Customer Added Successfully",
-          autoClose: 10000, // 10 sec me band hoga
-        });
-        socket.emit('addCustomerDetails', response?.data?.getCustomerDetailsArray)
-    } catch (error) {
-        // console.error('Error sending activate', error);
-    }
+        if (matchRoomResponse === true) {
+          // 🔹 Agar room already booked hai → Update API
+          const response = await axios.post(
+            `${BASE_URL}/hotel/updateCustomerDetails/${customerDetailsObj.id}`,
+            customerDetailsObj
+          );
+          console.log("response in update obj is", response?.data);
+          Toast.show({
+            type: ALERT_TYPE.SUCCESS,
+            title: "Customer Details Updated Successfully",
+            autoClose: 10000,
+          });
+          socket.emit("updateCustomerDetails", response?.data?.getCustomerDetailsArray);
+        } else {
+          // 🔹 Agar room empty hai → Add API
+          const response = await axios.post(
+            `${BASE_URL}/hotel/addCustomerDetails/${customerDetailsObj.id}`,
+            customerDetailsObj
+          );
+          console.log("response in add obj is", response?.data);
+          Toast.show({
+            type: ALERT_TYPE.SUCCESS,
+            title: "Customer Details Added Successfully",
+            autoClose: 10000,
+          });
+          socket.emit("addCustomerDetails", response?.data?.getCustomerDetailsArray);
+        }
+      } catch (error) {
+        console.error("Error in Add/Update Customer", error);
+      }
+
 console.log('customer',customerDetailsObj)
         resetForm()
         setShowAlert(false)
+        setShowTextField(false); 
       }}
       innerRef={formikRef}
       >
@@ -142,10 +178,11 @@ console.log('customer',customerDetailsObj)
     >
       {/* 🔹 Scroll starts from Customer Name */}
      { matchRoomResponse===false?<Text style={{textAlign:'center'}}>Enter Customer Details</Text>
-       :
-       <Text style={{textAlign:'center'}}>Customer Details Preview</Text>     
+       :showTextField === false ?
+       <Text style={{textAlign:'center'}}>Customer Details Preview</Text>
+       :<Text style={{textAlign:'center'}}>Update Customer Details </Text>    
     }
-      {matchRoomResponse===false?
+      {(matchRoomResponse === false || showTextField === true)?
       <ScrollView
         contentContainerStyle={{
           padding: 20,
@@ -373,6 +410,42 @@ console.log('customer',customerDetailsObj)
       </View>:null}
       {values.customerPhoneNumber?.trim().length > 0?<View>
         <TextInput
+          label="Total Payment"
+          mode="outlined"
+          style={{ width: screenWidth * 0.75, marginBottom: 10 }}
+          onChangeText={handleChange('totalPayment')}
+          onBlur={handleBlur('totalPayment')}
+          value={values.totalPayment}
+        />
+          {touched.totalPayment && errors.totalPayment && <Text style={{ color: 'red', marginLeft: 12 }}>{errors.totalPayment}</Text>}
+        </View>:null}
+
+        {values.customerPhoneNumber?.trim().length > 0?<View>
+        <TextInput
+          label=" Payment Paid"
+          mode="outlined"
+          style={{ width: screenWidth * 0.75, marginBottom: 10 }}
+          onChangeText={handleChange('paymentPaid')}
+          onBlur={handleBlur('paymentPaid')}
+          value={values.paymentPaid}
+        />
+          {touched.paymentPaid && errors.paymentPaid && <Text style={{ color: 'red', marginLeft: 12 }}>{errors.paymentPaid}</Text>}
+        </View>:null}
+
+        {values.customerPhoneNumber?.trim().length > 0?<View>
+        <TextInput
+          label=" Payment Due"
+          mode="outlined"
+          style={{ width: screenWidth * 0.75, marginBottom: 10 }}
+          onChangeText={handleChange('paymentDue')}
+          onBlur={handleBlur('paymentDue')}
+          value={values.paymentDue}
+        />
+          {touched.paymentDue && errors.paymentDue && <Text style={{ color: 'red', marginLeft: 12 }}>{errors.paymentDue}</Text>}
+        </View>:null}
+
+      {values.customerPhoneNumber?.trim().length > 0?<View>
+        <TextInput
           label="Front Desk Executive Name"
           mode="outlined"
           style={{ width: screenWidth * 0.75, marginBottom: 10 }}
@@ -432,6 +505,18 @@ console.log('customer',customerDetailsObj)
        <Text>{filterCustomerObj.checkOutTime}</Text>
       </View>
       <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
+        <Text>Total Payment : </Text>
+       <Text>{filterCustomerObj.totalPayment}</Text>
+      </View>
+      <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
+        <Text>Payment Paid : </Text>
+       <Text>{filterCustomerObj.paymentPaid}</Text>
+      </View>
+      <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
+        <Text>Payment Due : </Text>
+       <Text>{filterCustomerObj.paymentDue}</Text>
+      </View>
+      <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
         <Text>Front Desk Executive Name : </Text>
        <Text>{filterCustomerObj.frontDeskExecutiveName}</Text>
       </View>
@@ -439,7 +524,7 @@ console.log('customer',customerDetailsObj)
       </ScrollView>
       }
         <View style={{flexDirection:"row",justifyContent:'space-between'}}>
-       {matchRoomResponse===false?<View style={{ width: '50%', overflow: 'hidden' }}>
+       {(matchRoomResponse === false || showTextField === true)?<View style={{ width: '50%', overflow: 'hidden' }}>
             <Button
                       mode="contained"
                       onPress={handleSubmit}
@@ -472,13 +557,14 @@ console.log('customer',customerDetailsObj)
                        marginRight: 20,
                     }}
                     buttonColor="rgba(234, 88, 12, 1)"
+                    onPress={()=>updateCustomerDetailsData(filterCustomerObj?.roomId)}
                   >
          Update
                   </Button>
         </View>
           }
           {
-            matchRoomResponse===true?   <View style={{ width: '50%', overflow: 'hidden' }}>
+            (matchRoomResponse===true && showTextField==false)?   <View style={{ width: '50%', overflow: 'hidden' }}>
             <Button
                       mode="contained"
                       style={{
@@ -498,7 +584,7 @@ console.log('customer',customerDetailsObj)
                     </Button>
           </View>:null
           }
-          {matchRoomResponse===false?<View style={{ width: '50%', overflow: 'hidden' }}>
+          {(matchRoomResponse === false || showTextField === true) ?<View style={{ width: '50%', overflow: 'hidden' }}>
             <Button
                       mode="contained"
                       style={{
@@ -522,7 +608,7 @@ console.log('customer',customerDetailsObj)
           </View>:null}
         </View>
         <View style={{flexDirection:'row',justifyContent:'center'}}>
-        {matchRoomResponse===true?<View style={{ width: '50%', overflow: 'hidden' }}>
+        {matchRoomResponse===true && showTextField===false?<View style={{ width: '50%', overflow: 'hidden' }}>
             <Button
                       mode="contained"
                       style={{

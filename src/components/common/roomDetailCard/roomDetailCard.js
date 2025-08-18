@@ -12,7 +12,6 @@ const RoomDetailCard=({roomTitle,roomDetails})=>{
   const [showAlert, setShowAlert] = useState(false);
   const [selectedRoomId, setSelectedRoomId] = useState(null);
   const [customerArray,setCustomerArray]=useState([])
-  const [matchedCustomerResponse,setMatchedCustomerResponse]=useState(null)
   const hotelDetailSelector=useSelector((state)=>state.getHotelDetails.getHotelDetailsObj.hotelObj)
   console.log('hotel id',hotelDetailSelector?._id)
     const irregulars = {
@@ -92,13 +91,14 @@ return (
         const shortLabel=`R${data[data.length-1]}`
        const bedType = roomData.bedType.split(',').map(item => item.replace(' Bed', ''));
        const isMatched = customerArray.some(cust => cust.roomId === roomId);
+       const roomType=roomData.roomType
             return (
                 <View key={roomIndex} style={{ padding: 6 }}>
                 <Pressable onPress={()=>roomClickHandler(roomId)}>
                  <View
                    style={{
                      borderWidth: 1,
-                     borderColor:`${isMatched===true?'red':'#000'}`,
+                     borderColor:`${isMatched===true?'red':roomType==='Ac'?'blue':roomType === "Non Ac"?'green':''}`,
                      borderRadius:12,
                      padding:12,
                      marginBottom: 5,

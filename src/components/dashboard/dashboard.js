@@ -2,15 +2,50 @@ import { Text,Button } from "react-native-paper"
 import { useEffect,useState } from "react"
 import * as SecureStore from 'expo-secure-store';
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios'
+import io from "socket.io-client";
 import { View } from "react-native";
 import { ScrollView } from "react-native";
 import RoomDetailCard from "../common/roomDetailCard/roomDetailCard";
 import { SafeAreaView } from "react-native-safe-area-context";
+import {useSelector} from 'react-redux'
+const socket = io.connect("http://192.168.29.169:4000")
 const Dashboard=({hotelDetails})=>{
+  const BASE_URL = "http://192.168.29.169:4000";
   console.log('hotel details is',hotelDetails)
+  const [customerArray,setCustomerArray]=useState([])
     const navigation = useNavigation();
     const totalRoom=hotelDetails?.totalRoom
     const room=hotelDetails?.room
+    const hotelDetailSelector=useSelector((state)=>state.getHotelDetails.getHotelDetailsObj.hotelObj)
+    console.log('hotel id dashboard',hotelDetailSelector?._id)
+    useEffect(() => {
+      const fetchRoomDetails = async () => {
+        try {
+          if (hotelDetailSelector?._id) {
+            const response = await axios.get(
+              `${BASE_URL}/hotel/getCustomerDetails/${hotelDetailSelector?._id}`
+            );
+            console.log('visitor user dashboard in response',response?.data)
+            setCustomerArray(response?.data?.getCustomerDetailsArray || {} )
+          }
+        } catch (error) {
+          // console.error("Error fetching visitors:", error);
+        }
+      };
+    
+      fetchRoomDetails();
+    
+      socket.on("getCustomerDetails", (newUser) => {
+        setCustomerArray(newUser);
+      });
+      return () => {
+        socket.off("getCustomerDetails");
+      };
+    }, [hotelDetailSelector?._id]);
+    console.log('customer array dashboard is',customerArray)
+    const bookedNumber=customerArray.length
+    const finalTotalRoom=totalRoom-bookedNumber
     // console.log('room is',Object.entries(room))
     // const hotelObj=hotelDetails?.matchedHotels[0]
     // const removeLoginData = async () => {
@@ -46,13 +81,49 @@ return (
            logout
                     </Button> } */}
                     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
-                    <View style={{flexDirection:'row',justifyContent:'space-between',marginLeft:8,marginRight:8}}>
+                    <View style={{flexDirection:'row',justifyContent:'space-between',marginLeft:8,marginRight:8,marginTop:-20}}>
                     <View>
                    <Text>Total Rooms : {totalRoom}</Text>
+                   <View style={{flexDirection:'row',gap:5,marginTop:4}}>
+                   <View
+                    style={{
+                      width:10,        
+                      height: 10,     
+                      borderWidth: 2,   
+                      borderColor: "blue", 
+                      borderRadius: 2,
+                      marginTop:5  
+                    }}
+                   />
+                  <Text>Ac</Text>
+                  <View
+                    style={{
+                      width:10,        
+                      height: 10,     
+                      borderWidth: 2,   
+                      borderColor: "green", 
+                      borderRadius: 2,  
+                      marginTop:5
+                    }}
+                   />
+                  <Text>Non Ac</Text>
+                  <View
+                    style={{
+                      width:10,        
+                      height: 10,     
+                      borderWidth: 2,   
+                      borderColor: "red", 
+                      borderRadius: 2,  
+                      marginTop:5
+                    }}
+                   />
+                  <Text>Booked</Text>
+                   </View>
+                   
                     </View>
-                    <View style={{}}>
-                   <Text>Booked Room</Text>
-                   <Text>Non Booked Room : {totalRoom}</Text>
+                    <View>
+                   <Text>Booked Room : {bookedNumber}</Text>
+                   <Text style={{paddingTop:4}}>Non Booked Room : {finalTotalRoom}</Text>
                     </View>
                     </View>
 
