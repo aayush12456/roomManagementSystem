@@ -5,15 +5,17 @@ import { useNavigation } from '@react-navigation/native';
 import axios from 'axios'
 import io from "socket.io-client";
 import { View } from "react-native";
-import { ScrollView } from "react-native";
+import { ScrollView,Pressable } from "react-native";
 import RoomDetailCard from "../common/roomDetailCard/roomDetailCard";
 import { SafeAreaView } from "react-native-safe-area-context";
 import {useSelector} from 'react-redux'
+import BookedModal from "../bookedModal/bookedModal";
 const socket = io.connect("http://192.168.29.169:4000")
 const Dashboard=({hotelDetails})=>{
   const BASE_URL = "http://192.168.29.169:4000";
   console.log('hotel details is',hotelDetails)
   const [customerArray,setCustomerArray]=useState([])
+  const [showBookedAlert, setShowBookedAlert] = useState(false);
     const navigation = useNavigation();
     const totalRoom=hotelDetails?.totalRoom
     const room=hotelDetails?.room
@@ -60,6 +62,9 @@ const Dashboard=({hotelDetails})=>{
     //  removeLoginData()
     //  navigation.navigate('LoginPage')
     // }
+    const bookedRoomHandler=()=>{
+setShowBookedAlert(true)
+    }
 return (
     <>
     {/* {
@@ -122,11 +127,12 @@ return (
                    
                     </View>
                     <View>
+                    <Pressable onPress={bookedRoomHandler}>
                    <Text>Booked Room : {bookedNumber}</Text>
+                    </Pressable>
                    <Text style={{paddingTop:4}}>Non Booked Room : {finalTotalRoom}</Text>
                     </View>
                     </View>
-
                     <View>
                     {/* {room && typeof room === 'object' &&
   Object.entries(room).map(([floorKey, floorRooms], floorIndex) => (
@@ -161,9 +167,8 @@ return (
 </ScrollView>
 
                     </View>
-                    </SafeAreaView>
-                    
-             
+                    <BookedModal customerArray={customerArray} showBookedAlert={showBookedAlert} setShowBookedAlert={setShowBookedAlert}/> 
+                    </SafeAreaView>    
     </>
 )
 }

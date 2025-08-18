@@ -9,7 +9,7 @@ import {useSelector} from 'react-redux'
 import io from "socket.io-client";
 import axios from "axios";
 const socket = io.connect("http://192.168.29.169:4000")
-const CustomerDetailModal=({showAlert,setShowAlert,selectedRoomId,customerArray})=>{
+const CustomerDetailModal=({showAlert,setShowAlert,selectedRoomId,customerArray,roomType})=>{
   console.log('customer array',customerArray)
   const BASE_URL = "http://192.168.29.169:4000";
   const hotelDetailSelector=useSelector((state)=>state.getHotelDetails.getHotelDetailsObj.hotelObj)
@@ -20,7 +20,6 @@ const CustomerDetailModal=({showAlert,setShowAlert,selectedRoomId,customerArray}
     const [showTimesPicker, setShowTimesPicker] = useState(false);
     const [filterCustomerObj,setFilterCustomerObj]=useState({})
     const [matchRoomResponse,setMatchRoomResponse]=useState(null)
-    const [roomId,setRoomId]=useState('')
     const [showTextField,setShowTextField]=useState(false)
     const formikRef = useRef(null);
   
@@ -61,9 +60,7 @@ const CustomerDetailModal=({showAlert,setShowAlert,selectedRoomId,customerArray}
       }
 
       const updateCustomerDetailsData=(roomId)=>{
-        console.log('hello')
         setShowTextField(true)
-        setRoomId(roomId)
       }
 return (
     <>
@@ -101,6 +98,7 @@ return (
       const customerDetailsObj={
         id:hotelDetailSelector._id,
         roomId:selectedRoomId,
+        roomType:roomType,
         customerName:values.customerName,
         customerAddress:values.customerAddress,
         customerPhoneNumber:values.customerPhoneNumber,
@@ -464,6 +462,10 @@ console.log('customer',customerDetailsObj)
       }}
       >
      <View>
+     <View style={{flexDirection:"row",gap:6,paddingTop:10}}>
+        <Text>Room Type : </Text>
+       <Text>{roomType}</Text>
+      </View>
       <View style={{flexDirection:"row",gap:6,paddingTop:10}}>
         <Text>Customer Name : </Text>
        <Text>{filterCustomerObj.customerName}</Text>
