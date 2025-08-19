@@ -13,6 +13,8 @@ const RoomDetailCard=({roomTitle,roomDetails})=>{
   const [selectedRoomId, setSelectedRoomId] = useState(null);
   const [customerArray,setCustomerArray]=useState([])
   const [roomType,setRoomType]=useState('')
+  const [floors,setFloors]=useState('')
+  const [roomNo,setRoomNo]=useState('')
   const hotelDetailSelector=useSelector((state)=>state.getHotelDetails.getHotelDetailsObj.hotelObj)
   console.log('hotel id',hotelDetailSelector?._id)
     const irregulars = {
@@ -36,14 +38,16 @@ const RoomDetailCard=({roomTitle,roomDetails})=>{
         return `${ordinal} Floor`;
       };
       
-      const roomClickHandler = (id,type) => {
+      const roomClickHandler = (id,type,num) => {
         console.log('id is',id)
         setSelectedRoomId(id);
         setShowAlert(true);
         setRoomType(type)
+        setFloors(convertFloorName(roomTitle));
+        setRoomNo(num)
       };
-  
-      
+  console.log('floor us',floors)
+  console.log('room no',roomNo)
 useEffect(() => {
   const fetchRoomDetails = async () => {
     try {
@@ -96,7 +100,7 @@ return (
        const roomType=roomData.roomType
             return (
                 <View key={roomIndex} style={{ padding: 6 }}>
-                <Pressable onPress={()=>roomClickHandler(roomId,roomType)}>
+                <Pressable onPress={()=>roomClickHandler(roomId,roomType,shortLabel)}>
                  <View
                    style={{
                      borderWidth: 1,
@@ -116,7 +120,7 @@ return (
         } )}
     </View>
     </Card>
-  <CustomerDetailModal roomType={roomType} showAlert={showAlert} setShowAlert={setShowAlert} selectedRoomId={selectedRoomId} customerArray={customerArray}/>
+  <CustomerDetailModal floor={floors} roomType={roomType} roomNo={roomNo} showAlert={showAlert} setShowAlert={setShowAlert} selectedRoomId={selectedRoomId} customerArray={customerArray}/>
     
     </>
 )

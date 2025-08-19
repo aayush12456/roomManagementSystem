@@ -167,7 +167,7 @@ return (
 </ScrollView>
 
                     </View>
-                    <BookedModal customerArray={customerArray} showBookedAlert={showBookedAlert} setShowBookedAlert={setShowBookedAlert}/> 
+                    <BookedModal room={room} customerArray={customerArray} showBookedAlert={showBookedAlert} setShowBookedAlert={setShowBookedAlert}/> 
                     </SafeAreaView>    
     </>
 )

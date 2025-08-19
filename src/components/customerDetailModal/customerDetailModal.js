@@ -9,7 +9,7 @@ import {useSelector} from 'react-redux'
 import io from "socket.io-client";
 import axios from "axios";
 const socket = io.connect("http://192.168.29.169:4000")
-const CustomerDetailModal=({showAlert,setShowAlert,selectedRoomId,customerArray,roomType})=>{
+const CustomerDetailModal=({showAlert,setShowAlert,selectedRoomId,customerArray,roomType,floor,roomNo})=>{
   console.log('customer array',customerArray)
   const BASE_URL = "http://192.168.29.169:4000";
   const hotelDetailSelector=useSelector((state)=>state.getHotelDetails.getHotelDetailsObj.hotelObj)
@@ -99,6 +99,8 @@ return (
         id:hotelDetailSelector._id,
         roomId:selectedRoomId,
         roomType:roomType,
+        floor:floor,
+        roomNo:roomNo,
         customerName:values.customerName,
         customerAddress:values.customerAddress,
         customerPhoneNumber:values.customerPhoneNumber,
