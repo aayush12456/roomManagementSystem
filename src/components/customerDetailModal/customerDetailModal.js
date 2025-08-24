@@ -4,24 +4,31 @@ import { Text,TextInput,Button } from "react-native-paper"
 import { Formik } from 'formik';
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import { customerDetailsSchema } from "../../schemas";
-import { View,Pressable,Modal,Dimensions, ScrollView } from "react-native";
+import { View,Pressable,Modal,Dimensions, ScrollView,Image } from "react-native";
+import SignatureScreen from "react-native-signature-canvas";
 import {useSelector} from 'react-redux'
 import io from "socket.io-client";
 import axios from "axios";
 const socket = io.connect("http://192.168.29.169:4000")
-const CustomerDetailModal=({showAlert,setShowAlert,selectedRoomId,customerArray,roomType,floor,roomNo})=>{
+const CustomerDetailModal=({showAlert,setShowAlert,selectedRoomId,customerArray,roomType,floor,roomNo,currentDates})=>{
   console.log('customer array',customerArray)
   const BASE_URL = "http://192.168.29.169:4000";
   const hotelDetailSelector=useSelector((state)=>state.getHotelDetails.getHotelDetailsObj.hotelObj)
+  console.log('hotel detail obj',hotelDetailSelector)
     const screenWidth = Dimensions.get("window").width;
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [showTimePicker, setShowTimePicker] = useState(false);
     const [showDatesPicker, setShowDatesPicker] = useState(false);
     const [showTimesPicker, setShowTimesPicker] = useState(false);
     const [filterCustomerObj,setFilterCustomerObj]=useState({})
-    const [matchRoomResponse,setMatchRoomResponse]=useState(null)
+    const [matchRoomResponse,setMatchRoomResponse]=useState(false)
+    const [dateResponse,setDateResponse]=useState(false)
     const [showTextField,setShowTextField]=useState(false)
+    const [scrollEnabled, setScrollEnabled] = useState(true);
+    const [showSignaturePad, setShowSignaturePad] = useState(false);
+
     const formikRef = useRef(null);
+    const ref = useRef();
   
     useEffect(()=>{
     if(selectedRoomId){
@@ -30,7 +37,14 @@ const CustomerDetailModal=({showAlert,setShowAlert,selectedRoomId,customerArray,
      setMatchRoomResponse(matchRoom)
     }
     },[selectedRoomId,customerArray])
-
+   
+    useEffect(()=>{
+      if(selectedRoomId && currentDates){
+      const dateRoom=customerArray.some((item)=>item.currentDate==currentDates)
+       setDateResponse(dateRoom)
+      }
+      },[selectedRoomId,customerArray,currentDates])
+      
     useEffect(()=>{
       if(selectedRoomId){
       const customerObj=customerArray.find((item)=>item.roomId==selectedRoomId)
@@ -38,7 +52,9 @@ const CustomerDetailModal=({showAlert,setShowAlert,selectedRoomId,customerArray,
       setFilterCustomerObj(customerObj)
       }
       },[selectedRoomId,customerArray])
-
+  
+    
+    console.log('filter customer obj',filterCustomerObj)
       const deleteCustomerDetails=async(customerId)=>{
         const deleteObj={
         id:hotelDetailSelector?._id,
@@ -61,7 +77,7 @@ const CustomerDetailModal=({showAlert,setShowAlert,selectedRoomId,customerArray,
 
       const updateCustomerDetailsData=(roomId)=>{
         setShowTextField(true)
-      }
+      }    
 return (
     <>
       <Formik  initialValues={{
@@ -78,26 +94,29 @@ return (
  totalPayment: filterCustomerObj?.totalPayment || '',
  paymentPaid: filterCustomerObj?.paymentPaid || '',
  paymentDue: filterCustomerObj?.paymentDue || '',
- executiveName: filterCustomerObj?.frontDeskExecutiveName || ''
+ executiveName: filterCustomerObj?.frontDeskExecutiveName || '',
+ customerSignature: filterCustomerObj?.customerSignature || '' 
       }}
       enableReinitialize 
       validationSchema={customerDetailsSchema}
       onSubmit={async(values,{ resetForm }) => {
+        console
         const checkInTime=new Date(values.checkInTime).toLocaleTimeString("en-IN", {
           hour: "2-digit",
           minute: "2-digit",
           hour12: true,
           timeZone: "Asia/Kolkata"
         })
-        const checkOutTime=new Date(values.checkOutTime).toLocaleTimeString("en-IN", {
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: true,
-          timeZone: "Asia/Kolkata"
-        })
+        // const checkOutTime=new Date(values.checkOutTime).toLocaleTimeString("en-IN", {
+        //   hour: "2-digit",
+        //   minute: "2-digit",
+        //   hour12: true,
+        //   timeZone: "Asia/Kolkata"
+        // })
       const customerDetailsObj={
         id:hotelDetailSelector._id,
         roomId:selectedRoomId,
+        currentDate:currentDates,
         roomType:roomType,
         floor:floor,
         roomNo:roomNo,
@@ -110,11 +129,12 @@ return (
         checkInDate:values.checkInDate,
         checkInTime:checkInTime,
         checkOutDate:values.checkOutDate,
-        checkOutTime:checkOutTime,
+        checkOutTime:hotelDetailSelector?.checkOutTime,
         totalPayment:values.totalPayment,
         paymentPaid:values.paymentPaid,
         paymentDue:values.paymentDue,
-        frontDeskExecutiveName:values.executiveName
+        frontDeskExecutiveName:values.executiveName,
+        customerSignature: values.customerSignature, 
       }
       try {
         if (matchRoomResponse === true) {
@@ -182,7 +202,7 @@ console.log('customer',customerDetailsObj)
        <Text style={{textAlign:'center'}}>Customer Details Preview</Text>
        :<Text style={{textAlign:'center'}}>Update Customer Details </Text>    
     }
-      {(matchRoomResponse === false || showTextField === true)?
+      {(matchRoomResponse === false || showTextField === true  )?
       <ScrollView
         contentContainerStyle={{
           padding: 20,
@@ -190,6 +210,7 @@ console.log('customer',customerDetailsObj)
         }}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
+        scrollEnabled={scrollEnabled} 
       >
         <View>
         <TextInput
@@ -351,7 +372,7 @@ console.log('customer',customerDetailsObj)
       )}
 
       {/* Time Picker */}
-      {showTimesPicker && (
+      {/* {showTimesPicker && (
         <DateTimePicker
         value={values.checkInTime ? new Date(values.checkInTime) : new Date()}
         mode="time"
@@ -363,7 +384,7 @@ console.log('customer',customerDetailsObj)
           }
         }}
         />
-      )}
+      )} */}
 
          {values.customerPhoneNumber?.trim().length > 0?<View >
       <Pressable onPress={() => setShowDatesPicker(true)}>
@@ -383,7 +404,7 @@ console.log('customer',customerDetailsObj)
 
     </View>:null}
     
-      {values.customerPhoneNumber?.trim().length > 0?<View>
+      {/* {values.customerPhoneNumber?.trim().length > 0?<View>
   <Pressable onPress={() => setShowTimesPicker(true)} style={{ marginTop: 10 }}>
         <TextInput
           label="Check Out Time"
@@ -407,6 +428,22 @@ console.log('customer',customerDetailsObj)
       {touched.checkOutTime && errors.checkOutTime && (
   <Text style={{ color: 'red' }}>{errors.checkOutTime}</Text>
 )}
+      </View>:null} */}
+
+       {values.customerPhoneNumber?.trim().length > 0?<View>
+
+        <TextInput
+          label="Check Out Time"
+          mode="outlined"
+          value={
+            hotelDetailSelector?.checkOutTime
+          }
+          placeholder="Check Out Time"
+          editable={false}
+          pointerEvents="none"
+          style={{ width: screenWidth * 0.75, marginBottom: 10 }}
+        />
+      
       </View>:null}
       {values.customerPhoneNumber?.trim().length > 0?<View>
         <TextInput
@@ -455,6 +492,103 @@ console.log('customer',customerDetailsObj)
         />
         {touched.executiveName && errors.executiveName && <Text style={{ color: 'red', marginLeft: 12 }}>{errors.executiveName}</Text>}
         </View>:null}
+        {values.customerPhoneNumber?.trim().length > 0 && !filterCustomerObj?.customerSignature ? (
+  <View>
+    <Pressable onPress={() => setShowSignaturePad(true)}>
+      <TextInput
+        label="Customer Signature"
+        mode="outlined"
+        style={{ width: screenWidth * 0.75, marginBottom: 10 }}
+        value={values.customerSignature ? "Signature Captured" : ""}
+        editable={false} // ab bas display ke liye hai, typing block ho gayi
+        pointerEvents="none" // ✅ isse pressable ke through click hoga
+      />
+    </Pressable>
+    {touched.customerSignature && errors.customerSignature && (
+      <Text style={{ color: "red", marginLeft: 12 }}>
+        {errors.customerSignature}
+      </Text>
+    )}
+  </View>
+) : null}
+    
+  {/* <View style={{ height: 250, width: screenWidth * 0.9, borderWidth: 2, borderColor: "#ccc" }}>
+  <SignatureScreen
+  ref={ref}
+  onOK={(sig) => setFieldValue("customerSignature", sig)} 
+  onClear={() => setFieldValue("customerSignature", "")}
+  onBegin={() => setScrollEnabled(false)}
+  onEnd={() => {
+    setScrollEnabled(true);
+    ref.current.readSignature();   // ✅ ye call karega onOK aur Formik me signature save ho jaayega
+  }}
+  autoClear={false}
+  descriptionText="Apna Signature yaha karein"
+  webStyle={`
+    .m-signature-pad--footer {display: none; margin: 0px;}
+    body,html {width: 100%; height: 100%; margin: 0; padding: 0;}
+    .m-signature-pad {box-shadow: none; border: none; border-radius: 0;}
+  `}
+/>
+
+    <View style={{ flexDirection: "row", justifyContent: "center" }}>
+      <Button
+        mode="outlined"
+        onPress={() => ref.current.clearSignature()}
+        style={{ marginBottom: 10, width: 90, marginTop: 9 }}
+      >
+        Clear
+      </Button>
+    </View>
+  </View>
+  {touched.customerSignature && errors.customerSignature && (
+      <Text style={{ color: "red" }}>{errors.customerSignature}</Text>
+    )} */}
+{showSignaturePad && (
+  <View
+    style={{
+      height: 250,
+      width: screenWidth * 0.9,
+      borderWidth: 2,
+      borderColor: "#ccc",
+    }}
+  >
+    <SignatureScreen
+      ref={ref}
+      onOK={(sig) => {
+        setFieldValue("customerSignature", sig);
+        setShowSignaturePad(false); // ✅ Save ke baad pad hide
+      }}
+      onClear={() => setFieldValue("customerSignature", "")}
+      onBegin={() => setScrollEnabled(false)}
+      onEnd={() => {
+        setScrollEnabled(true);
+        ref.current.readSignature(); // ye trigger karega onOK
+      }}
+      autoClear={false}
+      
+      descriptionText="Apna Signature yaha karein"
+      webStyle={`
+        .m-signature-pad--footer {display: none; margin: 0px;}
+        body,html {width: 100%; height: 100%; margin: 0; padding: 0;}
+        .m-signature-pad {box-shadow: none; border: none; border-radius: 0;}
+      `}
+    />
+
+    <View style={{ flexDirection: "row", justifyContent: "center" }}>
+      <Button
+        mode="outlined"
+        onPress={() => {
+          ref.current.clearSignature();
+          setFieldValue("customerSignature", "");
+        }}
+        style={{ marginBottom: 10, width: 90, marginTop: 9 }}
+      >
+        Clear
+      </Button>
+    </View>
+  </View>
+)}
       </ScrollView>
       :
       <ScrollView 
@@ -524,6 +658,18 @@ console.log('customer',customerDetailsObj)
         <Text>Front Desk Executive Name : </Text>
        <Text>{filterCustomerObj.frontDeskExecutiveName}</Text>
       </View>
+      <View style={{ paddingTop: 15 }}>
+  <Text>Customer Signature : </Text>
+  {filterCustomerObj.customerSignature ? (
+    <Image
+      source={{ uri: filterCustomerObj.customerSignature }}
+      style={{ width: 150, height: 100, resizeMode: "contain", borderWidth:1, borderColor:"#ccc",marginTop:10 }}
+    />
+  ) : (
+    <Text>No signature found</Text>
+  )}
+</View>
+
      </View> 
       </ScrollView>
       }

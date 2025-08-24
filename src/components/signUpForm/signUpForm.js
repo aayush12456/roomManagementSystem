@@ -36,6 +36,7 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
   const [totalRooms,setTotalRooms]=useState('')
   const [totalFloors,setTotalFloors]=useState('')
   const [hotelName,setHotelName]=useState('')
+  const [checkOutTime,setCheckOutTime]=useState('')
   const [selectedStaffList, setSelectedStaffList] = useState('Designation');
   const [hotelImagesList, setHotelImagesList] = useState('Hotel Images');
   const [formErrors,setFormErrors]=useState({})
@@ -468,7 +469,9 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
     if (!hotelName || hotelName.trim().length < 2 || hotelName.trim().length > 64) {
       errors.hotelName = "Hotel name is required and must be between 2-64 characters.";
     }
-
+    if (!checkOutTime || checkOutTime.trim().length < 2 || checkOutTime.trim().length > 64) {
+      errors.hotelName = "Checkout time is required ";
+    }
     if (!totalFloors || totalFloors.trim().length === 0) {
       errors.totalFloors = "Total number of floors is required.";
     }
@@ -558,7 +561,7 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
   
     // 🏨 Append Hotel Name
     formData.append('hotelName', hotelName);
-  
+    formData.append('checkOutTime', checkOutTime);
     // 👤 Append Owners
     Object.keys(ownerNames).forEach((key, index) => {
       const owner = ownerNames[key];
@@ -634,6 +637,7 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
 
 
   setHotelName('');
+  setCheckOutTime('')
     setSelectedOwnerList('Hotel Owner'); // default value
     setOwnerNames({});
     setTotalStaff('');
@@ -1088,6 +1092,20 @@ return (
           )
         })
       }
+
+        {Object.keys(staffNamesArray).length>0?<View style={{ paddingHorizontal: 16, marginBottom: 10 }}>
+        <TextInput
+          label={`Check Out Time`}
+          mode="outlined"
+          value={checkOutTime}
+          onChangeText={(text)=>setCheckOutTime(text)}
+        />
+         {formErrors.checkOutTime && (
+  <Text style={{ color: 'red', marginTop: 4, paddingHorizontal: 16 }}>
+    {formErrors.checkOutTime}
+  </Text>
+)}
+        </View>:null}
     { Object.keys(staffNamesArray).length>0?
     <View style={{ paddingHorizontal: 16, marginBottom: 10,marginTop:6 }}>
       <View style={{

@@ -49,9 +49,10 @@ export const customerDetailsSchema=Yup.object({
   checkInDate:Yup.string().min(2).required("Please enter checkInDate"),
   checkInTime:Yup.string().min(2).required("Please enter checkInTime"),
   checkOutDate:Yup.string().min(2).required("Please enter checkOutDate"),
-  checkOutTime:Yup.string().min(2).required("Please enter checkOutTime"),
+  // checkOutTime:Yup.string().min(2).required("Please enter checkOutTime"),
   totalPayment:Yup.string().min(2).required("Please enter total payment"),
   paymentPaid:Yup.string().min(2).required("Please enter payment paid"),
   paymentDue:Yup.string().min(2).required("Please enter payment due"),
-  executiveName:Yup.string().min(2).max(50).required("Please enter front desk executive name")
+  executiveName:Yup.string().min(2).max(50).required("Please enter front desk executive name"),
+  customerSignature: Yup.string().required("Customer Signature required") 
 })

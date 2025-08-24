@@ -26,142 +26,151 @@ console.log('grouped datas',groupedDatas)
 
     return (
         <>
-        <Modal visible={showBookedAlert} transparent animationType="fade">
-        <View
-    style={{
-      flex: 1,
-      justifyContent: "center",
-      alignItems: "center",
-      backgroundColor: "rgba(0,0,0,0.5)",
-    }}
-  >
-    <View
-      style={{
-        backgroundColor: "#fff",
-        padding:20,
-        borderRadius: 10,
-        maxHeight: "60%", // Modal height limit for scrolling
-        width: screenWidth * 0.9,
-      }}
-    >
-    <View>
-        <Text>Ac : {acRoomArray.length}</Text>
-        <View
-  style={{
-    backgroundColor: "#fff",   // box ka background
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 8,
-    padding: 10,
-    marginBottom: 15,
-    marginTop:12
-  }}
->
-  {/* Table Header */}
-  <View
-    style={{
-      flexDirection: "row",
-      borderBottomWidth: 1,
-      borderColor: "#ccc",
-      paddingBottom: 8,
-      marginBottom: 8,
-    }}
-  >
-    <Text style={{ flex: 1, fontWeight: "bold" }}>Floor</Text>
-    <Text style={{ flex: 1, fontWeight: "bold" }}>Room</Text>
-  </View>
-
-  {/* Table Body */}
-  <ScrollView style={{ maxHeight: 200 }}>
-    {Object.entries(groupedData).map(([floor, rooms], index) => (
+         <Modal visible={showBookedAlert} transparent animationType="fade">
       <View
-        key={index}
         style={{
-          flexDirection: "row",
-          paddingVertical: 6,
-          borderBottomWidth: 0.5,
-          borderColor: "#eee",
-          gap:47
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          backgroundColor: "rgba(0,0,0,0.5)",
         }}
       >
-        <Text>{floor}</Text>
-        <Text >{rooms.join(", ")}</Text>
-      </View>
-    ))}
-  </ScrollView>
-</View>
-
-        <Text>Non Ac : {NonAcRoomArray.length}</Text>
         <View
-  style={{
-    backgroundColor: "#fff",   // box ka background
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 8,
-    padding: 10,
-    marginBottom: 15,
-    marginTop:12
-  }}
->
-  {/* Table Header */}
-  <View
-    style={{
-      flexDirection: "row",
-      borderBottomWidth: 1,
-      borderColor: "#ccc",
-      paddingBottom: 8,
-      marginBottom: 8,
-    }}
-  >
-    <Text style={{ flex: 1, fontWeight: "bold" }}>Floor</Text>
-    <Text style={{ flex: 1, fontWeight: "bold" }}>Room</Text>
-  </View>
+          style={{
+            backgroundColor: "#fff",
+            padding: 20,
+            borderRadius: 10,
+            maxHeight: "80%", // 👈 modal ki max height set ki
+            width: screenWidth * 0.9,
+          }}
+        >
+          {/* Wrap content in ScrollView */}
+          <ScrollView
+            nestedScrollEnabled={true}
+            showsVerticalScrollIndicator={true}
+          >
+            {/* AC Section */}
+            <Text>Ac : {acRoomArray.length}</Text>
+            <View
+              style={{
+                backgroundColor: "#fff",
+                borderWidth: 1,
+                borderColor: "#ccc",
+                borderRadius: 8,
+                padding: 10,
+                marginBottom: 15,
+                marginTop: 12,
+                maxHeight: 200, // 👈 bounded height for inner scroll
+              }}
+            >
+              {/* Table Header */}
+              <View
+                style={{
+                  flexDirection: "row",
+                  borderBottomWidth: 1,
+                  borderColor: "#ccc",
+                  paddingBottom: 8,
+                  marginBottom: 8,
+                }}
+              >
+                <Text style={{ flex: 1, fontWeight: "bold" }}>Floor</Text>
+                <Text style={{ flex: 1, fontWeight: "bold" }}>Room</Text>
+              </View>
 
-  {/* Table Body */}
-  <ScrollView style={{ maxHeight: 200 }}>
-    {Object.entries(groupedDatas).map(([floor, rooms], index) => (
-      <View
-        key={index}
-        style={{
-          flexDirection: "row",
-          paddingVertical: 6,
-          borderBottomWidth: 0.5,
-          borderColor: "#eee",
-          gap:47
-        }}
-      >
-        <Text>{floor} </Text>
-        <Text>{rooms.join(", ")}</Text>
-      </View>
-    ))}
-  </ScrollView>
-</View>
+              {/* Table Body */}
+              <ScrollView
+                nestedScrollEnabled={true}
+                showsVerticalScrollIndicator={true}
+              >
+                {Object.entries(groupedData).map(([floor, rooms], index) => (
+                  <View
+                    key={index}
+                    style={{
+                      flexDirection: "row",
+                      paddingVertical: 6,
+                      borderBottomWidth: 0.5,
+                      borderColor: "#eee",
+                      gap: 47,
+                    }}
+                  >
+                    <Text>{floor}</Text>
+                    <Text>{rooms.join(", ")}</Text>
+                  </View>
+                ))}
+              </ScrollView>
+            </View>
 
-    </View>
-        <View style={{ width: '50%', overflow: 'hidden' }}>
+            {/* Non AC Section */}
+            <Text>Non Ac : {NonAcRoomArray.length}</Text>
+            <View
+              style={{
+                backgroundColor: "#fff",
+                borderWidth: 1,
+                borderColor: "#ccc",
+                borderRadius: 8,
+                padding: 10,
+                marginBottom: 15,
+                marginTop: 12,
+                maxHeight: 200, // 👈 bounded height
+              }}
+            >
+              {/* Table Header */}
+              <View
+                style={{
+                  flexDirection: "row",
+                  borderBottomWidth: 1,
+                  borderColor: "#ccc",
+                  paddingBottom: 8,
+                  marginBottom: 8,
+                }}
+              >
+                <Text style={{ flex: 1, fontWeight: "bold" }}>Floor</Text>
+                <Text style={{ flex: 1, fontWeight: "bold" }}>Room</Text>
+              </View>
+
+              {/* Table Body */}
+              <ScrollView
+                nestedScrollEnabled={true}
+                showsVerticalScrollIndicator={true}
+              >
+                {Object.entries(groupedDatas).map(([floor, rooms], index) => (
+                  <View
+                    key={index}
+                    style={{
+                      flexDirection: "row",
+                      paddingVertical: 6,
+                      borderBottomWidth: 0.5,
+                      borderColor: "#eee",
+                      gap: 47,
+                    }}
+                  >
+                    <Text>{floor}</Text>
+                    <Text>{rooms.join(", ")}</Text>
+                  </View>
+                ))}
+              </ScrollView>
+            </View>
+          </ScrollView>
+
+          {/* Close Button */}
+          <View style={{ width: "100%", alignItems: "center" }}>
             <Button
-                      mode="contained"
-                      style={{
-                        height: 50, // Set the desired height
-                        borderRadius:11,
-                        color: '#FFFFFF',
-                         fontSize: 16, 
-                         justifyContent:'center',
-                         marginTop: 20,
-                         marginLeft: 12,
-                         marginRight: 20,
-                      }}
-                      buttonColor="rgba(234, 88, 12, 1)"
-                      onPress={() => {
-                        setShowBookedAlert(false)
-                      }}
-                    >
-     Close
-                    </Button>
+              mode="contained"
+              style={{
+                height: 50,
+                borderRadius: 11,
+                justifyContent: "center",
+                marginTop: 20,
+              }}
+              buttonColor="rgba(234, 88, 12, 1)"
+              onPress={() => setShowBookedAlert(false)}
+            >
+              Close
+            </Button>
           </View>
         </View>
-        </View>
-        </Modal>
+      </View>
+    </Modal>
         </>
     )
 }

@@ -6,7 +6,7 @@ import io from "socket.io-client";
 import {useSelector} from 'react-redux'
 import CustomerDetailModal from "../../customerDetailModal/customerDetailModal";
 const socket = io.connect("http://192.168.29.169:4000")
-const RoomDetailCard=({roomTitle,roomDetails})=>{
+const RoomDetailCard=({roomTitle,roomDetails,currentDate})=>{
   console.log('room details',roomDetails)
   const BASE_URL = "http://192.168.29.169:4000";
   const [showAlert, setShowAlert] = useState(false);
@@ -97,6 +97,7 @@ return (
         const shortLabel=`R${data[data.length-1]}`
        const bedType = roomData.bedType.split(',').map(item => item.replace(' Bed', ''));
        const isMatched = customerArray.some(cust => cust.roomId === roomId);
+       const dateMatched=customerArray.some(cust => cust.currentDate === currentDate);
        const roomType=roomData.roomType
             return (
                 <View key={roomIndex} style={{ padding: 6 }}>
@@ -104,7 +105,7 @@ return (
                  <View
                    style={{
                      borderWidth: 1,
-                     borderColor:`${isMatched===true?'red':roomType==='Ac'?'blue':roomType === "Non Ac"?'green':''}`,
+                     borderColor:`${isMatched===true && dateMatched===true?'red':roomType==='Ac'?'blue':roomType === "Non Ac"?'green':''}`,
                      borderRadius:12,
                      padding:12,
                      marginBottom: 5,
@@ -120,7 +121,8 @@ return (
         } )}
     </View>
     </Card>
-  <CustomerDetailModal floor={floors} roomType={roomType} roomNo={roomNo} showAlert={showAlert} setShowAlert={setShowAlert} selectedRoomId={selectedRoomId} customerArray={customerArray}/>
+  <CustomerDetailModal floor={floors} roomType={roomType} roomNo={roomNo} showAlert={showAlert} setShowAlert={setShowAlert} 
+  selectedRoomId={selectedRoomId} customerArray={customerArray} currentDates={currentDate}/>
     
     </>
 )

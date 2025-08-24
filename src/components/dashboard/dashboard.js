@@ -1,6 +1,7 @@
-import { Text,Button } from "react-native-paper"
+import { Text,Button,TextInput } from "react-native-paper"
 import { useEffect,useState } from "react"
 import * as SecureStore from 'expo-secure-store';
+import DateTimePicker from "@react-native-community/datetimepicker";
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios'
 import io from "socket.io-client";
@@ -16,6 +17,8 @@ const Dashboard=({hotelDetails})=>{
   console.log('hotel details is',hotelDetails)
   const [customerArray,setCustomerArray]=useState([])
   const [showBookedAlert, setShowBookedAlert] = useState(false);
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(new Date());
     const navigation = useNavigation();
     const totalRoom=hotelDetails?.totalRoom
     const room=hotelDetails?.room
@@ -65,6 +68,15 @@ const Dashboard=({hotelDetails})=>{
     const bookedRoomHandler=()=>{
 setShowBookedAlert(true)
     }
+    const handleDateChange = (event, date) => {
+
+      setShowDatePicker(false);
+      if (date) {
+        setSelectedDate(date);
+      }
+    };
+    console.log('select date',selectedDate.toLocaleDateString("en-GB"))
+    const currentDate=selectedDate.toLocaleDateString("en-GB")
 return (
     <>
     {/* {
@@ -86,7 +98,34 @@ return (
            logout
                     </Button> } */}
                     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
-                    <View style={{flexDirection:'row',justifyContent:'space-between',marginLeft:8,marginRight:8,marginTop:-20}}>
+                    <View style={{ marginTop:-24,flexDirection:'row',justifyContent:'center' }}>
+        <Pressable
+        onPress={() => setShowDatePicker(true)}
+        style={{
+          borderWidth: 1,
+          borderColor: "#ccc",
+          borderRadius: 8,
+          padding: 12,
+          margin: 12,
+          backgroundColor: "#f9f9f9",
+          width:'50%'
+        }}
+      >
+        <Text style={{ fontSize: 16, color: "#333" }}>
+          {selectedDate.toLocaleDateString("en-GB")} {/* dd/mm/yyyy */}
+        </Text>
+      </Pressable>
+
+        {showDatePicker && (
+          <DateTimePicker
+            value={selectedDate}
+            mode="date"
+            minimumDate={new Date()} // 👈 sirf aaj se aage ki date
+            onChange={handleDateChange}
+          />
+        )}
+      </View>
+                    <View style={{flexDirection:'row',justifyContent:'space-between',marginLeft:8,marginRight:8}}>
                     <View>
                    <Text>Total Rooms : {totalRoom}</Text>
                    <View style={{flexDirection:'row',gap:5,marginTop:4}}>
@@ -159,7 +198,7 @@ return (
           room && typeof room==='object'?Object.entries(room).map(([floorKey,floorRooms],floorIndex)=>{
                         return (
                           <View style={{marginTop:12,marginLeft:8,marginRight:8}} key={floorIndex}>
-                            <RoomDetailCard roomTitle={floorKey} roomDetails={floorRooms}  />
+                            <RoomDetailCard roomTitle={floorKey} roomDetails={floorRooms} currentDate={currentDate} />
                           </View>
                         )
                       }):null
