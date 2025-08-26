@@ -5,6 +5,7 @@ import axios from 'axios'
 import io from "socket.io-client";
 import {useSelector} from 'react-redux'
 import CustomerDetailModal from "../../customerDetailModal/customerDetailModal";
+import AdvanceBookModal from "../../advanceBookModal/advanceBookModal";
 const socket = io.connect("http://192.168.29.169:4000")
 const RoomDetailCard=({roomTitle,roomDetails,currentDate})=>{
   console.log('room details',roomDetails)
@@ -12,11 +13,15 @@ const RoomDetailCard=({roomTitle,roomDetails,currentDate})=>{
   const [showAlert, setShowAlert] = useState(false);
   const [selectedRoomId, setSelectedRoomId] = useState(null);
   const [customerArray,setCustomerArray]=useState([])
+  const [customerArrayAdvance,setCustomerArrayAdvance]=useState([])
   const [roomType,setRoomType]=useState('')
   const [floors,setFloors]=useState('')
   const [roomNo,setRoomNo]=useState('')
+  const [advanceAlert,setAdvanceAlert]=useState(false)
   const hotelDetailSelector=useSelector((state)=>state.getHotelDetails.getHotelDetailsObj.hotelObj)
   console.log('hotel id',hotelDetailSelector?._id)
+  const finalDate=new Date()
+  const todayDate=finalDate.toLocaleDateString("en-GB") 
     const irregulars = {
         one: "First",
         two: "Second",
@@ -41,7 +46,12 @@ const RoomDetailCard=({roomTitle,roomDetails,currentDate})=>{
       const roomClickHandler = (id,type,num) => {
         console.log('id is',id)
         setSelectedRoomId(id);
-        setShowAlert(true);
+        if(todayDate===currentDate){
+          setShowAlert(true);
+        }
+        else{
+          setAdvanceAlert(true)
+        }
         setRoomType(type)
         setFloors(convertFloorName(roomTitle));
         setRoomNo(num)
@@ -85,6 +95,31 @@ console.log('room data',roomData)
 //   console.log("Kya match mila? ->", isMatch); // true ya false
 // }, [customerArray, roomData]);
 
+useEffect(() => {
+  const fetchRoomDetailsAdvance = async () => {
+    try {
+      if (hotelDetailSelector._id) {
+        const response = await axios.get(
+          `${BASE_URL}/hotel/getCustomerDetailsAdvance/${hotelDetailSelector?._id}`
+        );
+        console.log('visitor user in response',response?.data)
+        setCustomerArrayAdvance(response?.data?.getAdvanceCustomerDetailsArray || {} )
+      }
+    } catch (error) {
+      // console.error("Error fetching visitors:", error);
+    }
+  };
+
+  fetchRoomDetailsAdvance();
+
+  socket.on("getCustomerDetailsAdvance", (newUser) => {
+    setCustomerArrayAdvance(newUser);
+  });
+  return () => {
+    socket.off("getCustomerDetailsAdvance");
+  };
+}, [hotelDetailSelector._id]);
+console.log('customer array advance',customerArrayAdvance)
 return (
     <>
     <Card style={{ borderRadius: 6, marginVertical: 5, padding: 10 }}>
@@ -123,6 +158,8 @@ return (
     </Card>
   <CustomerDetailModal floor={floors} roomType={roomType} roomNo={roomNo} showAlert={showAlert} setShowAlert={setShowAlert} 
   selectedRoomId={selectedRoomId} customerArray={customerArray} currentDates={currentDate}/>
+  <AdvanceBookModal floor={floors} roomType={roomType} roomNo={roomNo} advanceAlert={advanceAlert} roomNum={roomNo}
+  setAdvanceAlert={setAdvanceAlert}  selectedRoomId={selectedRoomId} customerArrayAdvance={customerArrayAdvance} />
     
     </>
 )

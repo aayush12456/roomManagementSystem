@@ -100,7 +100,6 @@ return (
       enableReinitialize 
       validationSchema={customerDetailsSchema}
       onSubmit={async(values,{ resetForm }) => {
-        console
         const checkInTime=new Date(values.checkInTime).toLocaleTimeString("en-IN", {
           hour: "2-digit",
           minute: "2-digit",

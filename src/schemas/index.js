@@ -56,3 +56,10 @@ export const customerDetailsSchema=Yup.object({
   executiveName:Yup.string().min(2).max(50).required("Please enter front desk executive name"),
   customerSignature: Yup.string().required("Customer Signature required") 
 })
+
+export const advanceCustomerBookingSchema=Yup.object({
+  customerName:Yup.string().min(2).max(50).required("Please enter customer name"),
+  customerAddress:Yup.string().min(2).required("Please enter customer address"),
+  customerPhoneNumber:Yup.string().min(2).required("Please enter customer phone number"),
+  executiveName:Yup.string().min(2).max(50).required("Please enter front desk executive name"),
+})
