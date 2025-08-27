@@ -24,6 +24,9 @@ const Dashboard=({hotelDetails})=>{
     const room=hotelDetails?.room
     const hotelDetailSelector=useSelector((state)=>state.getHotelDetails.getHotelDetailsObj.hotelObj)
     console.log('hotel id dashboard',hotelDetailSelector?._id)
+
+    const finalDate=new Date()
+    const todayDate=finalDate.toLocaleDateString("en-GB") 
     useEffect(() => {
       const fetchRoomDetails = async () => {
         try {
@@ -151,17 +154,18 @@ return (
                     }}
                    />
                   <Text>Non Ac</Text>
+    
                   <View
                     style={{
                       width:10,        
                       height: 10,     
                       borderWidth: 2,   
-                      borderColor: "red", 
+                      borderColor: `${todayDate!==currentDate?'pink':'red'}`, 
                       borderRadius: 2,  
                       marginTop:5
                     }}
                    />
-                  <Text>Booked</Text>
+                  {todayDate!==currentDate?<Text>Advance</Text>:<Text>Booked</Text>}
                    </View>
                    
                     </View>

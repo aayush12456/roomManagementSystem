@@ -133,6 +133,7 @@ return (
        const bedType = roomData.bedType.split(',').map(item => item.replace(' Bed', ''));
        const isMatched = customerArray.some(cust => cust.roomId === roomId);
        const dateMatched=customerArray.some(cust => cust.currentDate === currentDate);
+       const isAdvanceMatched=customerArrayAdvance.some(cust => cust.roomId === roomId);
        const roomType=roomData.roomType
             return (
                 <View key={roomIndex} style={{ padding: 6 }}>
@@ -140,7 +141,7 @@ return (
                  <View
                    style={{
                      borderWidth: 1,
-                     borderColor:`${isMatched===true && dateMatched===true?'red':roomType==='Ac'?'blue':roomType === "Non Ac"?'green':''}`,
+                     borderColor:`${isAdvanceMatched ===true && todayDate !== currentDate?"pink":isMatched===true &&  todayDate === currentDate ?'red':roomType==='Ac'?'blue':roomType === "Non Ac"?'green':''}`,
                      borderRadius:12,
                      padding:12,
                      marginBottom: 5,

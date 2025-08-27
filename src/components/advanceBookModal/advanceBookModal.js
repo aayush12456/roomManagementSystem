@@ -15,32 +15,57 @@ const hotelDetailSelector=useSelector((state)=>state.getHotelDetails.getHotelDet
 const screenWidth = Dimensions.get("window").width;   
 const formikRef = useRef(null);
 const ref = useRef();
-const [matchRoomResponse,setMatchRoomResponse]=useState(false)
-const [showTextField,setShowTextField]=useState(false)
-const [filterCustomerObj,setFilterCustomerObj]=useState({})
+const [matchRoomResponseAdvance,setMatchRoomResponseAdvance]=useState(false)
+const [showTextFieldAdvance,setShowTextFieldAdvance]=useState(false)
+const [filterCustomerObjAdvance,setFilterCustomerObjAdvance]=useState({})
 
 useEffect(()=>{
   if(selectedRoomId){
-  const matchRoom=customerArrayAdvance.some((item)=>item.roomId==selectedRoomId)
+  const matchRoom=customerArrayAdvance?.some((item)=>item.roomId==selectedRoomId)
   console.log('match room',matchRoom)
-   setMatchRoomResponse(matchRoom)
+   setMatchRoomResponseAdvance(matchRoom)
   }
   },[selectedRoomId,customerArrayAdvance])
 
   useEffect(()=>{
     if(selectedRoomId){
-    const customerObj=customerArrayAdvance.find((item)=>item.roomId==selectedRoomId)
-    setFilterCustomerObj(customerObj)
+    const customerObj=customerArrayAdvance?.find((item)=>item.roomId==selectedRoomId)
+    setFilterCustomerObjAdvance(customerObj)
     }
     },[selectedRoomId,customerArrayAdvance])
+
+    const deleteCustomerDetailsAdvance=async(customerId)=>{
+      const deleteObj={
+      id:hotelDetailSelector?._id,
+      customerId:customerId
+      }
+      try {
+        const response = await axios.post(`${BASE_URL}/hotel/deleteCustomerDetailsAdvance/${deleteObj.id}`,deleteObj);
+        // console.log('response in delete obj is',response?.data)
+        Toast.show({
+          type: ALERT_TYPE.SUCCESS,
+          title: "Advance Customer Details Deleted Successfully",
+          autoClose: 10000, // 10 sec me band hoga
+        });
+        socket.emit('deleteCustomerDetailsAdvance', response?.data?.getAdvanceCustomerDetailsArray)
+    } catch (error) {
+        // console.error('Error sending activate', error);
+    }
+    setAdvanceAlert(false)
+    }
+    
+
+    const updateCustomerDetailsAdvance=(roomId)=>{
+      setShowTextFieldAdvance(true)
+    }  
 return (
     <>
    <Formik 
     initialValues={{
-        customerName: filterCustomerObj?.customerName || '',
-        customerAddress:filterCustomerObj?.customerAddress || '',
-        customerPhoneNumber:filterCustomerObj?.customerPhoneNumber || '',
-        executiveName:filterCustomerObj?.frontDeskExecutiveName || '',
+        customerName: filterCustomerObjAdvance?.customerName || '',
+        customerAddress:filterCustomerObjAdvance?.customerAddress || '',
+        customerPhoneNumber:filterCustomerObjAdvance?.customerPhoneNumber || '',
+        executiveName:filterCustomerObjAdvance?.frontDeskExecutiveName || '',
     }}
     enableReinitialize 
     validationSchema={advanceCustomerBookingSchema}
@@ -57,6 +82,21 @@ return (
             frontDeskExecutiveName:values.executiveName,
         }
         console.log('advance customer',advanceCustomerObj)
+     try{
+      if(matchRoomResponseAdvance === true){
+        const response = await axios.post(
+          `${BASE_URL}/hotel/updateCustomerDetailsAdvance/${advanceCustomerObj.id}`,
+          advanceCustomerObj
+        );
+        console.log("response in update obj is", response?.data);
+        Toast.show({
+          type: ALERT_TYPE.SUCCESS,
+          title: "AdvanceCustomer Details Updated Successfully",
+          autoClose: 10000,
+        });
+        socket.emit("updateCustomerDetailsAdvance", response?.data?.getAdvanceCustomerDetailsArray);
+      }
+      else{
         const response = await axios.post(
           `${BASE_URL}/hotel/addCustomerDetailsAdvance/${advanceCustomerObj.id}`,
           advanceCustomerObj
@@ -68,7 +108,12 @@ return (
           autoClose: 10000,
         });
         socket.emit("addCustomerDetailsAdvance", response?.data?.getAdvanceCustomerDetailsArray);
+      }
+     }catch(error){
+      console.error('error in app/update',error)
+     }
         setAdvanceAlert(false)
+        setShowTextFieldAdvance(false); 
         resetForm()
     }}
     innerRef={formikRef}
@@ -94,8 +139,12 @@ return (
       }}
     >
         {/* <Text>hello world</Text> */}
-        <Text style={{textAlign:'center'}}>Advance Customer Details</Text>
-        {(matchRoomResponse === false || showTextField === true  )?<View>
+        { matchRoomResponseAdvance===false?<Text style={{textAlign:'center'}}>Enter Advance Customer Details</Text>
+       :showTextFieldAdvance === false ?
+       <Text style={{textAlign:'center'}}>Advance Customer Details Preview</Text>
+       :<Text style={{textAlign:'center'}}>Update Advance Customer Details </Text>    
+    }
+        {(matchRoomResponseAdvance === false || showTextFieldAdvance === true  )?<View>
         <View>
         <TextInput
           label="Customer Name"
@@ -146,7 +195,7 @@ return (
         </View>
 
         <View style={{flexDirection:"row",justifyContent:'space-between'}}>
-     <View style={{ width: '50%', overflow: 'hidden' }}>
+ <View style={{ width: '50%', overflow: 'hidden' }}>
             <Button
                       mode="contained"
                       onPress={handleSubmit}
@@ -197,17 +246,58 @@ return (
       </View>
       <View style={{flexDirection:"row",gap:6,paddingTop:10}}>
         <Text>Customer Name : </Text>
-       <Text>{filterCustomerObj.customerName}</Text>
+       <Text>{filterCustomerObjAdvance.customerName}</Text>
       </View>
       <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
         <Text>Customer Address : </Text>
-       <Text>{filterCustomerObj.customerAddress}</Text>
+       <Text>{filterCustomerObjAdvance.customerAddress}</Text>
       </View>
       <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
         <Text>Customer Phone Number : </Text>
-       <Text>{filterCustomerObj.customerPhoneNumber}</Text>
+       <Text>{filterCustomerObjAdvance.customerPhoneNumber}</Text>
       </View>
-          <View style={{ width: '50%', overflow: 'hidden' }}>
+      <View style={{flexDirection:'row',justifyContent:'space-between'}}>
+      <View style={{ width: '50%', overflow: 'hidden' }}>
+          <Button
+                    mode="contained"
+                    style={{
+                      height: 50, // Set the desired height
+                      borderRadius:11,
+                      color: '#FFFFFF',
+                       fontSize: 16, 
+                       justifyContent:'center',
+                       marginTop: 20,
+                       marginLeft: 12,
+                       marginRight: 20,
+                    }}
+                    buttonColor="rgba(234, 88, 12, 1)"
+                    onPress={()=>updateCustomerDetailsAdvance(filterCustomerObjAdvance?.roomId)}
+                  >
+         Update
+                  </Button>
+        </View>
+        <View style={{ width: '50%', overflow: 'hidden' }}>
+            <Button
+                      mode="contained"
+                      style={{
+                        height: 50, // Set the desired height
+                        borderRadius:11,
+                        color: '#FFFFFF',
+                         fontSize: 16, 
+                         justifyContent:'center',
+                         marginTop: 20,
+                         marginLeft: 12,
+                         marginRight: 20,
+                      }}
+                      buttonColor="rgba(234, 88, 12, 1)"
+                      onPress={()=>deleteCustomerDetailsAdvance(filterCustomerObjAdvance?._id)}
+                    >
+           Delete
+                    </Button>
+          </View>
+      </View>
+         <View style={{flexDirection:"row",justifyContent:'center'}}>
+         <View style={{ width: '50%', overflow: 'hidden' }}>
             <Button
                       mode="contained"
                       style={{
@@ -229,6 +319,7 @@ return (
      Close
                     </Button>
           </View>
+         </View>
         </View>
         }
        
