@@ -8,6 +8,7 @@ import CustomerDetailModal from "../../customerDetailModal/customerDetailModal";
 import AdvanceBookModal from "../../advanceBookModal/advanceBookModal";
 const socket = io.connect("http://192.168.29.169:4000")
 const RoomDetailCard=({roomTitle,roomDetails,currentDate})=>{
+  console.log('curent date',currentDate)
   console.log('room details',roomDetails)
   const BASE_URL = "http://192.168.29.169:4000";
   const [showAlert, setShowAlert] = useState(false);
@@ -46,7 +47,7 @@ const RoomDetailCard=({roomTitle,roomDetails,currentDate})=>{
       const roomClickHandler = (id,type,num) => {
         console.log('id is',id)
         setSelectedRoomId(id);
-        if(todayDate===currentDate){
+        if(todayDate===currentDate && customerArrayAdvance?.every((item) => item.roomId !== id)){
           setShowAlert(true);
         }
         else{
@@ -133,7 +134,8 @@ return (
        const bedType = roomData.bedType.split(',').map(item => item.replace(' Bed', ''));
        const isMatched = customerArray.some(cust => cust.roomId === roomId);
        const dateMatched=customerArray.some(cust => cust.currentDate === currentDate);
-       const isAdvanceMatched=customerArrayAdvance.some(cust => cust.roomId === roomId);
+       const isAdvanceMatched=customerArrayAdvance.some(cust => cust.roomId === roomId  && cust.selectedDate === currentDate);
+       console.log('is advance matched',isAdvanceMatched)
        const roomType=roomData.roomType
             return (
                 <View key={roomIndex} style={{ padding: 6 }}>
@@ -141,7 +143,8 @@ return (
                  <View
                    style={{
                      borderWidth: 1,
-                     borderColor:`${isAdvanceMatched ===true && todayDate !== currentDate?"pink":isMatched===true &&  todayDate === currentDate ?'red':roomType==='Ac'?'blue':roomType === "Non Ac"?'green':''}`,
+                    //  borderColor:`${isAdvanceMatched ===true && todayDate !== currentDate?"pink":isMatched===true &&  todayDate === currentDate ?'red':roomType==='Ac'?'blue':roomType === "Non Ac"?'green':''}`,
+                    borderColor:`${isAdvanceMatched ===true ?"pink":isMatched===true &&  todayDate === currentDate ?'red':roomType==='Ac'?'blue':roomType === "Non Ac"?'green':''}`,
                      borderRadius:12,
                      padding:12,
                      marginBottom: 5,
@@ -160,7 +163,8 @@ return (
   <CustomerDetailModal floor={floors} roomType={roomType} roomNo={roomNo} showAlert={showAlert} setShowAlert={setShowAlert} 
   selectedRoomId={selectedRoomId} customerArray={customerArray} currentDates={currentDate}/>
   <AdvanceBookModal floor={floors} roomType={roomType} roomNo={roomNo} advanceAlert={advanceAlert} roomNum={roomNo}
-  setAdvanceAlert={setAdvanceAlert}  selectedRoomId={selectedRoomId} customerArrayAdvance={customerArrayAdvance} />
+  setAdvanceAlert={setAdvanceAlert}  selectedRoomId={selectedRoomId}
+   customerArrayAdvance={customerArrayAdvance} todayDate={todayDate} currentDates={currentDate}/>
     
     </>
 )

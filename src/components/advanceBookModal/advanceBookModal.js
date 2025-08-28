@@ -8,7 +8,7 @@ import {useSelector} from 'react-redux'
 import axios from 'axios'
 import io from "socket.io-client";
 const socket = io.connect("http://192.168.29.169:4000")
-const AdvanceBookModal=({floor,roomType,roomNo,advanceAlert,setAdvanceAlert,selectedRoomId,roomNum,customerArrayAdvance})=>{
+const AdvanceBookModal=({floor,roomType,roomNo,advanceAlert,setAdvanceAlert,selectedRoomId,roomNum,customerArrayAdvance,todayDate,currentDates})=>{
   console.log('customer array advance modal',customerArrayAdvance)
 const BASE_URL = "http://192.168.29.169:4000";  
 const hotelDetailSelector=useSelector((state)=>state.getHotelDetails.getHotelDetailsObj.hotelObj)    
@@ -21,18 +21,18 @@ const [filterCustomerObjAdvance,setFilterCustomerObjAdvance]=useState({})
 
 useEffect(()=>{
   if(selectedRoomId){
-  const matchRoom=customerArrayAdvance?.some((item)=>item.roomId==selectedRoomId)
+  const matchRoom=customerArrayAdvance?.some((item)=>item.roomId==selectedRoomId &&item.selectedDate === currentDates)
   console.log('match room',matchRoom)
    setMatchRoomResponseAdvance(matchRoom)
   }
-  },[selectedRoomId,customerArrayAdvance])
+  },[selectedRoomId,customerArrayAdvance,currentDates])
 
   useEffect(()=>{
     if(selectedRoomId){
-    const customerObj=customerArrayAdvance?.find((item)=>item.roomId==selectedRoomId)
+    const customerObj=customerArrayAdvance?.find((item)=>item.roomId==selectedRoomId && item.selectedDate === currentDates)
     setFilterCustomerObjAdvance(customerObj)
     }
-    },[selectedRoomId,customerArrayAdvance])
+    },[selectedRoomId,customerArrayAdvance,currentDates])
 
     const deleteCustomerDetailsAdvance=async(customerId)=>{
       const deleteObj={
@@ -73,6 +73,8 @@ return (
         const advanceCustomerObj={
             id:hotelDetailSelector._id,
             roomId:selectedRoomId,
+            todayDate:todayDate,
+           selectedDate:currentDates,
             roomType:roomType,
             floor:floor,
             roomNo:roomNum,
@@ -256,7 +258,51 @@ return (
         <Text>Customer Phone Number : </Text>
        <Text>{filterCustomerObjAdvance.customerPhoneNumber}</Text>
       </View>
+      {todayDate===filterCustomerObjAdvance.selectedDate?
       <View style={{flexDirection:'row',justifyContent:'space-between'}}>
+      <View style={{  overflow: 'hidden' }}>
+      <Button
+                mode="contained"
+                style={{
+                  height: 50, // Set the desired height
+                  borderRadius:11,
+                  color: '#FFFFFF',
+                   fontSize: 16, 
+                   justifyContent:'center',
+                   marginTop: 20,
+                }}
+                buttonColor="rgba(234, 88, 12, 1)"
+                
+              >
+     Customer Booking
+              </Button>
+    </View>
+    <View style={{ width: '50%', overflow: 'hidden' }}>
+            <Button
+                      mode="contained"
+                      style={{
+                        height: 50, // Set the desired height
+                        borderRadius:11,
+                        color: '#FFFFFF',
+                         fontSize: 16, 
+                         justifyContent:'center',
+                         marginTop: 20,
+                         marginLeft: 12,
+                         marginRight: 20,
+                      }}
+                      buttonColor="rgba(234, 88, 12, 1)"
+                      onPress={() => {
+                        setAdvanceAlert(false)
+                        formikRef.current?.resetForm(); // Form reset
+                      }}
+                    >
+     Close
+                    </Button>
+          </View>
+     </View> 
+      
+      
+      :<View style={{flexDirection:'row',justifyContent:'space-between'}}>
       <View style={{ width: '50%', overflow: 'hidden' }}>
           <Button
                     mode="contained"
@@ -295,8 +341,8 @@ return (
            Delete
                     </Button>
           </View>
-      </View>
-         <View style={{flexDirection:"row",justifyContent:'center'}}>
+      </View>}
+         {todayDate===filterCustomerObjAdvance.selectedDate?null:<View style={{flexDirection:"row",justifyContent:'center'}}>
          <View style={{ width: '50%', overflow: 'hidden' }}>
             <Button
                       mode="contained"
@@ -319,7 +365,7 @@ return (
      Close
                     </Button>
           </View>
-         </View>
+         </View>}
         </View>
         }
        
