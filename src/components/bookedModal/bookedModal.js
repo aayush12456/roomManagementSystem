@@ -1,13 +1,16 @@
 import { View,Pressable,Modal,Dimensions, ScrollView } from "react-native";
 import { Text,Button } from "react-native-paper";
 import { useEffect } from "react";
-const BookedModal=({showBookedAlert,setShowBookedAlert,customerArray,room})=>{
+const BookedModal=({showBookedAlert,setShowBookedAlert,customerArray,customerArrayAdvance, todayDate,currentDate,room})=>{
     const screenWidth = Dimensions.get("window").width;
     const acRoomArray=customerArray.filter((item)=>item.roomType=='Ac')
     const NonAcRoomArray=customerArray.filter((item)=>item.roomType=='Non Ac')
+    const acRoomArrayAdvance=customerArrayAdvance.filter((item)=>item.roomType=='Ac' && item.selectedDate===currentDate)
+    const NonAcRoomArrayAdvance=customerArrayAdvance.filter((item)=>item.roomType=='Non Ac' && item.selectedDate===currentDate)
     console.log('room is',room)
-
-    const groupedData = acRoomArray.reduce((acc, item) => {
+    const finalAcRoomArray=todayDate!==currentDate?acRoomArrayAdvance:acRoomArray
+    const finalNonAcRoomArray=todayDate!==currentDate?NonAcRoomArrayAdvance:NonAcRoomArray
+    const groupedData = finalAcRoomArray.reduce((acc, item) => {
       if (!acc[item.floor]) {
         acc[item.floor] = [];
       }
@@ -15,7 +18,7 @@ const BookedModal=({showBookedAlert,setShowBookedAlert,customerArray,room})=>{
       return acc;
     }, {});
 
-    const groupedDatas = NonAcRoomArray.reduce((nonAc, item) => {
+    const groupedDatas = finalNonAcRoomArray.reduce((nonAc, item) => {
       if (!nonAc[item.floor]) {
         nonAc[item.floor] = [];
       }
@@ -50,7 +53,7 @@ console.log('grouped datas',groupedDatas)
             showsVerticalScrollIndicator={true}
           >
             {/* AC Section */}
-            <Text>Ac : {acRoomArray.length}</Text>
+            <Text>Ac : {finalAcRoomArray.length}</Text>
             <View
               style={{
                 backgroundColor: "#fff",
@@ -101,7 +104,7 @@ console.log('grouped datas',groupedDatas)
             </View>
 
             {/* Non AC Section */}
-            <Text>Non Ac : {NonAcRoomArray.length}</Text>
+            <Text>Non Ac : {finalNonAcRoomArray.length}</Text>
             <View
               style={{
                 backgroundColor: "#fff",

@@ -8,7 +8,7 @@ import {useSelector} from 'react-redux'
 import axios from 'axios'
 import io from "socket.io-client";
 const socket = io.connect("http://192.168.29.169:4000")
-const AdvanceBookModal=({floor,roomType,roomNo,advanceAlert,setAdvanceAlert,selectedRoomId,roomNum,customerArrayAdvance,todayDate,currentDates})=>{
+const AdvanceBookModal=({floor,roomType,roomNo,advanceAlert,selectedRoomId,roomNum,customerArrayAdvance,todayDate,currentDates,setAdvanceAlert})=>{
   console.log('customer array advance modal',customerArrayAdvance)
 const BASE_URL = "http://192.168.29.169:4000";  
 const hotelDetailSelector=useSelector((state)=>state.getHotelDetails.getHotelDetailsObj.hotelObj)    
@@ -52,12 +52,16 @@ useEffect(()=>{
         // console.error('Error sending activate', error);
     }
     setAdvanceAlert(false)
+    // if(todayDate===filterCustomerObjAdvance.selectedDate){
+    // setShowAlert(true)
+    // }
+    setShowAlert(true)
     }
     
-
     const updateCustomerDetailsAdvance=(roomId)=>{
       setShowTextFieldAdvance(true)
-    }  
+    }
+    
 return (
     <>
    <Formik 
@@ -272,7 +276,7 @@ return (
                    marginTop: 20,
                 }}
                 buttonColor="rgba(234, 88, 12, 1)"
-                
+                onPress={()=>deleteCustomerDetailsAdvance(filterCustomerObjAdvance?._id)}
               >
      Customer Booking
               </Button>

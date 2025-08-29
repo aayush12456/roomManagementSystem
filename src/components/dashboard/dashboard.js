@@ -16,9 +16,11 @@ const Dashboard=({hotelDetails})=>{
   const BASE_URL = "http://192.168.29.169:4000";
   console.log('hotel details is',hotelDetails)
   const [customerArray,setCustomerArray]=useState([])
+  const [customerArrayAdvance,setCustomerArrayAdvance]=useState([])
   const [showBookedAlert, setShowBookedAlert] = useState(false);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [matchRoomArray,setMatchRoomArray]=useState([])
     const navigation = useNavigation();
     const totalRoom=hotelDetails?.totalRoom
     const room=hotelDetails?.room
@@ -52,8 +54,6 @@ const Dashboard=({hotelDetails})=>{
       };
     }, [hotelDetailSelector?._id]);
     console.log('customer array dashboard is',customerArray)
-    const bookedNumber=customerArray.length
-    const finalTotalRoom=totalRoom-bookedNumber
     // console.log('room is',Object.entries(room))
     // const hotelObj=hotelDetails?.matchedHotels[0]
     // const removeLoginData = async () => {
@@ -68,6 +68,7 @@ const Dashboard=({hotelDetails})=>{
     //  removeLoginData()
     //  navigation.navigate('LoginPage')
     // }
+
     const bookedRoomHandler=()=>{
 setShowBookedAlert(true)
     }
@@ -80,6 +81,43 @@ setShowBookedAlert(true)
     };
     console.log('select date',selectedDate.toLocaleDateString("en-GB"))
     const currentDate=selectedDate.toLocaleDateString("en-GB")
+
+    
+    useEffect(() => {
+      const fetchRoomDetailsAdvance = async () => {
+        try {
+          if (hotelDetailSelector?._id) {
+            const response = await axios.get(
+              `${BASE_URL}/hotel/getCustomerDetailsAdvance/${hotelDetailSelector?._id}`
+            );
+            console.log('visitor user in response',response?.data)
+            setCustomerArrayAdvance(response?.data?.getAdvanceCustomerDetailsArray || {} )
+          }
+        } catch (error) {
+          // console.error("Error fetching visitors:", error);
+        }
+      };
+    
+      fetchRoomDetailsAdvance();
+    
+      socket.on("getCustomerDetailsAdvance", (newUser) => {
+        setCustomerArrayAdvance(newUser);
+      });
+      return () => {
+        socket.off("getCustomerDetailsAdvance");
+      };
+    }, [hotelDetailSelector?._id]);
+    useEffect(()=>{
+      if(currentDate){
+      const matchRoom=customerArrayAdvance?.filter((item)=>item.selectedDate==currentDate)
+       setMatchRoomArray(matchRoom)
+      }
+      },[currentDate,customerArrayAdvance])
+
+      console.log('match room array',matchRoomArray)
+
+      const bookedNumber=todayDate!==currentDate?matchRoomArray.length: customerArray.length
+      const finalTotalRoom=totalRoom-bookedNumber
 return (
     <>
     {/* {
@@ -171,7 +209,7 @@ return (
                     </View>
                     <View>
                     <Pressable onPress={bookedRoomHandler}>
-                   <Text>Booked Room : {bookedNumber}</Text>
+                   <Text>{todayDate!==currentDate?`Advance Booked Room`:'Booked Room'} : {bookedNumber}</Text>
                     </Pressable>
                    <Text style={{paddingTop:4}}>Non Booked Room : {finalTotalRoom}</Text>
                     </View>
@@ -210,7 +248,8 @@ return (
 </ScrollView>
 
                     </View>
-                    <BookedModal room={room} customerArray={customerArray} showBookedAlert={showBookedAlert} setShowBookedAlert={setShowBookedAlert}/> 
+                    <BookedModal room={room} customerArray={customerArray} customerArrayAdvance={customerArrayAdvance}
+                     showBookedAlert={showBookedAlert} setShowBookedAlert={setShowBookedAlert} todayDate={todayDate} currentDate={currentDate}/> 
                     </SafeAreaView>    
     </>
 )
