@@ -62,4 +62,6 @@ export const advanceCustomerBookingSchema=Yup.object({
   customerAddress:Yup.string().min(2).required("Please enter customer address"),
   customerPhoneNumber:Yup.string().min(2).required("Please enter customer phone number"),
   executiveName:Yup.string().min(2).max(50).required("Please enter front desk executive name"),
+  totalPayment:Yup.string().min(2).required("Please enter total payment"),
+  advancePayment:Yup.string().min(2).required("Please enter advance payment"),
 })

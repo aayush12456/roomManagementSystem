@@ -6,14 +6,19 @@ import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import { customerDetailsSchema } from "../../schemas";
 import { View,Pressable,Modal,Dimensions, ScrollView,Image } from "react-native";
 import SignatureScreen from "react-native-signature-canvas";
-import {useSelector} from 'react-redux'
+import {useSelector,useDispatch} from 'react-redux'
 import io from "socket.io-client";
 import axios from "axios";
+import { passDataObjSliceAcions } from "../../Redux/Slice/passDataSliceObj/passDataSliceObj";
 const socket = io.connect("http://192.168.29.169:4000")
 const CustomerDetailModal=({showAlert,setShowAlert,selectedRoomId,customerArray,roomType,floor,roomNo,currentDates})=>{
   console.log('customer array',customerArray)
   const BASE_URL = "http://192.168.29.169:4000";
   const hotelDetailSelector=useSelector((state)=>state.getHotelDetails.getHotelDetailsObj.hotelObj)
+  const passDataSelector=useSelector((state)=>state.passDataObj.passDataObj)
+  const recentBookObj=passDataSelector.obj
+  const dispatch=useDispatch()
+  console.log('pass data obj ',passDataSelector)
   console.log('hotel detail obj',hotelDetailSelector)
     const screenWidth = Dimensions.get("window").width;
     const [showDatePicker, setShowDatePicker] = useState(false);
@@ -81,9 +86,9 @@ const CustomerDetailModal=({showAlert,setShowAlert,selectedRoomId,customerArray,
 return (
     <>
       <Formik  initialValues={{
- customerName: filterCustomerObj?.customerName || '',
- customerAddress: filterCustomerObj?.customerAddress || '',
- customerPhoneNumber: filterCustomerObj?.customerPhoneNumber || '',
+ customerName: filterCustomerObj?.customerName || recentBookObj?.customerName|| '',
+ customerAddress: filterCustomerObj?.customerAddress || recentBookObj?.customerAddress ||'',
+ customerPhoneNumber: filterCustomerObj?.customerPhoneNumber || recentBookObj?.customerPhoneNumber|| '',
  totalCustomer: filterCustomerObj?.totalCustomer || '',
  customerAadharNumber: filterCustomerObj?.customerAadharNumber || '',
  customerCity: filterCustomerObj?.customerCity || '',
@@ -91,7 +96,7 @@ return (
  checkInTime: filterCustomerObj?.checkInTime || '',
  checkOutDate: filterCustomerObj?.checkOutDate || '',
  checkOutTime: filterCustomerObj?.checkOutTime || '',
- totalPayment: filterCustomerObj?.totalPayment || '',
+ totalPayment: filterCustomerObj?.totalPayment || recentBookObj?.totalPayment||'',
  paymentPaid: filterCustomerObj?.paymentPaid || '',
  paymentDue: filterCustomerObj?.paymentDue || '',
  executiveName: filterCustomerObj?.frontDeskExecutiveName || '',
@@ -114,11 +119,11 @@ return (
         // })
       const customerDetailsObj={
         id:hotelDetailSelector._id,
-        roomId:selectedRoomId,
+        roomId:selectedRoomId || recentBookObj?.roomId,
         currentDate:currentDates,
-        roomType:roomType,
-        floor:floor,
-        roomNo:roomNo,
+        roomType:roomType || recentBookObj?.roomType,
+        floor:floor || recentBookObj?.floor,
+        roomNo:roomNo || recentBookObj?.roomNo,
         customerName:values.customerName,
         customerAddress:values.customerAddress,
         customerPhoneNumber:values.customerPhoneNumber,
@@ -171,13 +176,17 @@ console.log('customer',customerDetailsObj)
         resetForm()
         setShowAlert(false)
         setShowTextField(false); 
+        if(recentBookObj!=={}){
+        dispatch(passDataObjSliceAcions.passDataObj({}))
+        }
       }}
       innerRef={formikRef}
       >
 
  {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue })=>(
   <>
- <Modal visible={showAlert} transparent animationType="fade">
+   {/* <Modal visible={ showAlert}  transparent animationType="fade"> */}
+ <Modal visible={ passDataSelector?.type===true?passDataSelector.type:showAlert}  transparent animationType="fade">
   <View
     style={{
       flex: 1,
@@ -467,6 +476,18 @@ console.log('customer',customerDetailsObj)
         />
           {touched.paymentPaid && errors.paymentPaid && <Text style={{ color: 'red', marginLeft: 12 }}>{errors.paymentPaid}</Text>}
         </View>:null}
+     
+        {values.customerPhoneNumber?.trim().length > 0 && recentBookObj?.advancePayment?<View>
+        <TextInput
+          label="Advance Payment"
+          mode="outlined"
+          style={{ width: screenWidth * 0.75, marginBottom: 10 }}
+          value={recentBookObj?.advancePayment}
+          editable={false}
+          pointerEvents="none"
+        />
+          
+        </View>:null}
 
         {values.customerPhoneNumber?.trim().length > 0?<View>
         <TextInput
@@ -749,6 +770,7 @@ console.log('customer',customerDetailsObj)
                       buttonColor="rgba(234, 88, 12, 1)"
                       onPress={() => {
                         setShowAlert(false)
+                        dispatch(passDataObjSliceAcions.passDataObj({}))
                         formikRef.current?.resetForm(); // Form reset
                       }}
                     >

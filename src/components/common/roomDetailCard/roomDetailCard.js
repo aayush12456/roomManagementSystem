@@ -2,6 +2,7 @@ import { Card,Text } from "react-native-paper"
 import { View,Pressable } from "react-native";
 import { useState,useEffect } from "react";
 import axios from 'axios'
+import moment from "moment";
 import io from "socket.io-client";
 import {useSelector} from 'react-redux'
 import CustomerDetailModal from "../../customerDetailModal/customerDetailModal";
@@ -20,6 +21,7 @@ const RoomDetailCard=({roomTitle,roomDetails,currentDate})=>{
   const [roomNo,setRoomNo]=useState('')
   const [advanceAlert,setAdvanceAlert]=useState(false)
   const hotelDetailSelector=useSelector((state)=>state.getHotelDetails.getHotelDetailsObj.hotelObj)
+  
   console.log('hotel id',hotelDetailSelector?._id)
   const finalDate=new Date()
   const todayDate=finalDate.toLocaleDateString("en-GB") 
@@ -43,22 +45,49 @@ const RoomDetailCard=({roomTitle,roomDetails,currentDate})=>{
     
         return `${ordinal} Floor`;
       };
-      
-      const roomClickHandler = (id,type,num) => {
-        console.log('id is',id)
-        setSelectedRoomId(id);
-        if(todayDate===currentDate && customerArrayAdvance?.every((item) => item.roomId !== id)){
-          setShowAlert(true);
-        }
-        else{
-          setAdvanceAlert(true)
-        }
-        setRoomType(type)
-        setFloors(convertFloorName(roomTitle));
-        setRoomNo(num)
-      };
+  const roomClickHandler = (id, type, num) => {
+  console.log("id is", id);
+  setSelectedRoomId(id);
+
+  const today = moment(todayDate, "DD/MM/YYYY");
+  const current = moment(currentDate, "DD/MM/YYYY");
+
+  // Sirf valid bookings rakho (jisme currentDate checkOut ke baad na ho)
+  const validBookings = customerArray.filter((item) => {
+    const checkOut = moment(item.checkOutDate, "DD/MM/YYYY");
+    return !(current.isAfter(checkOut) && item.roomId === id);
+  });
+
+  // Ab is filtered list se booked check karo
+  const isRoomBooked = validBookings.some((item) => {
+    const checkIn = moment(item.checkInDate, "DD/MM/YYYY");
+    const checkOut = moment(item.checkOutDate, "DD/MM/YYYY");
+
+    return (
+      item.roomId === id &&
+      today.isSameOrAfter(checkIn) &&
+      today.isSameOrBefore(checkOut)
+    );
+  });
+
+  if (
+    (todayDate === currentDate &&
+      customerArrayAdvance?.every((item) => item.roomId !== id)) ||
+    isRoomBooked
+  ) {
+    setShowAlert(true);
+  } else {
+    setAdvanceAlert(true);
+  }
+
+  setRoomType(type);
+  setFloors(convertFloorName(roomTitle));
+  setRoomNo(num);
+};
+
   console.log('floor us',floors)
   console.log('room no',roomNo)
+  console.log('show alert in advance',showAlert)
 useEffect(() => {
   const fetchRoomDetails = async () => {
     try {
@@ -133,7 +162,19 @@ return (
         const shortLabel=`R${data[data.length-1]}`
        const bedType = roomData.bedType.split(',').map(item => item.replace(' Bed', ''));
        const isMatched = customerArray.some(cust => cust.roomId === roomId);
-       const dateMatched=customerArray.some(cust => cust.currentDate === currentDate);
+       const today = moment(todayDate, "DD/MM/YYYY");
+       const current = moment(currentDate, "DD/MM/YYYY");
+       const isRoomBooked = customerArray
+  .filter(cust => !(current.isAfter(moment(cust.checkOutDate, "DD/MM/YYYY")) && cust.roomId === roomId))
+  .some(cust =>
+    cust.roomId === roomId &&
+    today.isBetween(
+      moment(cust.checkInDate, "DD/MM/YYYY"),
+      moment(cust.checkOutDate, "DD/MM/YYYY"),
+      undefined,
+      "[]"
+    )
+  );
        const isAdvanceMatched=customerArrayAdvance.some(cust => cust.roomId === roomId  && cust.selectedDate === currentDate);
        console.log('is advance matched',isAdvanceMatched)
        const roomType=roomData.roomType
@@ -144,7 +185,7 @@ return (
                    style={{
                      borderWidth: 1,
                     //  borderColor:`${isAdvanceMatched ===true && todayDate !== currentDate?"pink":isMatched===true &&  todayDate === currentDate ?'red':roomType==='Ac'?'blue':roomType === "Non Ac"?'green':''}`,
-                    borderColor:`${isAdvanceMatched ===true ?"pink":isMatched===true &&  todayDate === currentDate ?'red':roomType==='Ac'?'blue':roomType === "Non Ac"?'green':''}`,
+                    borderColor:`${isAdvanceMatched ===true ?"pink":isMatched===true &&  todayDate === currentDate || isRoomBooked ?'red':roomType==='Ac'?'blue':roomType === "Non Ac"?'green':''}`,
                      borderRadius:12,
                      padding:12,
                      marginBottom: 5,
