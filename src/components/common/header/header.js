@@ -1,6 +1,6 @@
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import RoomPreviewPage from '../../../Pages/roomPreviewPage/roomPreviewPage';
 import DashboardPage from '../../../Pages/dashboardPage/dashboardPage';
+import ReportPage from '../../../Pages/reportPage/reportPage';
 const Header=()=>{
     const Drawer = createDrawerNavigator();
 return (
@@ -41,7 +41,7 @@ return (
       />
          <Drawer.Screen
         name='Performance Graph'
-        component={RoomPreviewPage}
+        component={DashboardPage}
         // options={{ 
         //   drawerLabel: () => (
         //     <View style={{ flexDirection: 'row', alignItems: 'center',marginLeft:-12 }}>
@@ -74,7 +74,7 @@ return (
       />
          <Drawer.Screen
         name='Reports'
-        component={RoomPreviewPage}
+        component={ReportPage}
         // options={{ 
         //   drawerLabel: () => (
         //     <View style={{ flexDirection: 'row', alignItems: 'center',marginLeft:-12 }}>

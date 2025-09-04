@@ -15,7 +15,7 @@ const socket = io.connect("http://192.168.29.169:4000")
 const Dashboard=({hotelDetails})=>{
   const BASE_URL = "http://192.168.29.169:4000";
   console.log('hotel details is',hotelDetails)
-  const [customerArray,setCustomerArray]=useState([])
+  const [customerObj,setCustomerObj]=useState({})
   const [customerArrayAdvance,setCustomerArrayAdvance]=useState([])
   const [showBookedAlert, setShowBookedAlert] = useState(false);
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -37,7 +37,7 @@ const Dashboard=({hotelDetails})=>{
               `${BASE_URL}/hotel/getCustomerDetails/${hotelDetailSelector?._id}`
             );
             console.log('visitor user dashboard in response',response?.data)
-            setCustomerArray(response?.data?.getCustomerDetailsArray || {} )
+            setCustomerObj(response?.data || {})
           }
         } catch (error) {
           // console.error("Error fetching visitors:", error);
@@ -47,12 +47,13 @@ const Dashboard=({hotelDetails})=>{
       fetchRoomDetails();
     
       socket.on("getCustomerDetails", (newUser) => {
-        setCustomerArray(newUser);
+        setCustomerObj(newUser);
       });
       return () => {
         socket.off("getCustomerDetails");
       };
     }, [hotelDetailSelector?._id]);
+    const customerArray=customerObj?.getCustomerDetailsArray
     console.log('customer array dashboard is',customerArray)
     // console.log('room is',Object.entries(room))
     // const hotelObj=hotelDetails?.matchedHotels[0]
@@ -116,7 +117,7 @@ setShowBookedAlert(true)
 
       console.log('match room array',matchRoomArray)
 
-      const bookedNumber=todayDate!==currentDate?matchRoomArray.length: customerArray.length
+      const bookedNumber=todayDate!==currentDate?matchRoomArray.length: customerArray?.length
       const finalTotalRoom=totalRoom-bookedNumber
 return (
     <>
@@ -240,7 +241,7 @@ return (
           room && typeof room==='object'?Object.entries(room).map(([floorKey,floorRooms],floorIndex)=>{
                         return (
                           <View style={{marginTop:12,marginLeft:8,marginRight:8}} key={floorIndex}>
-                            <RoomDetailCard roomTitle={floorKey} roomDetails={floorRooms} currentDate={currentDate} />
+                            <RoomDetailCard roomTitle={floorKey} roomDetails={floorRooms} currentDate={currentDate}  />
                           </View>
                         )
                       }):null
@@ -250,6 +251,7 @@ return (
                     </View>
                     <BookedModal room={room} customerArray={customerArray} customerArrayAdvance={customerArrayAdvance}
                      showBookedAlert={showBookedAlert} setShowBookedAlert={setShowBookedAlert} todayDate={todayDate} currentDate={currentDate}/> 
+                    
                     </SafeAreaView>    
     </>
 )

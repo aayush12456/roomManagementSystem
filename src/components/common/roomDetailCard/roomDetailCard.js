@@ -14,7 +14,7 @@ const RoomDetailCard=({roomTitle,roomDetails,currentDate})=>{
   const BASE_URL = "http://192.168.29.169:4000";
   const [showAlert, setShowAlert] = useState(false);
   const [selectedRoomId, setSelectedRoomId] = useState(null);
-  const [customerArray,setCustomerArray]=useState([])
+  const [customerObj,setCustomerObj]=useState({})
   const [customerArrayAdvance,setCustomerArrayAdvance]=useState([])
   const [roomType,setRoomType]=useState('')
   const [floors,setFloors]=useState('')
@@ -53,7 +53,7 @@ const RoomDetailCard=({roomTitle,roomDetails,currentDate})=>{
   const current = moment(currentDate, "DD/MM/YYYY");
 
   // Sirf valid bookings rakho (jisme currentDate checkOut ke baad na ho)
-  const validBookings = customerArray.filter((item) => {
+  const validBookings = customerArray?.filter((item) => {
     const checkOut = moment(item.checkOutDate, "DD/MM/YYYY");
     return !(current.isAfter(checkOut) && item.roomId === id);
   });
@@ -70,16 +70,28 @@ const RoomDetailCard=({roomTitle,roomDetails,currentDate})=>{
     );
   });
 
+  const hasAdvanceBooking = customerArrayAdvance?.some(
+    (item) => item.roomId === id && item.selectedDate === currentDate
+  );
+  
+
+  // if (
+  //   (todayDate === currentDate &&
+  //     customerArrayAdvance?.every((item) => item.roomId !== id)) ||
+  //   isRoomBooked
+  // ) {
+  //   setShowAlert(true);
+  // } else {
+  //   setAdvanceAlert(true);
+  // }
   if (
-    (todayDate === currentDate &&
-      customerArrayAdvance?.every((item) => item.roomId !== id)) ||
+    (todayDate === currentDate  && !hasAdvanceBooking) ||
     isRoomBooked
   ) {
     setShowAlert(true);
   } else {
     setAdvanceAlert(true);
   }
-
   setRoomType(type);
   setFloors(convertFloorName(roomTitle));
   setRoomNo(num);
@@ -96,7 +108,7 @@ useEffect(() => {
           `${BASE_URL}/hotel/getCustomerDetails/${hotelDetailSelector?._id}`
         );
         console.log('visitor user in response',response?.data)
-        setCustomerArray(response?.data?.getCustomerDetailsArray || {} )
+        setCustomerObj(response?.data || {} )
       }
     } catch (error) {
       // console.error("Error fetching visitors:", error);
@@ -106,12 +118,14 @@ useEffect(() => {
   fetchRoomDetails();
 
   socket.on("getCustomerDetails", (newUser) => {
-    setCustomerArray(newUser);
+    setCustomerObj(newUser);
   });
   return () => {
     socket.off("getCustomerDetails");
   };
 }, [hotelDetailSelector._id]);
+
+const customerArray=customerObj?.getCustomerDetailsArray
 console.log('customer array is',customerArray)
 const roomData= Object.values(roomDetails)
 console.log('room data',roomData)
@@ -161,12 +175,12 @@ return (
         const roomId=roomData?._id
         const shortLabel=`R${data[data.length-1]}`
        const bedType = roomData.bedType.split(',').map(item => item.replace(' Bed', ''));
-       const isMatched = customerArray.some(cust => cust.roomId === roomId);
+       const isMatched = customerArray?.some(cust => cust.roomId === roomId);
        const today = moment(todayDate, "DD/MM/YYYY");
        const current = moment(currentDate, "DD/MM/YYYY");
        const isRoomBooked = customerArray
-  .filter(cust => !(current.isAfter(moment(cust.checkOutDate, "DD/MM/YYYY")) && cust.roomId === roomId))
-  .some(cust =>
+  ?.filter(cust => !(current.isAfter(moment(cust.checkOutDate, "DD/MM/YYYY")) && cust.roomId === roomId))
+  ?.some(cust =>
     cust.roomId === roomId &&
     today.isBetween(
       moment(cust.checkInDate, "DD/MM/YYYY"),
@@ -175,7 +189,10 @@ return (
       "[]"
     )
   );
-       const isAdvanceMatched=customerArrayAdvance.some(cust => cust.roomId === roomId  && cust.selectedDate === currentDate);
+       const isAdvanceMatched=customerArrayAdvance.some(cust => cust.roomId === roomId  && cust.selectedDate === currentDate  );
+       const hasAdvanceBooking = customerArrayAdvance?.some(
+        (item) => item.roomId === roomId && item.selectedDate === currentDate
+      );
        console.log('is advance matched',isAdvanceMatched)
        const roomType=roomData.roomType
             return (
@@ -185,7 +202,7 @@ return (
                    style={{
                      borderWidth: 1,
                     //  borderColor:`${isAdvanceMatched ===true && todayDate !== currentDate?"pink":isMatched===true &&  todayDate === currentDate ?'red':roomType==='Ac'?'blue':roomType === "Non Ac"?'green':''}`,
-                    borderColor:`${isAdvanceMatched ===true ?"pink":isMatched===true &&  todayDate === currentDate || isRoomBooked ?'red':roomType==='Ac'?'blue':roomType === "Non Ac"?'green':''}`,
+                    borderColor:`${isAdvanceMatched ===true || hasAdvanceBooking && todayDate !== currentDate ?"pink":isMatched===true &&  todayDate === currentDate || isRoomBooked ?'red':roomType==='Ac'?'blue':roomType === "Non Ac"?'green':''}`,
                      borderRadius:12,
                      padding:12,
                      marginBottom: 5,

@@ -24,7 +24,7 @@ const CustomerDetailModal=({showAlert,setShowAlert,selectedRoomId,customerArray,
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [showTimePicker, setShowTimePicker] = useState(false);
     const [showDatesPicker, setShowDatesPicker] = useState(false);
-    const [showTimesPicker, setShowTimesPicker] = useState(false);
+    // const [showTimesPicker, setShowTimesPicker] = useState(false);
     const [filterCustomerObj,setFilterCustomerObj]=useState({})
     const [matchRoomResponse,setMatchRoomResponse]=useState(false)
     const [dateResponse,setDateResponse]=useState(false)
@@ -73,14 +73,14 @@ const CustomerDetailModal=({showAlert,setShowAlert,selectedRoomId,customerArray,
             title: "Customer Details Deleted Successfully",
             autoClose: 10000, // 10 sec me band hoga
           });
-          socket.emit('deleteCustomerDetails', response?.data?.getCustomerDetailsArray)
+          socket.emit('deleteCustomerDetails', response?.data)
       } catch (error) {
           // console.error('Error sending activate', error);
       }
       setShowAlert(false)
       }
 
-      const updateCustomerDetailsData=(roomId)=>{
+      const updateCustomerDetailsData=()=>{
         setShowTextField(true)
       }    
 return (
@@ -153,7 +153,8 @@ return (
             title: "Customer Details Updated Successfully",
             autoClose: 10000,
           });
-          socket.emit("updateCustomerDetails", response?.data?.getCustomerDetailsArray);
+          // socket.emit("updateCustomerDetails", response?.data?.getCustomerDetailsArray);
+          socket.emit("updateCustomerDetails", response?.data);
         } else {
           // 🔹 Agar room empty hai → Add API
           const response = await axios.post(
@@ -166,7 +167,8 @@ return (
             title: "Customer Details Added Successfully",
             autoClose: 10000,
           });
-          socket.emit("addCustomerDetails", response?.data?.getCustomerDetailsArray);
+          socket.emit("addCustomerDetails", response?.data);
+          // socket.emit("addReportDetails", response?.data?.reportArray);
         }
       } catch (error) {
         console.error("Error in Add/Update Customer", error);
@@ -727,7 +729,7 @@ console.log('customer',customerDetailsObj)
                        marginRight: 20,
                     }}
                     buttonColor="rgba(234, 88, 12, 1)"
-                    onPress={()=>updateCustomerDetailsData(filterCustomerObj?.roomId)}
+                    onPress={()=>updateCustomerDetailsData()}
                   >
          Update
                   </Button>

@@ -12,6 +12,7 @@ import LoginPage from './src/Pages/loginPage/loginPage';
 import GetOtpPage from './src/Pages/getOtpPage/getOtpPage';
 import DashboardPage from './src/Pages/dashboardPage/dashboardPage';
 import HeaderPage from './src/Pages/headerPage/headerPage';
+import ReportPage from './src/Pages/reportPage/reportPage';
 
 const Stack = createNativeStackNavigator();
 
@@ -122,6 +123,11 @@ export default function App() {
             <Stack.Screen
               name="HeaderPage"
               component={HeaderPage}
+              options={{ headerShown: false }}
+            />
+              <Stack.Screen
+              name="ReportPage"
+              component={ReportPage}
               options={{ headerShown: false }}
             />
           </Stack.Navigator>
