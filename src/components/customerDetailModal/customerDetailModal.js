@@ -90,8 +90,11 @@ return (
  customerAddress: filterCustomerObj?.customerAddress || recentBookObj?.customerAddress ||'',
  customerPhoneNumber: filterCustomerObj?.customerPhoneNumber || recentBookObj?.customerPhoneNumber|| '',
  totalCustomer: filterCustomerObj?.totalCustomer || '',
- customerAadharNumber: filterCustomerObj?.customerAadharNumber || '',
+ customerIdProof: filterCustomerObj?.customerIdProof || '',
  customerCity: filterCustomerObj?.customerCity || '',
+ customerOccupation: filterCustomerObj?.customerOccupation || '',
+ customerDestination: filterCustomerObj?.customerDestination || '',
+ reasonToStay: filterCustomerObj?.reasonToStay || '',
  checkInDate: filterCustomerObj?.checkInDate || '',
  checkInTime: filterCustomerObj?.checkInTime || '',
  checkOutDate: filterCustomerObj?.checkOutDate || '',
@@ -128,8 +131,11 @@ return (
         customerAddress:values.customerAddress,
         customerPhoneNumber:values.customerPhoneNumber,
         totalCustomer:values.totalCustomer,
-        customerAadharNumber:values.customerAadharNumber,
+        customerIdProof:values.customerIdProof,
         customerCity:values.customerCity,
+        customerOccupation:values.customerOccupation,
+        customerDestination:values.customerDestination,
+        reasonToStay:values.reasonToStay,
         checkInDate:values.checkInDate,
         checkInTime:checkInTime,
         checkOutDate:values.checkOutDate,
@@ -272,14 +278,14 @@ console.log('customer',customerDetailsObj)
 
         {values.customerPhoneNumber?.trim().length > 0?<View>
         <TextInput
-          label="Customer Aadhar Number"
+          label="Customer Id Proof"
           mode="outlined"
           style={{ width: screenWidth * 0.75, marginBottom: 10 }}
-          onChangeText={handleChange('customerAadharNumber')}
-          onBlur={handleBlur('customerAadharNumber')}
-          value={values.customerAadharNumber}
+          onChangeText={handleChange('customerIdProof')}
+          onBlur={handleBlur('customerIdProof')}
+          value={values.customerIdProof}
         />
-        {touched.customerAadharNumber && errors.customerAadharNumber && <Text style={{ color: 'red', marginLeft: 12 }}>{errors.customerAadharNumber}</Text>}
+        {touched.customerIdProof && errors.customerIdProof && <Text style={{ color: 'red', marginLeft: 12 }}>{errors.customerIdProof}</Text>}
         </View>:null}
 
         {values.customerPhoneNumber?.trim().length > 0?<View>
@@ -292,6 +298,42 @@ console.log('customer',customerDetailsObj)
           value={values.customerCity}
         />
          {touched.customerCity && errors.customerCity && <Text style={{ color: 'red', marginLeft: 12 }}>{errors.customerCity}</Text>}
+        </View>:null}
+       
+        {values.customerPhoneNumber?.trim().length > 0?<View>
+        <TextInput
+          label="Customer Occupation"
+          mode="outlined"
+          style={{ width: screenWidth * 0.75, marginBottom: 10 }}
+          onChangeText={handleChange('customerOccupation')}
+          onBlur={handleBlur('customerOccupation')}
+          value={values.customerOccupation}
+        />
+         {touched.customerOccupation && errors.customerOccupation && <Text style={{ color: 'red', marginLeft: 12 }}>{errors.customerOccupation}</Text>}
+        </View>:null}
+
+        {values.customerPhoneNumber?.trim().length > 0?<View>
+        <TextInput
+          label="Customer Destination"
+          mode="outlined"
+          style={{ width: screenWidth * 0.75, marginBottom: 10 }}
+          onChangeText={handleChange('customerDestination')}
+          onBlur={handleBlur('customerDestination')}
+          value={values.customerDestination}
+        />
+         {touched.customerDestination && errors.customerDestination && <Text style={{ color: 'red', marginLeft: 12 }}>{errors.customerDestination}</Text>}
+        </View>:null}
+   
+        {values.customerPhoneNumber?.trim().length > 0?<View>
+        <TextInput
+          label="reason to stay"
+          mode="outlined"
+          style={{ width: screenWidth * 0.75, marginBottom: 10 }}
+          onChangeText={handleChange('reasonToStay')}
+          onBlur={handleBlur('reasonToStay')}
+          value={values.reasonToStay}
+        />
+         {touched.reasonToStay && errors.reasonToStay && <Text style={{ color: 'red', marginLeft: 12 }}>{errors.reasonToStay}</Text>}
         </View>:null}
 
        {values.customerPhoneNumber?.trim().length > 0?<View >
@@ -641,12 +683,24 @@ console.log('customer',customerDetailsObj)
        <Text>{filterCustomerObj.totalCustomer}</Text>
       </View>
       <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
-        <Text>Customer Aadhar Number : </Text>
-       <Text>{filterCustomerObj.customerAadharNumber}</Text>
+        <Text>Customer Id Proof : </Text>
+       <Text>{filterCustomerObj.customerIdProof}</Text>
       </View>
       <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
         <Text>Customer City : </Text>
        <Text>{filterCustomerObj.customerCity}</Text>
+      </View>
+       <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
+        <Text>Customer Occupation: </Text>
+       <Text>{filterCustomerObj.customerOccupation}</Text>
+      </View>
+      <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
+        <Text>Customer Destination: </Text>
+       <Text>{filterCustomerObj.customerDestination}</Text>
+      </View>
+      <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
+        <Text>Reason To Stay: </Text>
+       <Text>{filterCustomerObj.reasonToStay}</Text>
       </View>
       <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
         <Text>Check In Date : </Text>

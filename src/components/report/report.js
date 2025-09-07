@@ -1,7 +1,9 @@
 import { Button} from "react-native-paper"
 import { View } from "react-native"
 import { useState,useEffect } from "react"
+import PoliceReport from "../policeReport/policeReport"
 const Report=({totalReportArray})=>{
+  console.log('total report array',totalReportArray)
     const finalDate=new Date()
     const todayDate=finalDate.toLocaleDateString("en-GB") 
     console.log('today date report',todayDate)
@@ -9,10 +11,10 @@ const Report=({totalReportArray})=>{
 
     useEffect(()=>{
     if(todayDate){
-const currenReport=totalReportArray.filter((report)=>report.checkInDate===todayDate)
+const currenReport=totalReportArray?.filter((report)=>report.checkInDate===todayDate)
 setFilterReportArray(currenReport)
     }
-    },[todayDate])
+    },[todayDate,totalReportArray])
     console.log('filter report',filterReportArray)
 return (
     <>
@@ -32,7 +34,9 @@ return (
             </Button>
           </View>        
 </View>
-
+<View>
+  <PoliceReport policeReport={filterReportArray}/>
+</View>
     </>
 )
 }

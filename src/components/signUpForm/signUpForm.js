@@ -36,6 +36,8 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
   const [totalRooms,setTotalRooms]=useState('')
   const [totalFloors,setTotalFloors]=useState('')
   const [hotelName,setHotelName]=useState('')
+  const [hotelAddress,setHotelAddress]=useState('')
+  const [hotelRegistrationNumber,setHotelRegistrationNumber]=useState('')
   const [checkOutTime,setCheckOutTime]=useState('')
   const [selectedStaffList, setSelectedStaffList] = useState('Designation');
   const [hotelImagesList, setHotelImagesList] = useState('Hotel Images');
@@ -469,6 +471,12 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
     if (!hotelName || hotelName.trim().length < 2 || hotelName.trim().length > 64) {
       errors.hotelName = "Hotel name is required and must be between 2-64 characters.";
     }
+    if (!hotelAddress || hotelAddress.trim().length < 2 || hotelAddress.trim().length > 64) {
+      errors.hotelAddress = "Hotel address is required and must be between 2-64 characters.";
+    }
+    if (!hotelRegistrationNumber || hotelRegistrationNumber.trim().length < 2 || hotelRegistrationNumber.trim().length > 64) {
+      errors.hotelRegistrationNumber = "Hotel registration number is required and must be between 2-64 characters.";
+    }
     if (!checkOutTime || checkOutTime.trim().length < 2 || checkOutTime.trim().length > 64) {
       errors.hotelName = "Checkout time is required ";
     }
@@ -561,6 +569,8 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
   
     // 🏨 Append Hotel Name
     formData.append('hotelName', hotelName);
+    formData.append('hotelAddress', hotelAddress);
+    formData.append('hotelRegistrationNumber', hotelRegistrationNumber);
     formData.append('checkOutTime', checkOutTime);
     // 👤 Append Owners
     Object.keys(ownerNames).forEach((key, index) => {
@@ -820,6 +830,34 @@ return (
   ))}
   {/* Staff */}
 </View>
+
+{Object.keys(ownerNames).length>0?<View style={{ paddingHorizontal: 16, marginBottom: 10 }}>
+        <TextInput
+          label="Hotel Address"
+          mode="outlined"
+          value={hotelAddress}
+          onChangeText={(text)=>setHotelAddress(text)}
+        />
+        {formErrors.hotelAddress && (
+  <Text style={{ color: 'red', marginTop: 4, paddingHorizontal: 16 }}>
+    {formErrors.hotelAddress}
+  </Text>
+)}
+      </View>:null}
+
+     { Object.keys(ownerNames).length>0?<View style={{ paddingHorizontal: 16, marginBottom: 10 }}>
+        <TextInput
+          label="Hotel Registration Number"
+          mode="outlined"
+          value={hotelRegistrationNumber}
+          onChangeText={(text)=>setHotelRegistrationNumber(text)}
+        />
+        {formErrors.hotelRegistrationNumber && (
+  <Text style={{ color: 'red', marginTop: 4, paddingHorizontal: 16 }}>
+    {formErrors.hotelRegistrationNumber}
+  </Text>
+)}
+      </View>:null} 
 
 {Object.keys(ownerNames).length>0?<View style={{ paddingHorizontal: 16, marginBottom: 10 }}>
         <TextInput
