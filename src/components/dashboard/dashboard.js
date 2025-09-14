@@ -14,7 +14,7 @@ import BookedModal from "../bookedModal/bookedModal";
 const socket = io.connect("http://192.168.29.169:4000")
 const Dashboard=({hotelDetails})=>{
   const BASE_URL = "http://192.168.29.169:4000";
-  console.log('hotel details is',hotelDetails)
+  // console.log('hotel details is',hotelDetails)
   const [customerObj,setCustomerObj]=useState({})
   const [customerArrayAdvance,setCustomerArrayAdvance]=useState([])
   const [showBookedAlert, setShowBookedAlert] = useState(false);
@@ -25,7 +25,7 @@ const Dashboard=({hotelDetails})=>{
     const totalRoom=hotelDetails?.totalRoom
     const room=hotelDetails?.room
     const hotelDetailSelector=useSelector((state)=>state.getHotelDetails.getHotelDetailsObj.hotelObj)
-    console.log('hotel id dashboard',hotelDetailSelector?._id)
+    // console.log('hotel id dashboard',hotelDetailSelector?._id)
 
     const finalDate=new Date()
     const todayDate=finalDate.toLocaleDateString("en-GB") 
@@ -36,7 +36,7 @@ const Dashboard=({hotelDetails})=>{
             const response = await axios.get(
               `${BASE_URL}/hotel/getCustomerDetails/${hotelDetailSelector?._id}`
             );
-            console.log('visitor user dashboard in response',response?.data)
+            // console.log('visitor user dashboard in response',response?.data)
             setCustomerObj(response?.data || {})
           }
         } catch (error) {
@@ -54,7 +54,7 @@ const Dashboard=({hotelDetails})=>{
       };
     }, [hotelDetailSelector?._id]);
     const customerArray=customerObj?.getCustomerDetailsArray
-    console.log('customer array dashboard is',customerArray)
+    // console.log('customer array dashboard is',customerArray)
     // console.log('room is',Object.entries(room))
     // const hotelObj=hotelDetails?.matchedHotels[0]
     // const removeLoginData = async () => {
@@ -80,7 +80,7 @@ setShowBookedAlert(true)
         setSelectedDate(date);
       }
     };
-    console.log('select date',selectedDate.toLocaleDateString("en-GB"))
+    // console.log('select date',selectedDate.toLocaleDateString("en-GB"))
     const currentDate=selectedDate.toLocaleDateString("en-GB")
 
     
@@ -91,7 +91,7 @@ setShowBookedAlert(true)
             const response = await axios.get(
               `${BASE_URL}/hotel/getCustomerDetailsAdvance/${hotelDetailSelector?._id}`
             );
-            console.log('visitor user in response',response?.data)
+            // console.log('visitor user in response',response?.data)
             setCustomerArrayAdvance(response?.data?.getAdvanceCustomerDetailsArray || {} )
           }
         } catch (error) {
@@ -115,7 +115,7 @@ setShowBookedAlert(true)
       }
       },[currentDate,customerArrayAdvance])
 
-      console.log('match room array',matchRoomArray)
+      // console.log('match room array',matchRoomArray)
 
       const bookedNumber=todayDate!==currentDate?matchRoomArray.length: customerArray?.length
       const finalTotalRoom=totalRoom-bookedNumber

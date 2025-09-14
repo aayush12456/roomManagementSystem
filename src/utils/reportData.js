@@ -15,3 +15,8 @@ export const reportArray=[
     {id:14,name:'Button'}
 
 ]
+export const filterReport=[
+    {id:1,name:'today'},
+    {id:2,name:'yesterday'},
+    {id:3,name:'Custom'},
+]

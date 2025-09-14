@@ -12,14 +12,14 @@ import axios from "axios";
 import { passDataObjSliceAcions } from "../../Redux/Slice/passDataSliceObj/passDataSliceObj";
 const socket = io.connect("http://192.168.29.169:4000")
 const CustomerDetailModal=({showAlert,setShowAlert,selectedRoomId,customerArray,roomType,floor,roomNo,currentDates})=>{
-  console.log('customer array',customerArray)
+  // console.log('customer array',customerArray)
   const BASE_URL = "http://192.168.29.169:4000";
   const hotelDetailSelector=useSelector((state)=>state.getHotelDetails.getHotelDetailsObj.hotelObj)
   const passDataSelector=useSelector((state)=>state.passDataObj.passDataObj)
   const recentBookObj=passDataSelector.obj
   const dispatch=useDispatch()
-  console.log('pass data obj ',passDataSelector)
-  console.log('hotel detail obj',hotelDetailSelector)
+  // console.log('pass data obj ',passDataSelector)
+  // console.log('hotel detail obj',hotelDetailSelector)
     const screenWidth = Dimensions.get("window").width;
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [showTimePicker, setShowTimePicker] = useState(false);
@@ -38,7 +38,7 @@ const CustomerDetailModal=({showAlert,setShowAlert,selectedRoomId,customerArray,
     useEffect(()=>{
     if(selectedRoomId){
     const matchRoom=customerArray.some((item)=>item.roomId==selectedRoomId)
-    console.log('match room',matchRoom)
+    // console.log('match room',matchRoom)
      setMatchRoomResponse(matchRoom)
     }
     },[selectedRoomId,customerArray])
@@ -53,13 +53,13 @@ const CustomerDetailModal=({showAlert,setShowAlert,selectedRoomId,customerArray,
     useEffect(()=>{
       if(selectedRoomId){
       const customerObj=customerArray.find((item)=>item.roomId==selectedRoomId)
-      console.log('customer obj',customerObj)
+      // console.log('customer obj',customerObj)
       setFilterCustomerObj(customerObj)
       }
       },[selectedRoomId,customerArray])
   
     
-    console.log('filter customer obj',filterCustomerObj)
+    // console.log('filter customer obj',filterCustomerObj)
       const deleteCustomerDetails=async(customerId)=>{
         const deleteObj={
         id:hotelDetailSelector?._id,
@@ -153,7 +153,7 @@ return (
             `${BASE_URL}/hotel/updateCustomerDetails/${customerDetailsObj.id}`,
             customerDetailsObj
           );
-          console.log("response in update obj is", response?.data);
+          // console.log("response in update obj is", response?.data);
           Toast.show({
             type: ALERT_TYPE.SUCCESS,
             title: "Customer Details Updated Successfully",
@@ -167,7 +167,7 @@ return (
             `${BASE_URL}/hotel/addCustomerDetails/${customerDetailsObj.id}`,
             customerDetailsObj
           );
-          console.log("response in add obj is", response?.data);
+          // console.log("response in add obj is", response?.data);
           Toast.show({
             type: ALERT_TYPE.SUCCESS,
             title: "Customer Details Added Successfully",
@@ -180,7 +180,7 @@ return (
         console.error("Error in Add/Update Customer", error);
       }
 
-console.log('customer',customerDetailsObj)
+// console.log('customer',customerDetailsObj)
         resetForm()
         setShowAlert(false)
         setShowTextField(false); 

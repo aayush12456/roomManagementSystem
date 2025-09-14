@@ -10,7 +10,7 @@ import io from "socket.io-client";
 import { passDataObjSliceAcions } from "../../Redux/Slice/passDataSliceObj/passDataSliceObj";
 const socket = io.connect("http://192.168.29.169:4000")
 const AdvanceBookModal=({floor,roomType,roomNo,advanceAlert,selectedRoomId,roomNum,customerArrayAdvance,todayDate,currentDates,setAdvanceAlert})=>{
-  console.log('customer array advance modal',customerArrayAdvance)
+  // console.log('customer array advance modal',customerArrayAdvance)
 const BASE_URL = "http://192.168.29.169:4000";  
 const hotelDetailSelector=useSelector((state)=>state.getHotelDetails.getHotelDetailsObj.hotelObj)    
 const screenWidth = Dimensions.get("window").width;   
@@ -23,7 +23,7 @@ const [filterCustomerObjAdvance,setFilterCustomerObjAdvance]=useState({})
 useEffect(()=>{
   if(selectedRoomId){
   const matchRoom=customerArrayAdvance?.some((item)=>item.roomId==selectedRoomId &&item.selectedDate === currentDates)
-  console.log('match room',matchRoom)
+  // console.log('match room',matchRoom)
    setMatchRoomResponseAdvance(matchRoom)
   }
   },[selectedRoomId,customerArrayAdvance,currentDates])
@@ -58,7 +58,7 @@ useEffect(()=>{
       obj:filterCustomerObjAdvance,
       type:true
     }
-    console.log('final obj',finalObj)
+    // console.log('final obj',finalObj)
     dispatch(passDataObjSliceAcions.passDataObj(finalObj))
     }
     // setShowAlert(true)
@@ -98,14 +98,14 @@ return (
             advancePayment:values.advancePayment,
             frontDeskExecutiveName:values.executiveName,
         }
-        console.log('advance customer',advanceCustomerObj)
+        // console.log('advance customer',advanceCustomerObj)
      try{
       if(matchRoomResponseAdvance === true){
         const response = await axios.post(
           `${BASE_URL}/hotel/updateCustomerDetailsAdvance/${advanceCustomerObj.id}`,
           advanceCustomerObj
         );
-        console.log("response in update obj is", response?.data);
+        // console.log("response in update obj is", response?.data);
         Toast.show({
           type: ALERT_TYPE.SUCCESS,
           title: "AdvanceCustomer Details Updated Successfully",
@@ -118,7 +118,7 @@ return (
           `${BASE_URL}/hotel/addCustomerDetailsAdvance/${advanceCustomerObj.id}`,
           advanceCustomerObj
         );
-        console.log("response in add obj advance is", response?.data);
+        // console.log("response in add obj advance is", response?.data);
         Toast.show({
           type: ALERT_TYPE.SUCCESS,
           title: "Advance Customer Details Added Successfully",

@@ -9,8 +9,8 @@ import CustomerDetailModal from "../../customerDetailModal/customerDetailModal";
 import AdvanceBookModal from "../../advanceBookModal/advanceBookModal";
 const socket = io.connect("http://192.168.29.169:4000")
 const RoomDetailCard=({roomTitle,roomDetails,currentDate})=>{
-  console.log('curent date',currentDate)
-  console.log('room details',roomDetails)
+  // console.log('curent date',currentDate)
+  // console.log('room details',roomDetails)
   const BASE_URL = "http://192.168.29.169:4000";
   const [showAlert, setShowAlert] = useState(false);
   const [selectedRoomId, setSelectedRoomId] = useState(null);
@@ -22,7 +22,7 @@ const RoomDetailCard=({roomTitle,roomDetails,currentDate})=>{
   const [advanceAlert,setAdvanceAlert]=useState(false)
   const hotelDetailSelector=useSelector((state)=>state.getHotelDetails.getHotelDetailsObj.hotelObj)
   
-  console.log('hotel id',hotelDetailSelector?._id)
+  // console.log('hotel id',hotelDetailSelector?._id)
   const finalDate=new Date()
   const todayDate=finalDate.toLocaleDateString("en-GB") 
     const irregulars = {
@@ -46,7 +46,7 @@ const RoomDetailCard=({roomTitle,roomDetails,currentDate})=>{
         return `${ordinal} Floor`;
       };
   const roomClickHandler = (id, type, num) => {
-  console.log("id is", id);
+  // console.log("id is", id);
   setSelectedRoomId(id);
 
   const today = moment(todayDate, "DD/MM/YYYY");
@@ -97,9 +97,9 @@ const RoomDetailCard=({roomTitle,roomDetails,currentDate})=>{
   setRoomNo(num);
 };
 
-  console.log('floor us',floors)
-  console.log('room no',roomNo)
-  console.log('show alert in advance',showAlert)
+  // console.log('floor us',floors)
+  // console.log('room no',roomNo)
+  // console.log('show alert in advance',showAlert)
 useEffect(() => {
   const fetchRoomDetails = async () => {
     try {
@@ -107,7 +107,7 @@ useEffect(() => {
         const response = await axios.get(
           `${BASE_URL}/hotel/getCustomerDetails/${hotelDetailSelector?._id}`
         );
-        console.log('visitor user in response',response?.data)
+        // console.log('visitor user in response',response?.data)
         setCustomerObj(response?.data || {} )
       }
     } catch (error) {
@@ -126,9 +126,9 @@ useEffect(() => {
 }, [hotelDetailSelector._id]);
 
 const customerArray=customerObj?.getCustomerDetailsArray
-console.log('customer array is',customerArray)
+// console.log('customer array is',customerArray)
 const roomData= Object.values(roomDetails)
-console.log('room data',roomData)
+// console.log('room data',roomData)
 // useEffect(() => {
 //   const isMatch = customerArray.some(cust =>
 //     roomData.some(room => room._id === cust.roomId)
@@ -146,7 +146,7 @@ useEffect(() => {
         const response = await axios.get(
           `${BASE_URL}/hotel/getCustomerDetailsAdvance/${hotelDetailSelector?._id}`
         );
-        console.log('visitor user in response',response?.data)
+        // console.log('visitor user in response',response?.data)
         setCustomerArrayAdvance(response?.data?.getAdvanceCustomerDetailsArray || {} )
       }
     } catch (error) {
@@ -163,7 +163,7 @@ useEffect(() => {
     socket.off("getCustomerDetailsAdvance");
   };
 }, [hotelDetailSelector._id]);
-console.log('customer array advance',customerArrayAdvance)
+// console.log('customer array advance',customerArrayAdvance)
 return (
     <>
     <Card style={{ borderRadius: 6, marginVertical: 5, padding: 10 }}>
@@ -193,7 +193,7 @@ return (
        const hasAdvanceBooking = customerArrayAdvance?.some(
         (item) => item.roomId === roomId && item.selectedDate === currentDate
       );
-       console.log('is advance matched',isAdvanceMatched)
+      //  console.log('is advance matched',isAdvanceMatched)
        const roomType=roomData.roomType
             return (
                 <View key={roomIndex} style={{ padding: 6 }}>

@@ -2,13 +2,13 @@ import { View,Pressable,Modal,Dimensions, ScrollView } from "react-native";
 import { Text,Button } from "react-native-paper";
 import { useEffect } from "react";
 const BookedModal=({showBookedAlert,setShowBookedAlert,customerArray,customerArrayAdvance, todayDate,currentDate,room})=>{
-  console.log('customer array in booked',customerArray)
+  // console.log('customer array in booked',customerArray)
     const screenWidth = Dimensions.get("window").width;
     const acRoomArray=customerArray?.filter((item)=>item.roomType=='Ac')
     const NonAcRoomArray=customerArray?.filter((item)=>item.roomType=='Non Ac')
     const acRoomArrayAdvance=customerArrayAdvance.filter((item)=>item.roomType=='Ac' && item.selectedDate===currentDate)
     const NonAcRoomArrayAdvance=customerArrayAdvance.filter((item)=>item.roomType=='Non Ac' && item.selectedDate===currentDate)
-    console.log('room is',room)
+    // console.log('room is',room)
     const finalAcRoomArray=todayDate!==currentDate?acRoomArrayAdvance:acRoomArray|| []
     const finalNonAcRoomArray=todayDate!==currentDate?NonAcRoomArrayAdvance:NonAcRoomArray || []
     const groupedData = finalAcRoomArray?.reduce((acc, item) => {
@@ -26,7 +26,7 @@ const BookedModal=({showBookedAlert,setShowBookedAlert,customerArray,customerArr
       nonAc[item.floor].push(item.roomNo);
       return nonAc;
     }, {});
-console.log('grouped datas',groupedDatas)
+// console.log('grouped datas',groupedDatas)
 
     return (
         <>

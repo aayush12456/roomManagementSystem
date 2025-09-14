@@ -29,8 +29,18 @@ const ReportPage=()=>{
         socket.on("getCustomerDetails", (newUser) => {
           setReportObj(newUser);
         });
+
+        socket.on("updateCustomerDetails", (data) => {
+          if (data.hotelId === hotelDetailSelector._id) {
+            setReportObj(prev => ({
+              ...prev,
+              reportArray: data.reportArray,
+            }));
+          }
+        });
         return () => {
           socket.off("getReportDetails");
+          socket.off("updateCustomerDetails");
         };
       }, [hotelDetailSelector._id]);
       const reportArray=reportObj?.reportArray
