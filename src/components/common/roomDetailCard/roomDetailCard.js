@@ -10,7 +10,7 @@ import AdvanceBookModal from "../../advanceBookModal/advanceBookModal";
 const socket = io.connect("http://192.168.29.169:4000")
 const RoomDetailCard=({roomTitle,roomDetails,currentDate})=>{
   // console.log('curent date',currentDate)
-  // console.log('room details',roomDetails)
+  console.log('room details',roomDetails)
   const BASE_URL = "http://192.168.29.169:4000";
   const [showAlert, setShowAlert] = useState(false);
   const [selectedRoomId, setSelectedRoomId] = useState(null);
@@ -46,6 +46,7 @@ const RoomDetailCard=({roomTitle,roomDetails,currentDate})=>{
         return `${ordinal} Floor`;
       };
   const roomClickHandler = (id, type, num) => {
+    console.log('num is',num)
   // console.log("id is", id);
   setSelectedRoomId(id);
 
@@ -171,9 +172,10 @@ return (
     <View style={{flexDirection:'row',flexWrap:'wrap',gap:10}}>
     {roomDetails && typeof roomDetails === 'object' &&
         Object.entries(roomDetails).map(([roomLabel, roomData], roomIndex) =>{
+          console.log('room data is',roomData)
         const data=roomLabel.split('')
         const roomId=roomData?._id
-        const shortLabel=`R${data[data.length-1]}`
+        const shortLabel=`R-${roomData?.number}`
        const bedType = roomData.bedType.split(',').map(item => item.replace(' Bed', ''));
        const isMatched = customerArray?.some(cust => cust.roomId === roomId);
        const today = moment(todayDate, "DD/MM/YYYY");
@@ -207,9 +209,17 @@ return (
                      padding:12,
                      marginBottom: 5,
                      width:50
+                     
                    }}
                  >
-                   <Text style={{ fontWeight: "bold",textAlign:'center' }}>{shortLabel}</Text>
+                 <View style={{ flexDirection: "row", justifyContent: "center" }}>
+                 <Text style={{ fontWeight: "bold", textAlign: "center"}}>
+        R-
+      </Text>
+      <Text style={{ fontWeight: "bold", textAlign: "center" }}>
+        {roomData?.number}
+      </Text>
+    </View>
                  </View>
                 </Pressable>
              <Text style={{textAlign:'center'}}>{bedType}</Text>

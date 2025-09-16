@@ -27,7 +27,7 @@ const BookedModal=({showBookedAlert,setShowBookedAlert,customerArray,customerArr
       return nonAc;
     }, {});
 // console.log('grouped datas',groupedDatas)
-
+console.log('grouped data',groupedData)
     return (
         <>
          <Modal visible={showBookedAlert} transparent animationType="fade">

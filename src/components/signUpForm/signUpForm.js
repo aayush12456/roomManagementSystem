@@ -313,7 +313,7 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
         if (!isNaN(floorCount) && floorCount > 0) {
           const floorDataObj = {};
           for (let i = 1; i <= floorCount; i++) {
-            floorDataObj[`${floorName} Room ${i}`] = { roomType: '', bedType: '' };
+            floorDataObj[`${floorName} Room ${i}`] = { roomType: '', bedType: '',number:'' };
           }
     
           setTotalFloorArray((prev) => ({
@@ -556,6 +556,9 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
       }
       if (!roomData.bedType || roomData.bedType.trim().length === 0) {
         errors[`bedType_${roomKey}`] = `${roomKey} bed type is required.`;
+      }
+      if (!roomData.number || roomData.number.trim().length === 0) {
+        errors[`number_${roomKey}`] = `${roomKey} room number is required.`;
       }
     });
   
@@ -1126,6 +1129,21 @@ return (
     {formErrors[`bedType_${roomKey}`]}
   </Text>
 )}
+<View style={{ paddingHorizontal: 0, marginBottom: 10,marginTop:4 }}>
+        <TextInput
+          label={`Room Number`}
+          mode="outlined"
+          value={roomNamesArray[roomKey]?.number || ''}
+          onChangeText={(text) => handleRoomDataChange(roomKey, 'number', text)}
+          keyboardType="numeric"
+        />
+        {formErrors[`number_${roomKey}`] && (
+          <Text style={{ color: 'red', fontSize: 12, marginTop: 4 }}>
+            {formErrors[`number_${roomKey}`]}
+          </Text>
+        )}
+      </View>
+ 
             </View>
           )
         })

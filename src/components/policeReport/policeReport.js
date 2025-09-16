@@ -501,7 +501,7 @@ const generateAndDownloadPDF = async () => {
                 ${rowsToRender.map((item, index) => `
                   <tr style="height: calc(700px / 7);">
                     <td>${pageIndex * chunkSize + index + 1}</td>
-                    <td>${item.roomNo}</td>
+                    <td>${item.roomNo?item.roomNo.split('R-').join(''):''}</td>
                     <td>${item.customerName} ${item.customerAddress} ${item.customerPhoneNumber}</td>
                     <td>${item.customerOccupation}</td>
                     <td>${item.reasonToStay}</td>
@@ -601,7 +601,7 @@ const generateAndDownloadPDF = async () => {
               ${rowsToRender.map((item, index) => `
                 <tr style="height: calc(700px / 7);">
                   <td>${pageIndex * chunkSize + index + 1}</td>
-                  <td>${item.roomNo}</td>
+                  <td>${item.roomNo?item.roomNo.split('R-').join(''):''}</td>
                   <td>${item.customerName} ${item.customerAddress} ${item.customerPhoneNumber}</td>
                   <td>${item.customerOccupation}</td>
                   <td>${item.reasonToStay}</td>
