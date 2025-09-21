@@ -4,25 +4,35 @@ import { View,Dimensions } from "react-native"
 import { useState,useEffect } from "react"
 import PoliceReport from "../policeReport/policeReport"
 import { useSelector } from "react-redux"
-const Report=({totalReportArray})=>{
+import PersonalReport from '../personalReport/personalReport';
+const Report=({totalReportArray,personalReportArray})=>{
   // console.log('total report array',totalReportArray)
+  console.log('personal report',personalReportArray)
     const finalDate=new Date()
     const todayDate=finalDate?.toLocaleDateString("en-GB") 
     // console.log('today date report',todayDate)
     const [filterReportArray,setFilterReportArray]=useState([])
+    const [filterPersonalReportArray,setFilterPersonalReportArray]=useState([])
+    const [normalText,setNormalText]=useState('')
     const dateSelector=useSelector((state)=>state.passReportObj.passReportObj)
-    // console.log('date selector',dateSelector)
+    console.log('date selector',dateSelector)
+
+    const hotelDetailSelector = useSelector((state) => state.getHotelDetails.getHotelDetailsObj.hotelObj);
 
     const parseDate = (dateStr) => {
       const [day, month, year] = dateStr?.split('/').map(Number);
       return new Date(year, month - 1, day);
     };
     useEffect(()=>{
-     if(dateSelector.type==='yesterday' || dateSelector.type === 'today'){
+     if((dateSelector.type==='yesterday' || dateSelector.type === 'today') && dateSelector.report==="police"){
       const currenReport=totalReportArray?.filter((report)=> report.checkInDate===dateSelector?.dates)
       setFilterReportArray(currenReport)
     }
-    else if (dateSelector.type === 'Custom') {
+    else if((dateSelector.type==='yesterday' || dateSelector.type === 'today') && dateSelector.report==="personal"){
+      const personalReport=personalReportArray?.filter((report)=> report.checkInDate===dateSelector?.dates)
+      setFilterPersonalReportArray(personalReport)
+    }
+    else if (dateSelector.type === 'Custom' && dateSelector.report==="police" ) {
       // Parse startDate and endDate
       const start = parseDate(dateSelector.startDate);
       
@@ -35,11 +45,29 @@ const Report=({totalReportArray})=>{
   
       setFilterReportArray(currenReport);
     } 
+
+    else if (dateSelector.type === 'Custom' && dateSelector.report==="personal" ) {
+      // Parse startDate and endDate
+      const start = parseDate(dateSelector.startDate);
+      
+      const end = parseDate(dateSelector.endDate);
+  
+      const currenReport = personalReportArray?.filter((report) => {
+        const reportDate = parseDate(report.checkInDate);
+        return reportDate >= start && reportDate <= end;
+      });
+  
+      setFilterPersonalReportArray(currenReport);
+    } 
     else {
-      const currenReport=totalReportArray?.filter((report)=>report.checkInDate===todayDate)
-      setFilterReportArray(currenReport)
+      if(todayDate){
+        const currenReport=totalReportArray?.filter((report)=>report.checkInDate===todayDate)
+        setFilterReportArray(currenReport)
+        const currentReport=personalReportArray?.filter((report)=>report.checkInDate===todayDate)
+        setFilterPersonalReportArray(currentReport)
+      }
           }
-    },[todayDate,totalReportArray,dateSelector?.dates,dateSelector.type,dateSelector.startDate, dateSelector.endDate])
+    },[todayDate,totalReportArray,dateSelector?.dates,dateSelector.type,dateSelector.startDate, dateSelector.endDate,personalReportArray,dateSelector.report])
     // console.log('filter report',filterReportArray)
 
     const screenHeight = Dimensions.get("window").height;
@@ -49,25 +77,29 @@ const Report=({totalReportArray})=>{
     const [index, setIndex] = useState(0);
   const [routes] = useState([
     { key: 'policeReport', title: 'Police Report', focusedIcon: 'shield-account' },
-    { key: 'normalReport', title: 'Normal Report', focusedIcon: 'file-document' },
+    { key: 'normalReport', title: 'Personal Report', focusedIcon: 'file-document' },
   ]);
 
   const PoliceReportRoute = () => (
     <View style={{ flex: 1 }}>
-      <PoliceReport policeReport={filterReportArray} dateSelector={dateSelector} isSmallScreen={isSmallScreen} />
+      <PoliceReport policeReport={filterReportArray} dateSelector={dateSelector} 
+      isSmallScreen={isSmallScreen} hotelDetailSelector={hotelDetailSelector} />
     </View>
   );
   
   const NormalReportRoute = () => (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>No report selected</Text>
-    </View>
+  
+    <View style={{ flex: 1 }}>
+<PersonalReport isSmallScreen={isSmallScreen} personalReport={filterPersonalReportArray} 
+hotelDetailSelector={hotelDetailSelector} dateSelector={dateSelector} />
+  </View>
   );
   const renderScene = BottomNavigation.SceneMap({
     policeReport: PoliceReportRoute,
     normalReport: NormalReportRoute,
   });
-  
+  console.log('filter report personal',filterReportArray)
+  console.log('total report',filterReportArray)
 return (
     <>
   <View style={{ flex: 1 }}>

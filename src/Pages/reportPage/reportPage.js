@@ -45,9 +45,10 @@ const ReportPage=()=>{
       }, [hotelDetailSelector._id]);
       const reportArray=reportObj?.reportArray
       console.log('report details',reportArray)
+      const PersonalReportArray=reportObj?.getCustomerDetailsArray
 return (
     <>
-    <Report totalReportArray={reportArray}/>
+    <Report totalReportArray={reportArray} personalReportArray={PersonalReportArray} />
     </>
 )
 }

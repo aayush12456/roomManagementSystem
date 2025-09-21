@@ -17,7 +17,7 @@ import { passReportObjSliceActions } from "../../Redux/Slice/passReportObjSlice/
 
 const socket = io.connect("http://192.168.29.169:4000");
 
-const PoliceReport = ({ policeReport, dateSelector, isSmallScreen }) => {
+const PoliceReport = ({ policeReport, dateSelector, isSmallScreen ,hotelDetailSelector }) => {
   const BASE_URL = "http://192.168.29.169:4000";
   const dispatch = useDispatch();
   const [staffObj, setStaffObj] = useState({});
@@ -29,8 +29,6 @@ const PoliceReport = ({ policeReport, dateSelector, isSmallScreen }) => {
 
   const windowHeight = Dimensions.get('window').height;
   const containerHeight = windowHeight * 0.2;
-
-  const hotelDetailSelector = useSelector((state) => state.getHotelDetails.getHotelDetailsObj.hotelObj);
   const finalDate = new Date();
   const todayDate = finalDate.toLocaleDateString("en-GB");
   const staffArray = Object.values(hotelDetailSelector.staff || {});
@@ -65,7 +63,6 @@ const PoliceReport = ({ policeReport, dateSelector, isSmallScreen }) => {
   };
 
   const filterReportHandler = (value) => {
-    debugger
     console.log('value is',value)
     if (value === "yesterday") {
       const today = new Date();
@@ -74,11 +71,11 @@ const PoliceReport = ({ policeReport, dateSelector, isSmallScreen }) => {
       const month = String(today.getMonth() + 1).padStart(2, '0');
       const year = today.getFullYear();
       const yesterdayDate = `${day}/${month}/${year}`;
-      dispatch(passReportObjSliceActions.passReportObj({ dates: yesterdayDate, type: value }));
+      dispatch(passReportObjSliceActions.passReportObj({ dates: yesterdayDate, type: value,report:'police' }));
       setSelectedFromDate('');
       setSelectedToDate('');
     } else if (value === "today") {
-      dispatch(passReportObjSliceActions.passReportObj({ dates: todayDate, type: value }));
+      dispatch(passReportObjSliceActions.passReportObj({ dates: todayDate, type: value,report:'police' }));
       setSelectedFromDate('');
       setSelectedToDate('');
     }

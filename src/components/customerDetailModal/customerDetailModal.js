@@ -24,7 +24,7 @@ const CustomerDetailModal=({showAlert,setShowAlert,selectedRoomId,customerArray,
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [showTimePicker, setShowTimePicker] = useState(false);
     const [showDatesPicker, setShowDatesPicker] = useState(false);
-    // const [showTimesPicker, setShowTimesPicker] = useState(false);
+    const [showTimesPicker, setShowTimesPicker] = useState(false);
     const [filterCustomerObj,setFilterCustomerObj]=useState({})
     const [matchRoomResponse,setMatchRoomResponse]=useState(false)
     const [dateResponse,setDateResponse]=useState(false)
@@ -90,7 +90,9 @@ return (
  customerAddress: filterCustomerObj?.customerAddress || recentBookObj?.customerAddress ||'',
  customerPhoneNumber: filterCustomerObj?.customerPhoneNumber || recentBookObj?.customerPhoneNumber|| '',
  totalCustomer: filterCustomerObj?.totalCustomer || '',
+ relation:filterCustomerObj?.relation || '',
  customerIdProof: filterCustomerObj?.customerIdProof || '',
+ customerAadharNumber: filterCustomerObj?.customerAadharNumber || '',
  customerCity: filterCustomerObj?.customerCity || '',
  customerOccupation: filterCustomerObj?.customerOccupation || '',
  customerDestination: filterCustomerObj?.customerDestination || '',
@@ -99,7 +101,8 @@ return (
  checkInTime: filterCustomerObj?.checkInTime || '',
  checkOutDate: filterCustomerObj?.checkOutDate || '',
  checkOutTime: filterCustomerObj?.checkOutTime || '',
- totalPayment: filterCustomerObj?.totalPayment || recentBookObj?.totalPayment||'',
+ personalCheckOutTime:filterCustomerObj?.personalCheckOutTime || '',
+ totalPayment: filterCustomerObj?.totalPayment ||'',
  paymentPaid: filterCustomerObj?.paymentPaid || '',
  paymentDue: filterCustomerObj?.paymentDue || '',
  executiveName: filterCustomerObj?.frontDeskExecutiveName || '',
@@ -114,12 +117,12 @@ return (
           hour12: true,
           timeZone: "Asia/Kolkata"
         })
-        // const checkOutTime=new Date(values.checkOutTime).toLocaleTimeString("en-IN", {
-        //   hour: "2-digit",
-        //   minute: "2-digit",
-        //   hour12: true,
-        //   timeZone: "Asia/Kolkata"
-        // })
+        const personalCheckOutTime=new Date(values.personalCheckOutTime).toLocaleTimeString("en-IN", {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true,
+          timeZone: "Asia/Kolkata"
+        })
       const customerDetailsObj={
         id:hotelDetailSelector._id,
         roomId:selectedRoomId || recentBookObj?.roomId,
@@ -131,7 +134,9 @@ return (
         customerAddress:values.customerAddress,
         customerPhoneNumber:values.customerPhoneNumber,
         totalCustomer:values.totalCustomer,
+        relation:values.relation,
         customerIdProof:values.customerIdProof,
+        customerAadharNumber:values.customerAadharNumber,
         customerCity:values.customerCity,
         customerOccupation:values.customerOccupation,
         customerDestination:values.customerDestination,
@@ -139,6 +144,7 @@ return (
         checkInDate:values.checkInDate,
         checkInTime:checkInTime,
         checkOutDate:values.checkOutDate,
+        personalCheckOutTime:personalCheckOutTime,
         checkOutTime:hotelDetailSelector?.checkOutTime,
         totalPayment:values.totalPayment,
         paymentPaid:values.paymentPaid,
@@ -264,6 +270,7 @@ return (
         />
          {touched.customerPhoneNumber && errors.customerPhoneNumber && <Text style={{ color: 'red', marginLeft: 12 }}>{errors.customerPhoneNumber}</Text>}
         </View>
+
         {values.customerPhoneNumber?.trim().length > 0?<View>
         <TextInput
           label="Total Customer"
@@ -278,6 +285,18 @@ return (
 
         {values.customerPhoneNumber?.trim().length > 0?<View>
         <TextInput
+          label="Relation"
+          mode="outlined"
+          style={{ width: screenWidth * 0.75, marginBottom: 10 }}
+          onChangeText={handleChange('relation')}
+          onBlur={handleBlur('relation')}
+          value={values.relation}
+        />
+          {touched.relation && errors.relation && <Text style={{ color: 'red', marginLeft: 12 }}>{errors.relation}</Text>}
+        </View>:null}
+
+        {values.customerPhoneNumber?.trim().length > 0?<View>
+        <TextInput
           label="Customer Id Proof"
           mode="outlined"
           style={{ width: screenWidth * 0.75, marginBottom: 10 }}
@@ -287,6 +306,19 @@ return (
         />
         {touched.customerIdProof && errors.customerIdProof && <Text style={{ color: 'red', marginLeft: 12 }}>{errors.customerIdProof}</Text>}
         </View>:null}
+
+        {values.customerPhoneNumber?.trim().length > 0?<View>
+        <TextInput
+          label="Customer Aadhar Number"
+          mode="outlined"
+          style={{ width: screenWidth * 0.75, marginBottom: 10 }}
+          onChangeText={handleChange('customerAadharNumber')}
+          onBlur={handleBlur('customerAadharNumber')}
+          value={values.customerAadharNumber}
+        />
+        {touched.customerAadharNumber && errors.customerAadharNumber && <Text style={{ color: 'red', marginLeft: 12 }}>{errors.customerAadharNumber}</Text>}
+        </View>:null}
+
 
         {values.customerPhoneNumber?.trim().length > 0?<View>
         <TextInput
@@ -326,7 +358,7 @@ return (
    
         {values.customerPhoneNumber?.trim().length > 0?<View>
         <TextInput
-          label="reason to stay"
+          label="Reason To Stay"
           mode="outlined"
           style={{ width: screenWidth * 0.75, marginBottom: 10 }}
           onChangeText={handleChange('reasonToStay')}
@@ -424,19 +456,19 @@ return (
       )}
 
       {/* Time Picker */}
-      {/* {showTimesPicker && (
+      {showTimesPicker && (
         <DateTimePicker
-        value={values.checkInTime ? new Date(values.checkInTime) : new Date()}
+        value={values.personalCheckOutTime ? new Date(values.personalCheckOutTime) : new Date()}
         mode="time"
-        onChange={(event, selectedCheckOutTime) => {
+        onChange={(event, personalSelectedCheckOutTime) => {
           setShowTimesPicker(false);
-          if (selectedCheckOutTime) {
+          if (personalSelectedCheckOutTime) {
             // ✅ Store as Date object in Formik
-            setFieldValue("checkOutTime", selectedCheckOutTime.toISOString());
+            setFieldValue("personalCheckOutTime", personalSelectedCheckOutTime.toISOString());
           }
         }}
         />
-      )} */}
+      )}
 
          {values.customerPhoneNumber?.trim().length > 0?<View >
       <Pressable onPress={() => setShowDatesPicker(true)}>
@@ -456,31 +488,33 @@ return (
 
     </View>:null}
     
-      {/* {values.customerPhoneNumber?.trim().length > 0?<View>
-  <Pressable onPress={() => setShowTimesPicker(true)} style={{ marginTop: 10 }}>
-        <TextInput
-          label="Check Out Time"
-          mode="outlined"
-          value={
-            values.checkOutTime
-              ? new Date(values.checkOutTime).toLocaleTimeString("en-IN", {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                  hour12: true,
-                  timeZone: "Asia/Kolkata"
-                })
-              : ""
-          }
-          placeholder="Check Out Time"
-          editable={false}
-          pointerEvents="none"
-          style={{ width: screenWidth * 0.75, marginBottom: 10 }}
-        />
-      </Pressable>
-      {touched.checkOutTime && errors.checkOutTime && (
-  <Text style={{ color: 'red' }}>{errors.checkOutTime}</Text>
-)}
-      </View>:null} */}
+    {values.customerPhoneNumber?.trim().length > 0 ? (
+  <View>
+    <Pressable onPress={() => setShowTimesPicker(true)} style={{ marginTop: 10 }}>
+      <TextInput
+        label="Personal Check Out Time"
+        mode="outlined"
+        value={
+          values.personalCheckOutTime
+            ? new Date(values.personalCheckOutTime).toLocaleTimeString("en-IN", {
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: true,
+                timeZone: "Asia/Kolkata",
+              })
+            : ""
+        }
+        placeholder="Personal Check Out Time"
+        editable={false}
+        pointerEvents="none"
+        style={{ width: screenWidth * 0.75, marginBottom: 10 }}
+      />
+    </Pressable>
+    {touched.personalCheckOutTime && errors.personalCheckOutTime && (
+      <Text style={{ color: "red" }}>{errors.personalCheckOutTime}</Text>
+    )}
+  </View>
+) : null}
 
        {values.customerPhoneNumber?.trim().length > 0?<View>
 
@@ -682,9 +716,18 @@ return (
         <Text>Total Customer : </Text>
        <Text>{filterCustomerObj.totalCustomer}</Text>
       </View>
+
+      <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
+        <Text>Relation : </Text>
+       <Text>{filterCustomerObj.relation}</Text>
+      </View>
       <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
         <Text>Customer Id Proof : </Text>
        <Text>{filterCustomerObj.customerIdProof}</Text>
+      </View>
+      <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
+        <Text>customer Aadhar Number : </Text>
+       <Text>{filterCustomerObj.customerAadharNumber}</Text>
       </View>
       <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
         <Text>Customer City : </Text>
@@ -717,6 +760,10 @@ return (
       <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
         <Text>check Out Time : </Text>
        <Text>{filterCustomerObj.checkOutTime}</Text>
+      </View>
+      <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
+        <Text>Personal Check Out Time : </Text>
+       <Text>{filterCustomerObj.personalCheckOutTime}</Text>
       </View>
       <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
         <Text>Total Payment : </Text>
