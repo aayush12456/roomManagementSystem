@@ -13,7 +13,7 @@ const Report=({totalReportArray,personalReportArray})=>{
     // console.log('today date report',todayDate)
     const [filterReportArray,setFilterReportArray]=useState([])
     const [filterPersonalReportArray,setFilterPersonalReportArray]=useState([])
-    const [normalText,setNormalText]=useState('')
+
     const dateSelector=useSelector((state)=>state.passReportObj.passReportObj)
     console.log('date selector',dateSelector)
 

@@ -153,6 +153,9 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
     }));
   };
 
+
+
+
   const handleStaffDataChange = (type, text, index) => {
     const key = `staff${index + 1}`;
     setStaffNamesArray((prev) => ({
@@ -503,6 +506,9 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
         if (!owner.phone || !/^\d{10}$/.test(owner.phone)) {
           errors[`ownerPhone_${key}`] = `${key} phone must be 10 digits.`;
         }
+        if (!owner.address || owner.address.trim().length < 2) {
+          errors[`ownerAddress_${key}`] = `${key} address is invalid.`;
+        }
         if (!owner.image) {
           errors[`ownerImage_${key}`] = `${key} image is required.`;
         }
@@ -519,6 +525,9 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
         }
         if (!staff.phone || !/^\d{10}$/.test(staff.phone)) {
           errors[`staffPhone_${key}`] = `${key} phone must be 10 digits.`;
+        }
+        if (!staff.address || staff.address.trim().length < 2) {
+          errors[`staffAddress_${key}`] = `${key} address is invalid.`;
         }
         if (!staff.post) {
           errors[`staffPost_${key}`] = `${key} post is required.`;
@@ -581,6 +590,7 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
       formData.append(`owner${index + 1}`, JSON.stringify({
         name: owner.name,
         phone: owner.phone,
+        address:owner.address
       }));
       formData.append('ownerImages', {
         uri: owner.image,
@@ -595,6 +605,7 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
       formData.append(`staff${index + 1}`, JSON.stringify({
         name: staff.name,
         phone: staff.phone,
+        address:staff.address,
         post: staff.post,
       }));
       formData.append('staffImages', {
@@ -661,6 +672,8 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
     setTotalFloorArray({})
     setTotalFloors('')
     setTotalRooms({})
+    setHotelRegistrationNumber('')
+    setHotelAddress('')
     setFloorObj({})
     } catch (error) {
       console.log("❌ Error submitting form:", error.response?.data || error.message);
@@ -774,11 +787,34 @@ return (
             // setFieldValue(`ownerNames.${key}.phone`, text)
           }
           }
+          keyboardType="phone-pad" 
+          maxLength={10}    
+          returnKeyType="done"
           // onBlur={handleBlur(`ownerNames.${key}.phone`)}
         />
         {formErrors[`ownerPhone_${key}`] && (
   <Text style={{ color: 'red', marginTop: 4 }}>
     {formErrors[`ownerPhone_${key}`]}
+  </Text>
+)}
+      </View>
+
+      <View style={{ paddingHorizontal: 16, marginBottom: 10,marginTop:10 }}>
+        <TextInput
+          label={`Owner ${index + 1} Address `}
+          mode="outlined"
+          // value={values.ownerNames[key]?.name}
+          value={ownerNames[key].address}
+          onChangeText={(text) =>{
+            // setFieldValue(`ownerNames.${key}.name`, text)
+            // console.log(`Owner ${index + 1} Name:`, text);
+            handleOwnerNameChange('address', text, index);
+          }
+          }
+        />
+        {formErrors[`ownerAddress_${key}`] && (
+  <Text style={{ color: 'red', marginTop: 4 }}>
+    {formErrors[`ownerAddress_${key}`]}
   </Text>
 )}
       </View>
@@ -834,7 +870,7 @@ return (
   {/* Staff */}
 </View>
 
-{Object.keys(ownerNames).length>0?<View style={{ paddingHorizontal: 16, marginBottom: 10 }}>
+{Object.keys(ownerNames).length>0?<View style={{ paddingHorizontal: 16, marginBottom: 10}}>
         <TextInput
           label="Hotel Address"
           mode="outlined"
@@ -866,7 +902,9 @@ return (
         <TextInput
           label={`Total Staff`}
           mode="outlined"
-          onChangeText={(text)=>setTotalStaff(text)}         
+          onChangeText={(text)=>setTotalStaff(text)}    
+          keyboardType="phone-pad"     
+          returnKeyType="done"     
         />
         {formErrors.totalStaff && (
     <Text style={{ color: 'red', marginTop: 4 }}>
@@ -907,6 +945,9 @@ return (
           onChangeText={(text) =>
             handleStaffDataChange('phone', text, index)
           }
+          keyboardType="phone-pad" 
+          maxLength={10}    
+          returnKeyType="done"
         />
 {formErrors[`staffPhone_${key}`] && (
   <Text style={{ color: 'red', marginTop: 4 }}>
@@ -914,6 +955,28 @@ return (
   </Text>
 )}
       </View>
+  
+      <View  style={{ paddingHorizontal: 16, marginBottom: 10,marginTop:10 }}>
+          <TextInput
+            label={`Staff ${index + 1} Address `}
+            mode="outlined"
+            value={staffNamesArray[key].address}
+            onChangeText={(text) =>
+              handleStaffDataChange('address', text, index)
+            }
+            // value={values.staffNames[key]?.name}
+            // onChangeText={(text) =>
+            //   setFieldValue(`staffNames.${key}.name`, text)
+            // }
+            // onBlur={handleBlur(`staffNames.${key}.name`)}
+          />
+           {formErrors[`staffAddress_${key}`] && (
+  <Text style={{ color: 'red', marginTop: 4 }}>
+    {formErrors[`staffAddress_${key}`]}
+  </Text>
+)}
+        </View>
+
       <View style={{
       flex: 1,
       justifyContent: 'center',
@@ -1007,7 +1070,9 @@ return (
         <TextInput
           label={`Total Rooms`}
           mode="outlined"
-          onChangeText={(text)=>setTotalRooms(text)}         
+          onChangeText={(text)=>setTotalRooms(text)} 
+          keyboardType="phone-pad" 
+          returnKeyType="done"        
         />
          {formErrors.totalRooms && (
     <Text style={{ color: 'red', marginTop: 4 }}>
@@ -1021,7 +1086,9 @@ return (
           label={`Total Floors`}
           mode="outlined"
           value={totalFloors}
-          onChangeText={(val) =>setTotalFloors(val) }    
+          onChangeText={(val) =>setTotalFloors(val) }  
+          keyboardType="phone-pad"  
+          returnKeyType="done" 
         />
          {formErrors.totalFloors && (
     <Text style={{ color: 'red', marginTop: 4 }}>
@@ -1038,6 +1105,8 @@ return (
           mode="outlined"
           onChangeText={(val)=>floorSelect(val,floorItem)}   
           value={floorObj[floorItem]?.floorNumber || ''}  
+          keyboardType="phone-pad"     
+          returnKeyType="done"
         />
          {formErrors[`floorNumber_${floorItem}`] && (
     <Text style={{ color: 'red', fontSize: 12, marginTop: 4 }}>

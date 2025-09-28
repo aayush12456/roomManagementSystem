@@ -38,9 +38,19 @@ const ReportPage=()=>{
             }));
           }
         });
+
+        socket.on("updatePersonalCustomerDetails", (data) => {
+          if (data.hotelId === hotelDetailSelector._id) {
+            setReportObj(prev => ({
+              ...prev,
+              getCustomerDetailsArray: data.getCustomerDetailsArray,
+            }));
+          }
+        });
         return () => {
           socket.off("getReportDetails");
           socket.off("updateCustomerDetails");
+          socket.off("updatePersonalCustomerDetails");
         };
       }, [hotelDetailSelector._id]);
       const reportArray=reportObj?.reportArray

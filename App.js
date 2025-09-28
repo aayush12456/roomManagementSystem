@@ -12,7 +12,9 @@ import LoginPage from './src/Pages/loginPage/loginPage';
 import GetOtpPage from './src/Pages/getOtpPage/getOtpPage';
 import DashboardPage from './src/Pages/dashboardPage/dashboardPage';
 import HeaderPage from './src/Pages/headerPage/headerPage';
-import ReportPage from './src/Pages/reportPage/reportPage';
+// import ReportPage from './src/Pages/reportPage/reportPage';
+import MyProfilePage from './src/Pages/myProfilePage/myProfilePage';
+import EditProfilePage from './src/Pages/editProfilePage/editProfilePage';
 
 const Stack = createNativeStackNavigator();
 
@@ -125,9 +127,19 @@ export default function App() {
               component={HeaderPage}
               options={{ headerShown: false }}
             />
-              <Stack.Screen
+              {/* <Stack.Screen
               name="ReportPage"
               component={ReportPage}
+              options={{ headerShown: false }}
+            /> */}
+               {/* <Stack.Screen
+              name="MyProfilePage"
+              component={MyProfilePage}
+              options={{ headerShown: false }}
+            /> */}
+                 <Stack.Screen
+              name="EditProfilePage"
+              component={EditProfilePage}
               options={{ headerShown: false }}
             />
           </Stack.Navigator>

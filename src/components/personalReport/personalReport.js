@@ -61,7 +61,25 @@ const PersonalReport=({personalReport,isSmallScreen,hotelDetailSelector,dateSele
         };
         dispatch(passReportObjSliceActions.passReportObj(rangeObj));
       };
+      const deletePersonalCustomerReport = async (id) => {
+        const deleteObj = {
+          id: hotelDetailSelector?._id,
+          customerId: id
+        };
+        try {
+          const response = await axios.post(`${BASE_URL}/hotel/deletePersonalCustomerDetails/${deleteObj.id}`, deleteObj);
+          Toast.show({
+            type: ALERT_TYPE.SUCCESS,
+            title: "Customer Details report Deleted Successfully",
+            autoClose: 10000,
+          });
+          socket.emit('deletePersonalCustomerDetails', response?.data);
+        } catch (error) {
+          console.error('Error deleting report:', error);
+        }
+      };
     
+
       useEffect(() => {
         if (dateSelector?.type && dateSelector.report==="personal") {
           setPersonalFilterDate(dateSelector.type);
@@ -486,7 +504,7 @@ style={{
                       <Text style={{minWidth: 120,textAlign: "center", paddingHorizontal: 8 }}>{item.totalPayment}</Text>
                      <Text style={{minWidth: 120,  textAlign: "center", paddingHorizontal: 8 }}>{item.paymentPaid}</Text>
                      <Text style={{ minWidth: 120, textAlign: "center", paddingHorizontal: 8 }}>{item.paymentDue}</Text>
-                      <Button mode="contained" style={{ borderRadius: 11, marginLeft: 20 }} buttonColor="rgba(234, 88, 12, 1)" onPress={() => deleteCustomerReport(item._id)}>
+                      <Button mode="contained" style={{ borderRadius: 11, marginLeft: 20 }} buttonColor="rgba(234, 88, 12, 1)" onPress={() => deletePersonalCustomerReport(item._id)}>
                         Delete
                       </Button>
                     </View>

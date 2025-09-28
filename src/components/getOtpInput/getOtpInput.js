@@ -52,7 +52,7 @@ const GetOtpInput=({hotelName})=>{
       
         if (compareOtpSelector?.mssg === "fetch data") {
           saveLoginDataToSecureStore(); // ✅ Save to SecureStore
-          navigation.navigate('DashboardPage');
+          navigation.navigate('HeaderPage');
         }
       }, [compareOtpSelector]);
 
