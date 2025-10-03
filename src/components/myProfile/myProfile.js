@@ -6,6 +6,7 @@ import edit from '../../../assets/profileIcon/edit.png'
 import designation from '../../../assets/profileIcon/designation.png'
 import { useNavigation } from "@react-navigation/native"
 const MyProfile=({profiles})=>{
+  console.log('my profile',profiles)
     const navigation=useNavigation()
     const editProfileHandler=()=>{
     navigation.navigate('EditProfilePage',{formData:profiles,heading:'Edit Profile'})

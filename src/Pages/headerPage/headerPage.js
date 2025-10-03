@@ -3,12 +3,34 @@ import { useEffect,useState } from "react"
 import { useDispatch,useSelector } from "react-redux";
 import * as SecureStore from 'expo-secure-store';
 import { getHotelDetailsAsync } from "../../Redux/Slice/getHotelDetailSlice/getHotelDetailSlice";
+import { useNavigation } from '@react-navigation/native';
 const HeaderPage=()=>{
     const [loginObj, setLoginObj] = useState(null);
     const [profileObj,setProfileObj]=useState({})
     const dispatch=useDispatch()
+    const navigation = useNavigation();
     const hotelDetailSelector=useSelector((state)=>state.getHotelDetails.getHotelDetailsObj.hotelObj)
+    const updateHotelDetailSelector=useSelector((state)=>state?.updateMyProfiles?.updateMyProfileObj?.updatedData)
+    console.log('hotel update',updateHotelDetailSelector)
     console.log('hotel details',hotelDetailSelector)
+    const oldNumber=useSelector((state)=>state?.updateMyProfiles?.updateMyProfileObj?.oldPhone)
+    const newNumber=useSelector((state)=>state?.updateMyProfiles?.updateMyProfileObj?.newPhone)
+
+    useEffect(()=>{
+  if(oldNumber!==newNumber){
+removeLoginData()
+navigation.navigate('LoginPage')
+  }
+    },[oldNumber,newNumber])
+
+    const removeLoginData = async () => {
+      try {
+        await SecureStore.deleteItemAsync('loginOtpObj');
+        console.log('login obj removed from SecureStore');
+      } catch (error) {
+        console.error('Error removing login obj:', error);
+      }
+    };
     const getLoginDataToSecureStore = async () => {
         try {
           const data = await SecureStore.getItemAsync('loginOtpObj');
@@ -44,8 +66,6 @@ const HeaderPage=()=>{
         }
         },[id])
 
-      
-
           
         function findByPhone(obj, phone) {
             for (let key in obj) {
@@ -59,10 +79,15 @@ const HeaderPage=()=>{
             }
             return null;
           }
+          
+          const finalHotelDetailSelector =
+          updateHotelDetailSelector && Object.keys(updateHotelDetailSelector).length > 0
+            ? updateHotelDetailSelector
+            : hotelDetailSelector;
 
           useEffect(() => {
-            if (hotelDetailSelector && phone) {
-              const matchedObj = findByPhone(hotelDetailSelector, phone);
+            if (finalHotelDetailSelector && phone) {
+              const matchedObj = findByPhone(finalHotelDetailSelector, phone);
               if (matchedObj) {
                 setProfileObj(matchedObj);
               } else {
@@ -70,7 +95,7 @@ const HeaderPage=()=>{
                 setProfileObj(null); // safe reset
               }
             }
-          }, [hotelDetailSelector, phone]);  
+          }, [finalHotelDetailSelector, phone]);  
           console.log('profile obj is',profileObj)
           console.log('profile obj is',profileObj)
 return (

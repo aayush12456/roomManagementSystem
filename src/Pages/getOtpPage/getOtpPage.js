@@ -5,7 +5,7 @@ const GetOtpPage=({route})=>{
     console.log('form data page',formData)
 return(
     <>
-    <GetOtpInput hotelName={formData}/>
+    <GetOtpInput hotelObj={formData}/>
     </>
 )
 }

@@ -7,6 +7,7 @@ import getHotelDetailSlice from "../Slice/getHotelDetailSlice/getHotelDetailSlic
 import customerModalSlice from "../Slice/customerModalSlice/customerModalSlice"
 import passDataSliceObj from "../Slice/passDataSliceObj/passDataSliceObj"
 import passReportObjSlice from "../Slice/passReportObjSlice/passReportObjSlice"
+import updateMyProfileSlice from "../Slice/updateMyProfileSlice/updateMyProfileSlice"
 const store=configureStore({
     reducer:{
         hotelRegisterData:hotelRegisterSlice,
@@ -16,7 +17,8 @@ const store=configureStore({
         getHotelDetails:getHotelDetailSlice,
         customerModal:customerModalSlice,
         passDataObj:passDataSliceObj,
-        passReportObj:passReportObjSlice
+        passReportObj:passReportObjSlice,
+        updateMyProfiles:updateMyProfileSlice
     }
 })
 export default store

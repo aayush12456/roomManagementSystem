@@ -1,9 +1,10 @@
 import MyProfile from "../../components/myProfile/myProfile"
 import { BottomNavigation} from "react-native-paper"
 import { View,Dimensions } from "react-native"
-import { useState,useEffect } from "react"
+import { useState } from "react"
 import Hierarchy from "../../components/Hierarchy/hierarchy"
-const MyProfilePage=({profile})=>{
+import AddStaff from "../../components/addStaff/addStaff"
+const ProfilePage=({profile})=>{
     console.log('pofile page',profile)
 
     const screenHeight = Dimensions.get("window").height;
@@ -13,7 +14,8 @@ const MyProfilePage=({profile})=>{
     const [index, setIndex] = useState(0);
   const [routes] = useState([
     { key: 'myProfile', title: 'My Profile', focusedIcon: 'account-circle' },
-    { key: 'hierarchy', title: 'Hierarchy', focusedIcon: 'account-tree' },
+    { key: 'hierarchy', title: 'Hierarchy', focusedIcon: 'family-tree' },
+    { key: 'addStaff', title: 'Add Staff', focusedIcon: 'account-plus' },
   ]);
   const MyProfileRoute = () => (
     <View style={{ flex: 1 }}>
@@ -25,9 +27,15 @@ const MyProfilePage=({profile})=>{
 <Hierarchy/>
     </View>
   );
+  const AddStaffRoute = () => (
+    <View style={{ flex: 1 }}>
+<AddStaff/>
+    </View>
+  );
     const renderScene = BottomNavigation.SceneMap({
         myProfile: MyProfileRoute,
         hierarchy: HierarchyRoute,
+        addStaff:AddStaffRoute
       });
 return (
     <>
@@ -42,4 +50,4 @@ return (
     </>
 )
 }
-export default MyProfilePage
+export default ProfilePage

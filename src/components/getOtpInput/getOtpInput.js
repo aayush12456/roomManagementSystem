@@ -9,7 +9,7 @@ import { useEffect,useState } from 'react';
 import { useDispatch,useSelector } from 'react-redux';
 import { compareOtpAsync } from '../../Redux/Slice/compareOtpSlice/compareOtpSlice';
 
-const GetOtpInput=({hotelName})=>{
+const GetOtpInput=({hotelObj})=>{
   const dispatch=useDispatch()
   const navigation = useNavigation();
   const compareOtpSelector=useSelector((state)=>state.compareOtpData.compareOtpObj)
@@ -72,7 +72,8 @@ const GetOtpInput=({hotelName})=>{
        }
        const finalOtpObj={
         phone:recieveOtpObj.phoneNumber,
-        hotelName:hotelName
+        hotelName:hotelObj?.hotelName,
+        hotelId:hotelObj?.hotelId
        }
        console.log('final otp obj',finalOtpObj)
       dispatch(compareOtpAsync(finalOtpObj))

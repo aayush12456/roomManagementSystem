@@ -13,7 +13,6 @@ import GetOtpPage from './src/Pages/getOtpPage/getOtpPage';
 import DashboardPage from './src/Pages/dashboardPage/dashboardPage';
 import HeaderPage from './src/Pages/headerPage/headerPage';
 // import ReportPage from './src/Pages/reportPage/reportPage';
-import MyProfilePage from './src/Pages/myProfilePage/myProfilePage';
 import EditProfilePage from './src/Pages/editProfilePage/editProfilePage';
 
 const Stack = createNativeStackNavigator();

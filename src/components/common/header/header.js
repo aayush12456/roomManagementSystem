@@ -9,7 +9,8 @@ import room from '../../../../assets/sidebarIcons/bed.png'
 import chart from '../../../../assets/sidebarIcons/pieChart.png'
 import report from '../../../../assets/sidebarIcons/report.png'
 import myProfile from '../../../../assets/sidebarIcons/profile.png'
-import MyProfilePage from '../../../Pages/myProfilePage/myProfilePage';
+import ProfilePage from '../../../Pages/profilePage/profilePage';
+
 const Header=({profile})=>{
     const Drawer = createDrawerNavigator();
     const navigation = useNavigation();
@@ -106,7 +107,7 @@ return (
         ),
         }}
       >
-        {(props) => <MyProfilePage {...props}  profile={profile} />}
+        {(props) => <ProfilePage {...props}  profile={profile} />}
         </Drawer.Screen>
      </Drawer.Navigator>
      

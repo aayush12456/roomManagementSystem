@@ -85,8 +85,8 @@ const LoginForm=()=>{
     dispatch(getHotelNameAsync(phoneObj))
     }
   
-    const hotelClickHandler=(phone)=>{
-      setHotelName(phone)
+    const hotelClickHandler=(phone,hotel)=>{
+      setHotelName(hotel)
     const phoneObj={
       phone:phoneNumber
     }
@@ -185,11 +185,11 @@ return (
             </Text>:null}
             <ScrollView>
             {
-                  phoneNameObj?.matchedNames?.length>0? phoneNameObj?.matchedNames?.map((hotelName,index)=>{
+                  phoneNameObj?.matchedNames?.length>0? phoneNameObj?.matchedNames?.map((hotelNameObj,index)=>{
                 return (
-                 <View key={hotelName}>
-                  <Text style={{ marginTop: 10,fontSize:16 }} onPress={()=>hotelClickHandler(hotelName)}>
-                  {hotelName}
+                 <View key={hotelNameObj?.hotelName}>
+                  <Text style={{ marginTop: 10,fontSize:16 }} onPress={()=>hotelClickHandler(hotelNameObj?.hotelName,hotelNameObj)}>
+                  {hotelNameObj.hotelName}
                 </Text>
                 </View>
                 )
