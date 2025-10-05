@@ -11,7 +11,7 @@ import report from '../../../../assets/sidebarIcons/report.png'
 import myProfile from '../../../../assets/sidebarIcons/profile.png'
 import ProfilePage from '../../../Pages/profilePage/profilePage';
 
-const Header=({profile})=>{
+const Header=({profile,allStaffPlusOwner})=>{
     const Drawer = createDrawerNavigator();
     const navigation = useNavigation();
     console.log('profile is',profile)
@@ -107,7 +107,7 @@ return (
         ),
         }}
       >
-        {(props) => <ProfilePage {...props}  profile={profile} />}
+        {(props) => <ProfilePage {...props}  profile={profile} allStaffOwner={allStaffPlusOwner}/>}
         </Drawer.Screen>
      </Drawer.Navigator>
      

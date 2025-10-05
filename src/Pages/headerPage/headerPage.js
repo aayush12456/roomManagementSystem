@@ -4,9 +4,14 @@ import { useDispatch,useSelector } from "react-redux";
 import * as SecureStore from 'expo-secure-store';
 import { getHotelDetailsAsync } from "../../Redux/Slice/getHotelDetailSlice/getHotelDetailSlice";
 import { useNavigation } from '@react-navigation/native';
+import io from "socket.io-client";
+import axios from "axios";
+const socket = io.connect("http://192.168.29.169:4000")
 const HeaderPage=()=>{
+  const BASE_URL = "http://192.168.29.169:4000";
     const [loginObj, setLoginObj] = useState(null);
     const [profileObj,setProfileObj]=useState({})
+    const [allStaffOwnerObj,setAllStaffOwnerObj]=useState({})
     const dispatch=useDispatch()
     const navigation = useNavigation();
     const hotelDetailSelector=useSelector((state)=>state.getHotelDetails.getHotelDetailsObj.hotelObj)
@@ -98,9 +103,35 @@ navigation.navigate('LoginPage')
           }, [finalHotelDetailSelector, phone]);  
           console.log('profile obj is',profileObj)
           console.log('profile obj is',profileObj)
+
+          useEffect(() => {
+            const fetchAllStaffDetails = async () => {
+              try {
+                if (finalHotelDetailSelector?._id) {
+                  const response = await axios.get(
+                    `${BASE_URL}/hotel/getStaffPlusOwner/${finalHotelDetailSelector?._id}`
+                  );
+                  // console.log('visitor user in response',response?.data)
+                  setAllStaffOwnerObj(response?.data || {} )
+                }
+              } catch (error) {
+                // console.error("Error fetching visitors:", error);
+              }
+            };
+          
+            fetchAllStaffDetails();
+          
+            socket.on("getStaffOwnerObj", (newUser) => {
+              setAllStaffOwnerObj(newUser);
+            });
+            return () => {
+              socket.off("getStaffOwnerObj");
+            };
+          }, [finalHotelDetailSelector?._id]);
+          console.log('all staff',allStaffOwnerObj)
 return (
     <>
-    <Header profile={profileObj}/>
+    <Header profile={profileObj} allStaffPlusOwner={allStaffOwnerObj}/>
     </>
 )
 }

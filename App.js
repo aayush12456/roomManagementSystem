@@ -14,6 +14,8 @@ import DashboardPage from './src/Pages/dashboardPage/dashboardPage';
 import HeaderPage from './src/Pages/headerPage/headerPage';
 // import ReportPage from './src/Pages/reportPage/reportPage';
 import EditProfilePage from './src/Pages/editProfilePage/editProfilePage';
+import ProfileDetailsPage from './src/Pages/profileDetailsPage/profileDetailsPage';
+import EditStaffProfilePage from './src/Pages/editStaffProfilePage/editStaffProfilePage';
 
 const Stack = createNativeStackNavigator();
 
@@ -139,6 +141,16 @@ export default function App() {
                  <Stack.Screen
               name="EditProfilePage"
               component={EditProfilePage}
+              options={{ headerShown: false }}
+            />
+              <Stack.Screen
+              name="ProfileDetailsPage"
+              component={ProfileDetailsPage}
+              options={{ headerShown: false }}
+            />
+             <Stack.Screen
+              name="EditStaffProfilePage"
+              component={EditStaffProfilePage}
               options={{ headerShown: false }}
             />
           </Stack.Navigator>

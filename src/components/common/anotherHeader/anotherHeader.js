@@ -9,8 +9,10 @@ const AnotherHeader=({edit})=>{
     const backHandler=()=>{
     if(edit?.params?.heading==="Edit Profile"){
     navigation.goBack();
-
     }
+    else if(edit?.params?.heading==="Staff Details"){
+      navigation.goBack();
+      }
     }
 return (
     <>

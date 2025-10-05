@@ -1,0 +1,175 @@
+import { View,Image,ScrollView,KeyboardAvoidingView, Platform,Text } from "react-native"
+import { TextInput,Button } from 'react-native-paper';
+import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
+import { useState } from "react";
+import avatar from '../../../assets/AllIcons/avatar.png'
+import * as ImagePicker from 'expo-image-picker';
+const AddOwner=()=>{
+    const [ownerName,setOwnerName]=useState('')
+    const [ownerPhoneNumber,setOwnerPhoneNumber]=useState('')
+    const [ownerAddress,setOwnerAddress]=useState('')
+    const [ownerImage,setOwnerImage]=useState('')
+
+    const uploadOwnerImage = async () => {
+        try {
+          let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+          if (!permissionResult.granted) {
+            alert("Permission to access media library is required!");
+            return;
+          }
+    
+          let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [1, 1],
+            quality: 1,
+          });
+    
+          if (!result.canceled && result.assets && result.assets.length > 0) {
+            const selectedImage = result.assets[0];
+            setOwnerImage(selectedImage.uri);
+          } else {
+            console.log('No image selected or operation canceled.');
+          }
+        } catch (error) {
+          console.log('Error during image picking:', error);
+        }
+      };
+
+      const addOwnerHandler=async()=>{
+        // if (!validate()) return;
+        const formData = new FormData()
+        formData.append("ownerName",ownerName)
+        formData.append("ownerPhone",ownerPhoneNumber)
+        formData.append("ownerAddress",ownerAddress)
+        // formData.append("hotelId",hotelDetailSelector?._id)
+        if (ownerImage) {
+          const imageUri = ownerImage;
+            const fileName = imageUri.split("/").pop();
+            const fileType = "image/jpeg"; // ya mime-type detect karlo
+        
+            formData.append("ownerImg", {
+              uri: imageUri,
+              type: fileType,
+              name: fileName,
+            });
+        }
+        console.log('form',formData)
+        // try {
+        //   const response = await axios.post(
+        //     `${BASE_URL}/hotel/addStaff`,
+        //     formData,
+        //     {
+        //       headers: {
+        //         "Content-Type": "multipart/form-data",
+        //       },
+        //     }
+        //   );
+        //   console.log("response in staff", response.data);
+        //   Toast.show({
+        //     type: ALERT_TYPE.SUCCESS,
+        //     title: "Staff Details Added Successfully",
+        //     autoClose: 10000,
+        //   });
+        //   socket.emit('addStaffOwnerObj', response?.data)
+        // } catch (error) {
+        //   console.error("Error in Add/Update Staff", error.message);
+        // }
+        setOwnerName('')
+        setOwnerAddress('')
+        setOwnerPhoneNumber('')
+        setOwnerImage('')
+        // setErrors({});
+      }
+return (
+    <>
+     <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={80} // adjust according to header height
+    >
+<ScrollView
+contentContainerStyle={{ flexGrow: 1, paddingBottom: 30 }}
+keyboardShouldPersistTaps="handled"
+>
+    <View style={{marginTop:40}}>
+    <View style={{ paddingHorizontal: 16 }}>
+        <TextInput
+          label="Owner Name"
+          mode="outlined"
+          onChangeText={(text) => setOwnerName(text)}
+          value={ownerName}
+        />
+          {/* {errors.staffName && <Text style={{ color: "red" }}>{errors.staffName}</Text>} */}
+        </View>
+        <View style={{ paddingHorizontal: 16,marginTop:12 }}>
+        <TextInput
+          label="Owner Phone Number"
+          mode="outlined"
+          keyboardType="phone-pad"
+          onChangeText={(text) => setOwnerPhoneNumber(text)}
+          value={ownerPhoneNumber}
+        />
+          {/* {errors.staffPhone && <Text style={{ color: "red" }}>{errors.staffPhone}</Text>} */}
+        </View>
+        <View style={{ paddingHorizontal: 16,marginTop:12 }}>
+        <TextInput
+          label="Owner Address"
+          mode="outlined"
+          onChangeText={(text) => setOwnerAddress(text)}
+          value={ownerAddress}
+        />
+         {/* {errors.staffAddress && <Text style={{ color: "red" }}>{errors.staffAddress}</Text>} */}
+        </View>
+       
+        <View style={{ paddingHorizontal: 16, marginTop: 16 }}>
+              <View style={{ flexDirection: 'row', gap: 20, alignItems: 'center' }}>
+                <Image
+                  source={ownerImage ? { uri: ownerImage } : avatar}
+                  style={{ width: 60, height: 60, borderRadius: 30 }}
+                />
+                <Button
+                  mode="contained"
+                  style={{
+                    height: 40,
+                    borderRadius: 11,
+                    justifyContent: 'center',
+                    marginTop: 2
+                  }}
+                  buttonColor="rgba(234, 88, 12, 1)"
+                  onPress={uploadOwnerImage}
+                >
+                  {ownerImage ? "Change" : "Upload"}
+                </Button>
+              </View>
+              {/* {errors.staffImage && (
+    <Text style={{ color: "red", marginTop: 8 }}>{errors.staffImage}</Text>
+  )} */}
+            </View>
+        <View style={{ width: '100%', overflow: 'hidden' }}>
+         <Button
+                      mode="contained"
+                      style={{
+                        height: 50, // Set the desired height
+                        borderRadius:11,
+                        color: '#FFFFFF',
+                         fontSize: 16, 
+                         justifyContent:'center',
+                         marginTop: 20,
+                         marginLeft: 12,
+                         marginRight: 20,
+                      }}
+                      buttonColor="rgba(234, 88, 12, 1)"
+                      onPress={addOwnerHandler}
+                    >
+           SUBMIT
+                    </Button>
+      </View>
+
+    </View>
+    </ScrollView>
+    </KeyboardAvoidingView>
+    </>
+)
+}
+export default AddOwner
