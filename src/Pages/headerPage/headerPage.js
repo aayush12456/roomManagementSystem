@@ -124,14 +124,18 @@ navigation.navigate('LoginPage')
             socket.on("getStaffOwnerObj", (newUser) => {
               setAllStaffOwnerObj(newUser);
             });
+      
             return () => {
               socket.off("getStaffOwnerObj");
             };
           }, [finalHotelDetailSelector?._id]);
           console.log('all staff',allStaffOwnerObj)
+          
+          const hotelId=finalHotelDetailSelector?._id
+          // console.log('hotelid',hotelId)
 return (
     <>
-    <Header profile={profileObj} allStaffPlusOwner={allStaffOwnerObj}/>
+    <Header profile={profileObj} allStaffPlusOwner={allStaffOwnerObj} hotelId={hotelId}/>
     </>
 )
 }

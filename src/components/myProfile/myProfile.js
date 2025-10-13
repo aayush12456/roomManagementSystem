@@ -58,7 +58,7 @@ return (
           }}
         />
 
-            <View style={{flexDirection:"row",gap:25,justifyContent:'space-between',marginTop:5,marginLeft:42,marginRight:42,marginBottom:40}}>
+            <View style={{flexDirection:"row",gap:25,marginTop:5,marginLeft:42,marginRight:42,marginBottom:40}}>
               <Image source={location} style={{ width: 18, height:18 }}/>
               <Text style={{fontSize:15}}>{profiles?.address}</Text>
             </View>

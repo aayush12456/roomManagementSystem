@@ -22,6 +22,26 @@ const EditProfile=({edit})=>{
     const [updatePhone,setUpdatePhone]=useState(phoneNumber)
     const [updateImage,setUpdateImage]=useState('')
     const [updateAddress,setUpdateAddress]=useState(address)
+    const [errors, setErrors] = useState({});
+
+    const validate = () => {
+      let newErrors = {};
+  
+ 
+      if (!updatePhone.trim()) {
+        newErrors.phone = "Phone Number is required";
+      } else if (!/^\d{10}$/.test(updatePhone)) {
+        newErrors.phone = "Phone Number must be 10 digits";
+      }
+  
+      if (!updateAddress.trim()) {
+        newErrors.address = " Address is required";
+      }
+    
+      setErrors(newErrors);
+      return Object.keys(newErrors).length === 0; // true agar koi error nahi hai
+    };
+  
     
     const imageClickHandler = async () => {
       try {
@@ -57,6 +77,7 @@ const EditProfile=({edit})=>{
     console.log('update',updatePhone)
 
     const updateDataHandler=()=>{
+      if (!validate()) return;
       const formData = new FormData()
       formData.append("name",name)
       formData.append("phone",updatePhone)
@@ -150,6 +171,7 @@ keyboardShouldPersistTaps="handled"
         onChangeText={(text) => setUpdatePhone(text)}
         keyboardType="phone-pad"
       />
+      {errors.phone && <Text style={{ color: "red" }}>{errors.phone}</Text>}
     </View>
 
     <View style={{ paddingHorizontal: 16, marginTop: 16 }}>
@@ -159,6 +181,7 @@ keyboardShouldPersistTaps="handled"
         value={updateAddress}
         onChangeText={(text) => setUpdateAddress(text)}
       />
+      {errors.address && <Text style={{ color: "red" }}>{errors.address}</Text>} 
     </View>
 
 

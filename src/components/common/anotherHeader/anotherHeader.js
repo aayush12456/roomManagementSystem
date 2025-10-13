@@ -13,6 +13,12 @@ const AnotherHeader=({edit})=>{
     else if(edit?.params?.heading==="Staff Details"){
       navigation.goBack();
       }
+      else if(edit?.params?.heading==="Manager Details"){
+        navigation.goBack();
+        }
+        else if(edit?.params?.heading==="Owner Details"){
+          navigation.goBack();
+          }
     }
 return (
     <>

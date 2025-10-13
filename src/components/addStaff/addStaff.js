@@ -24,26 +24,26 @@ const AddStaff=()=>{
     let newErrors = {};
 
     if (!staffName.trim()) {
-      newErrors.staffName = "Staff name is required";
+      newErrors.staffName = "Staff Name is required";
     } else if (staffName.length < 6) {
-      newErrors.staffName = "Staff name must be at least 6 characters";
+      newErrors.staffName = "Staff Name must be at least 6 characters";
     }
 
     if (!staffPhoneNumber.trim()) {
-      newErrors.staffPhone = "Phone number is required";
+      newErrors.staffPhone = "Phone Number is required";
     } else if (!/^\d{10}$/.test(staffPhoneNumber)) {
-      newErrors.staffPhone = "Phone number must be 10 digits";
+      newErrors.staffPhone = "Phone Number must be 10 digits";
     }
 
     if (!staffAddress.trim()) {
-      newErrors.staffAddress = "Address is required";
+      newErrors.staffAddress = "Staff Address is required";
     }
 
     if (!staffPost) {
-      newErrors.staffPost = "Staff post is required";
+      newErrors.staffPost = "Staff Post is required";
     }
     if (!staffImage) {
-      newErrors.staffImage = "Staff image is required";
+      newErrors.staffImage = "Staff Image is required";
     }
   
     setErrors(newErrors);

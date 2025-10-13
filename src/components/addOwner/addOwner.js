@@ -3,12 +3,45 @@ import { TextInput,Button } from 'react-native-paper';
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import { useState } from "react";
 import avatar from '../../../assets/AllIcons/avatar.png'
+import io from "socket.io-client";
+import axios from "axios";
 import * as ImagePicker from 'expo-image-picker';
-const AddOwner=()=>{
+const socket = io.connect("http://192.168.29.169:4000")
+const AddOwner=({hotelsId})=>{
+    const BASE_URL = "http://192.168.29.169:4000";
     const [ownerName,setOwnerName]=useState('')
     const [ownerPhoneNumber,setOwnerPhoneNumber]=useState('')
     const [ownerAddress,setOwnerAddress]=useState('')
     const [ownerImage,setOwnerImage]=useState('')
+    const [errors, setErrors] = useState({});
+
+    const validate = () => {
+      let newErrors = {};
+  
+      if (!ownerName.trim()) {
+        newErrors.ownerName = "Owner Name is required";
+      } else if (ownerName.length < 6) {
+        newErrors.ownerName = "Owner Name must be at least 6 characters";
+      }
+  
+      if (!ownerPhoneNumber.trim()) {
+        newErrors.ownerPhone = "Phone Number is required";
+      } else if (!/^\d{10}$/.test(ownerPhoneNumber)) {
+        newErrors.ownerPhone = "Phone Number must be 10 digits";
+      }
+  
+      if (!ownerAddress.trim()) {
+        newErrors.ownerAddress = "Owner Address is required";
+      }
+      if (!ownerImage) {
+        newErrors.ownerImage = "Owner Image is required";
+      }
+    
+      setErrors(newErrors);
+      return Object.keys(newErrors).length === 0; // true agar koi error nahi hai
+    };
+  
+  
 
     const uploadOwnerImage = async () => {
         try {
@@ -37,12 +70,12 @@ const AddOwner=()=>{
       };
 
       const addOwnerHandler=async()=>{
-        // if (!validate()) return;
+        if (!validate()) return;
         const formData = new FormData()
         formData.append("ownerName",ownerName)
         formData.append("ownerPhone",ownerPhoneNumber)
         formData.append("ownerAddress",ownerAddress)
-        // formData.append("hotelId",hotelDetailSelector?._id)
+        formData.append("hotelId",hotelsId)
         if (ownerImage) {
           const imageUri = ownerImage;
             const fileName = imageUri.split("/").pop();
@@ -55,31 +88,31 @@ const AddOwner=()=>{
             });
         }
         console.log('form',formData)
-        // try {
-        //   const response = await axios.post(
-        //     `${BASE_URL}/hotel/addStaff`,
-        //     formData,
-        //     {
-        //       headers: {
-        //         "Content-Type": "multipart/form-data",
-        //       },
-        //     }
-        //   );
-        //   console.log("response in staff", response.data);
-        //   Toast.show({
-        //     type: ALERT_TYPE.SUCCESS,
-        //     title: "Staff Details Added Successfully",
-        //     autoClose: 10000,
-        //   });
-        //   socket.emit('addStaffOwnerObj', response?.data)
-        // } catch (error) {
-        //   console.error("Error in Add/Update Staff", error.message);
-        // }
+        try {
+          const response = await axios.post(
+            `${BASE_URL}/hotel/addOwner`,
+            formData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          );
+          console.log("response in staff", response.data);
+          Toast.show({
+            type: ALERT_TYPE.SUCCESS,
+            title: "Owner Details Added Successfully",
+            autoClose: 10000,
+          });
+          socket.emit('addOwnerObj', response?.data)
+        } catch (error) {
+          console.error("Error in Add/Update Staff", error.message);
+        }
         setOwnerName('')
         setOwnerAddress('')
         setOwnerPhoneNumber('')
         setOwnerImage('')
-        // setErrors({});
+        setErrors({});
       }
 return (
     <>
@@ -100,7 +133,7 @@ keyboardShouldPersistTaps="handled"
           onChangeText={(text) => setOwnerName(text)}
           value={ownerName}
         />
-          {/* {errors.staffName && <Text style={{ color: "red" }}>{errors.staffName}</Text>} */}
+          {errors.ownerName && <Text style={{ color: "red" }}>{errors.ownerName}</Text>}
         </View>
         <View style={{ paddingHorizontal: 16,marginTop:12 }}>
         <TextInput
@@ -110,7 +143,7 @@ keyboardShouldPersistTaps="handled"
           onChangeText={(text) => setOwnerPhoneNumber(text)}
           value={ownerPhoneNumber}
         />
-          {/* {errors.staffPhone && <Text style={{ color: "red" }}>{errors.staffPhone}</Text>} */}
+          {errors.ownerPhone && <Text style={{ color: "red" }}>{errors.ownerPhone}</Text>}
         </View>
         <View style={{ paddingHorizontal: 16,marginTop:12 }}>
         <TextInput
@@ -119,7 +152,7 @@ keyboardShouldPersistTaps="handled"
           onChangeText={(text) => setOwnerAddress(text)}
           value={ownerAddress}
         />
-         {/* {errors.staffAddress && <Text style={{ color: "red" }}>{errors.staffAddress}</Text>} */}
+         {errors.ownerAddress && <Text style={{ color: "red" }}>{errors.ownerAddress}</Text>}
         </View>
        
         <View style={{ paddingHorizontal: 16, marginTop: 16 }}>
@@ -142,9 +175,9 @@ keyboardShouldPersistTaps="handled"
                   {ownerImage ? "Change" : "Upload"}
                 </Button>
               </View>
-              {/* {errors.staffImage && (
-    <Text style={{ color: "red", marginTop: 8 }}>{errors.staffImage}</Text>
-  )} */}
+              {errors.ownerImage && (
+    <Text style={{ color: "red", marginTop: 8 }}>{errors.ownerImage}</Text>
+  )}
             </View>
         <View style={{ width: '100%', overflow: 'hidden' }}>
          <Button

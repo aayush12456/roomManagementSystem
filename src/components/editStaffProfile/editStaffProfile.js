@@ -1,18 +1,55 @@
 import { Text ,TextInput,Button} from "react-native-paper"
 import { View,Image,Pressable, ScrollView,KeyboardAvoidingView, Platform } from "react-native"
+import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import { useState } from "react"
 import editImg from '../../../assets/profileIcon/edit.png'
 import * as ImagePicker from 'expo-image-picker';
 import { Picker } from "@react-native-picker/picker";
 import { staffPostList } from "../../utils/signUpData";
 import { useNavigation } from "@react-navigation/native"
-const EditStaffProfile=({editStaff})=>{
+import io from "socket.io-client";
+import axios from "axios";
+
+const socket = io.connect("http://192.168.29.169:4000")
+const EditStaffProfile=({editStaff,hotelId})=>{
+  console.log('hotelId staff',hotelId)
+  const BASE_URL = "http://192.168.29.169:4000";
   const navigation=useNavigation()
     const [updateImage,setUpdateImage]=useState('')
     const [updateName,setUpdateName]=useState(editStaff?.name)
     const [updatePost,setUpdatePost]=useState(editStaff?.post)
     const [updatePhone,setUpdatePhone]=useState(editStaff?.phone)
     const [updateAddress,setUpdateAddress]=useState(editStaff?.address)
+    const [errors, setErrors] = useState({});
+
+    const validate = () => {
+      let newErrors = {};
+    
+      if (!updateName?.trim()) {
+        newErrors.staffName = "Staff Name is required";
+      } else if (updateName.length < 6) {
+        newErrors.staffName = "Staff Name must be at least 6 characters";
+      }
+    
+      if (!updatePhone?.trim()) {
+        newErrors.staffPhone = "Staff Phone Number is required";
+      } else if (!/^\d{10}$/.test(updatePhone)) {
+        newErrors.staffPhone = "Staff Phone Number must be 10 digits";
+      }
+    
+      if (!updateAddress?.trim()) {
+        newErrors.staffAddress = "Staff Address is required";
+      }
+    
+      if (!updatePost) {
+        newErrors.staffPost = "Staff Post is required";
+      }
+    
+      setErrors(newErrors);
+      return Object.keys(newErrors).length === 0;
+    };
+    
+
     const imageClickHandler = async () => {
         try {
           const maxFileSize = 5 * 1024 * 1024; // 5MB
@@ -43,14 +80,15 @@ const EditStaffProfile=({editStaff})=>{
           console.log('Error during image picking:', error);
         }
       };
-      const updateDataHandler=()=>{
+      const updateDataHandler=async(staffId)=>{
+        if (!validate()) return;
         const formData = new FormData()
-        formData.append("name",updateName)
-        formData.append("phone",updatePhone)
-        // formData.append("oldPhone",phoneNumber)
-        formData.append("address",updateAddress)
-        // formData.append("id",hotelDetailSelector?._id)
-        // formData.append("staffId",staffId)
+        formData.append("staffName",updateName)
+        formData.append("staffPhone",updatePhone)
+        formData.append("staffAddress",updateAddress)
+        formData.append("staffPost",updatePost)
+        formData.append("hotelId",hotelId)
+        formData.append("staffId",staffId)
         if (updateImage) {
           const imageUri = updateImage;
           const fileName = imageUri.split("/").pop();
@@ -62,9 +100,29 @@ const EditStaffProfile=({editStaff})=>{
             name: fileName,
           });
         }
-        console.log('form data',formData)
-        // dispatch(updateMyProfileAsync(formData))
+        console.log('form data in staff',formData)
+        try {
+          const response = await axios.post(
+            `${BASE_URL}/hotel/updateStaff`,
+            formData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          );
+          console.log("response in staff", response.data);
+          Toast.show({
+            type: ALERT_TYPE.SUCCESS,
+            title: "Staff Details Updated Successfully",
+            autoClose: 10000,
+          });
+          socket.emit('updateStaffOwnerObj', response?.data)
+        } catch (error) {
+          console.error("Error in Add/Update Staff", error.message);
+        }
         navigation.goBack()
+        setErrors({});
       }
 return (
     <>
@@ -111,30 +169,33 @@ keyboardShouldPersistTaps="handled"
 >
 <View style={{ paddingHorizontal: 16, marginTop: 16 }}>
       <TextInput
-        label="Name"
+        label="Staff Name"
         mode="outlined"
         value={updateName}
         onChangeText={(text) => setUpdateName(text)}
       />
+      {errors.staffName && <Text style={{ color: "red" }}>{errors.staffName}</Text>}
     </View>
 
 <View style={{ paddingHorizontal: 16, marginTop: 16 }}>
       <TextInput
-        label="Phone Number"
+        label="Staff Phone Number"
         mode="outlined"
         value={updatePhone}
         onChangeText={(text) => setUpdatePhone(text)}
         keyboardType="phone-pad"
       />
+      {errors.staffPhone && <Text style={{ color: "red" }}>{errors.staffPhone}</Text>}
     </View>
 
     <View style={{ paddingHorizontal: 16, marginTop: 16 }}>
       <TextInput
-        label="Address"
+        label="Staff Address"
         mode="outlined"
         value={updateAddress}
         onChangeText={(text) => setUpdateAddress(text)}
       />
+      {errors.staffAddress && <Text style={{ color: "red" }}>{errors.staffAddress}</Text>}
     </View>
     {/* <View style={{ paddingHorizontal: 16, marginTop: 16 }}>
       <TextInput
@@ -172,12 +233,15 @@ keyboardShouldPersistTaps="handled"
          }
         </Picker>
         </View>
+        {errors.staffPost && (
+            <Text style={{ color: "red", marginLeft: 20 }}>{errors.staffPost}</Text>
+          )}
         <View style={{ padding: 20, marginTop: "auto" }}>
         <Button
           mode="contained"
           buttonColor="#28a745"
           style={{ borderRadius: 25, height: 50, paddingTop: 4, fontSize: 16 }}
-          onPress={updateDataHandler}
+          onPress={()=>updateDataHandler(editStaff?._id)}
         >
 Update
         </Button>

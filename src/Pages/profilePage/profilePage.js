@@ -1,28 +1,42 @@
 import MyProfile from "../../components/myProfile/myProfile"
 import { BottomNavigation} from "react-native-paper"
 import { View,Dimensions } from "react-native"
-import { useState } from "react"
+import { useState,useMemo } from "react"
 import Hierarchy from "../../components/Hierarchy/hierarchy"
 import AddStaff from "../../components/addStaff/addStaff"
 import AllStaff from "../../components/allStaff/allStaff"
 import AddOwner from "../../components/addOwner/addOwner"
-const ProfilePage=({profile,allStaffOwner})=>{
+const ProfilePage=({profile,allStaffOwner,hotelIds})=>{
   console.log('staff profile',allStaffOwner)
+  console.log('id is',hotelIds)
     console.log('pofile page',profile)
     const allStaffArray = allStaffOwner?.staff ? Object.values(allStaffOwner.staff) : [];
     console.log('staff array',allStaffArray)
+    const allOwnerArray=[allStaffOwner.owner1,allStaffOwner.owner2,allStaffOwner.owner3,allStaffOwner.owner4]
+    console.log('owner array',allOwnerArray)
     const screenHeight = Dimensions.get("window").height;
     // console.log('screen height',screenHeight)
     const isSmallScreen = screenHeight <= 640;
 
     const [index, setIndex] = useState(0);
-  const [routes] = useState([
-    { key: 'myProfile', title: 'My Profile', focusedIcon: 'account-circle' },
-    { key: 'hierarchy', title: 'Hierarchy', focusedIcon: 'family-tree' },
-    { key: "allStaff", title: "All Staff", focusedIcon: "account-group" }, 
-    { key: 'addStaff', title: 'Add Staff', focusedIcon: 'account-plus' },
-    { key: "addOwner", title: "Add Owner", focusedIcon: "account-tie" },
-  ]);
+    const routes = useMemo(() => {
+      if (profile?.post) {
+        // If user has a "post", show only MyProfile & Hierarchy
+        return [
+          { key: "myProfile", title: "My Profile", focusedIcon: "account-circle" },
+          { key: "hierarchy", title: "Hierarchy", focusedIcon: "family-tree" },
+        ];
+      } else {
+        // If no post, show all options
+        return [
+          { key: "myProfile", title: "My Profile", focusedIcon: "account-circle" },
+          { key: "hierarchy", title: "Hierarchy", focusedIcon: "family-tree" },
+          { key: "allStaff", title: "All Staff", focusedIcon: "account-group" },
+          { key: "addStaff", title: "Add Staff", focusedIcon: "account-plus" },
+          { key: "addOwner", title: "Add Owner", focusedIcon: "account-tie" },
+        ];
+      }
+    }, [profile?.post]);
 //   const MyProfileRoute = () => (
 //     <View style={{ flex: 1 }}>
 //       <MyProfile profiles={profile}/> 
@@ -62,13 +76,13 @@ const ProfilePage=({profile,allStaffOwner})=>{
         case "myProfile":
           return <MyProfile profiles={profile} />;
         case "hierarchy":
-          return <Hierarchy />;
+          return <Hierarchy allStaff={allStaffArray} allOwner={allOwnerArray} />;
         case "allStaff":
-          return <AllStaff allStaff={allStaffArray} />;
+          return <AllStaff allStaff={allStaffArray} hotelsId={hotelIds}/>;
         case "addStaff":
           return <AddStaff />;
         case "addOwner":
-          return <AddOwner />;
+          return <AddOwner  hotelsId={hotelIds} />;
         default:
           return null;
       }

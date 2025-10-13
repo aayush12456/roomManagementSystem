@@ -11,11 +11,11 @@ import report from '../../../../assets/sidebarIcons/report.png'
 import myProfile from '../../../../assets/sidebarIcons/profile.png'
 import ProfilePage from '../../../Pages/profilePage/profilePage';
 
-const Header=({profile,allStaffPlusOwner})=>{
+const Header=({profile,allStaffPlusOwner,hotelId})=>{
     const Drawer = createDrawerNavigator();
     const navigation = useNavigation();
     console.log('profile is',profile)
-
+    // console.log('hotelid',hotelId)
 
     const removeLoginData = async () => {
         try {
@@ -107,7 +107,7 @@ return (
         ),
         }}
       >
-        {(props) => <ProfilePage {...props}  profile={profile} allStaffOwner={allStaffPlusOwner}/>}
+        {(props) => <ProfilePage {...props}  profile={profile} allStaffOwner={allStaffPlusOwner} hotelIds={hotelId}/>}
         </Drawer.Screen>
      </Drawer.Navigator>
      

@@ -4,19 +4,20 @@ import location from '../../../../assets/profileIcon/location.png'
 import edit from '../../../../assets/profileIcon/edit.png'
 import designation from '../../../../assets/profileIcon/designation.png'
 import { useNavigation } from "@react-navigation/native"
-const ProfileDetails=({profileDetails})=>{
+const ProfileDetails=({profileDetails,hotelId,hierarchyHeading})=>{
     console.log('profile detail',profileDetails)
+    console.log('profile in hotelid',hotelId)
     const navigation=useNavigation()
     const editImgHandler=()=>{
-        navigation.navigate('EditStaffProfilePage',{formData:profileDetails,heading:'Edit Staff Details'})
+        navigation.navigate('EditStaffProfilePage',{formData:profileDetails,heading:'Edit Staff Details',hotelsId:hotelId})
     }
 return (
     <>
-      <Pressable onPress={editImgHandler}>
+      {hierarchyHeading=="hierarchy"?null:<Pressable onPress={editImgHandler}>
          <View style={{ flexDirection: 'row', justifyContent: 'flex-end',marginRight:22 }}>
          <Image source={edit} style={{marginTop:15}} />
         </View>
-            </Pressable> 
+            </Pressable>} 
             <View style={{marginTop:10}}>
             <View style={{alignItems:"center",marginBottom:5}}>
         <Image
@@ -55,7 +56,7 @@ return (
           }}
         />
 
-            <View style={{flexDirection:"row",gap:25,justifyContent:'space-between',marginTop:5,marginLeft:42,marginRight:42,marginBottom:40}}>
+            <View style={{flexDirection:"row",gap:25,marginTop:5,marginLeft:42,marginRight:42,marginBottom:40}}>
               <Image source={location} style={{ width: 18, height:18 }}/>
               <Text style={{fontSize:15}}>{profileDetails?.address}</Text>
             </View>
@@ -72,7 +73,7 @@ return (
 
 <View style={{flexDirection:"row",gap:25,marginLeft:42,marginRight:42}}>
               <Image source={designation} style={{ width: 25, height:25 }}/>
-             <Text style={{fontSize:15}}>{profileDetails?.post}</Text>
+             <Text style={{fontSize:15}}>{!profileDetails?.post?'Owner':profileDetails?.post}</Text>
       
             </View>
 

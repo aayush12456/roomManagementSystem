@@ -16,7 +16,12 @@ import HeaderPage from './src/Pages/headerPage/headerPage';
 import EditProfilePage from './src/Pages/editProfilePage/editProfilePage';
 import ProfileDetailsPage from './src/Pages/profileDetailsPage/profileDetailsPage';
 import EditStaffProfilePage from './src/Pages/editStaffProfilePage/editStaffProfilePage';
+import ProfilePage from './src/Pages/profilePage/profilePage';
+import { LogBox } from 'react-native';
 
+LogBox.ignoreLogs([
+  'Each child in a list should have a unique "key" prop.%s%s See https://react.dev/link/warning-keys for more information.'
+]);
 const Stack = createNativeStackNavigator();
 
 export default function App() {
@@ -133,11 +138,11 @@ export default function App() {
               component={ReportPage}
               options={{ headerShown: false }}
             /> */}
-               {/* <Stack.Screen
-              name="MyProfilePage"
-              component={MyProfilePage}
+               <Stack.Screen
+              name="ProfilePage"
+              component={ProfilePage}
               options={{ headerShown: false }}
-            /> */}
+            />
                  <Stack.Screen
               name="EditProfilePage"
               component={EditProfilePage}
