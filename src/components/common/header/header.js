@@ -8,8 +8,10 @@ import { useNavigation } from '@react-navigation/native';
 import room from '../../../../assets/sidebarIcons/bed.png'
 import chart from '../../../../assets/sidebarIcons/pieChart.png'
 import report from '../../../../assets/sidebarIcons/report.png'
+import setting from '../../../../assets/sidebarIcons/settingImg.png'
 import myProfile from '../../../../assets/sidebarIcons/profile.png'
 import ProfilePage from '../../../Pages/profilePage/profilePage';
+import SettingsPage from '../../../Pages/settingsPage/settingsPage';
 
 const Header=({profile,allStaffPlusOwner,hotelId})=>{
     const Drawer = createDrawerNavigator();
@@ -109,6 +111,17 @@ return (
       >
         {(props) => <ProfilePage {...props}  profile={profile} allStaffOwner={allStaffPlusOwner} hotelIds={hotelId}/>}
         </Drawer.Screen>
+
+        <Drawer.Screen
+        name='Settings'
+        component={SettingsPage}
+        options={{
+          drawerIcon:()=>(
+            <Image  source={setting}
+            style={{ width: 20, height: 20 }}/>
+        ),
+        }}
+      />
      </Drawer.Navigator>
      
     </>

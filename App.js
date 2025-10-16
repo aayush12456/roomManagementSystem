@@ -18,6 +18,7 @@ import ProfileDetailsPage from './src/Pages/profileDetailsPage/profileDetailsPag
 import EditStaffProfilePage from './src/Pages/editStaffProfilePage/editStaffProfilePage';
 import ProfilePage from './src/Pages/profilePage/profilePage';
 import { LogBox } from 'react-native';
+import ExistingAccountPage from './src/Pages/existingAccountPage/exisingAccountPage';
 
 LogBox.ignoreLogs([
   'Each child in a list should have a unique "key" prop.%s%s See https://react.dev/link/warning-keys for more information.'
@@ -156,6 +157,11 @@ export default function App() {
              <Stack.Screen
               name="EditStaffProfilePage"
               component={EditStaffProfilePage}
+              options={{ headerShown: false }}
+            />
+              <Stack.Screen
+              name="ExistingAccountPage"
+              component={ExistingAccountPage}
               options={{ headerShown: false }}
             />
           </Stack.Navigator>

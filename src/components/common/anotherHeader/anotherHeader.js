@@ -19,6 +19,9 @@ const AnotherHeader=({edit})=>{
         else if(edit?.params?.heading==="Owner Details"){
           navigation.goBack();
           }
+          else if(edit?.params?.heading==="Add account"){
+            navigation.goBack();
+            }
     }
 return (
     <>

@@ -9,7 +9,7 @@ import { useEffect,useState } from 'react';
 import { useDispatch,useSelector } from 'react-redux';
 import { compareOtpAsync } from '../../Redux/Slice/compareOtpSlice/compareOtpSlice';
 
-const GetOtpInput=({hotelObj})=>{
+const GetOtpInput=({hotelObj,data})=>{
   const dispatch=useDispatch()
   const navigation = useNavigation();
   const compareOtpSelector=useSelector((state)=>state.compareOtpData.compareOtpObj)
@@ -80,7 +80,13 @@ const GetOtpInput=({hotelObj})=>{
       removeOtpData()
       }
       const cancelOtpHandler=()=>{
-       navigation.navigate('LoginPage')
+        if(data){
+          navigation.goBack()
+
+        }
+        else{
+          navigation.navigate('LoginPage')
+        }
        removeOtpData()
       }
 return (
