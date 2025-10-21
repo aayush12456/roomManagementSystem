@@ -20,6 +20,7 @@ import ProfilePage from './src/Pages/profilePage/profilePage';
 import { LogBox } from 'react-native';
 import ExistingAccountPage from './src/Pages/existingAccountPage/exisingAccountPage';
 
+
 LogBox.ignoreLogs([
   'Each child in a list should have a unique "key" prop.%s%s See https://react.dev/link/warning-keys for more information.'
 ]);
@@ -134,6 +135,7 @@ export default function App() {
               component={HeaderPage}
               options={{ headerShown: false }}
             />
+               
               {/* <Stack.Screen
               name="ReportPage"
               component={ReportPage}

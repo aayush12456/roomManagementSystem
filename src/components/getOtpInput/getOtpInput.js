@@ -8,15 +8,21 @@ import * as SecureStore from 'expo-secure-store';
 import { useEffect,useState } from 'react';
 import { useDispatch,useSelector } from 'react-redux';
 import { compareOtpAsync } from '../../Redux/Slice/compareOtpSlice/compareOtpSlice';
+import {Modal} from 'react-native'
 
 const GetOtpInput=({hotelObj,data})=>{
   const dispatch=useDispatch()
   const navigation = useNavigation();
+  const [modalMsg,setModalMsg]=useState('')
+  const [showModal,setShowModal]=useState('')
+  
   const compareOtpSelector=useSelector((state)=>state.compareOtpData.compareOtpObj)
   console.log('compare otp selector',compareOtpSelector)
+  const loginMssg=compareOtpSelector?.mssg
     const [myOtp,setMyOtp]=useState('')
     const [otpError,setOtpError]=useState('')
     const [recieveOtpObj,setRecieveOtpObj]=useState('')
+    const [loginObj, setLoginObj] = useState(null);
     const loadOtpData = async () => {
         try {
           const data = await SecureStore.getItemAsync('otpData');
@@ -56,6 +62,43 @@ const GetOtpInput=({hotelObj,data})=>{
         }
       }, [compareOtpSelector]);
 
+      // useEffect(() => {
+      //   const saveLoginDataToSecureStore = async () => {
+      //     try {
+      //       // 🛡️ Step 1: Make sure compareOtpSelector is a valid object
+      //       if (!compareOtpSelector || typeof compareOtpSelector !== 'object') {
+      //         console.log('⚠️ No valid compareOtpSelector found — skipping save');
+      //         return;
+      //       }
+      
+      //       // 🗑️ Step 2: Delete old SecureStore data if it exists
+      //       const existingData = await SecureStore.getItemAsync('loginOtpObj');
+      //       if (existingData) {
+      //         console.log('Old loginOtpObj found — deleting...');
+      //         await SecureStore.deleteItemAsync('loginOtpObj');
+      //       }
+      
+      //       // 💾 Step 3: Save new data safely
+      //       await SecureStore.setItemAsync(
+      //         'loginOtpObj',
+      //         JSON.stringify(compareOtpSelector)
+      //       );
+      
+      //       console.log('✅ New loginOtpObj saved to SecureStore');
+      //     } catch (error) {
+      //       console.error('Error handling SecureStore loginOtpObj:', error);
+      //     }
+      //   };
+      
+      //   // ✅ Only run when OTP verified
+      //   if (compareOtpSelector?.mssg === "fetch data") {
+      //     saveLoginDataToSecureStore();
+      //     navigation.navigate('HeaderPage');
+      //   }
+      // }, [compareOtpSelector]);
+      
+      
+
       const removeOtpData = async () => {
         try {
           await SecureStore.deleteItemAsync('otpData');
@@ -65,16 +108,47 @@ const GetOtpInput=({hotelObj,data})=>{
         }
       };
 
+
+      const getLoginDataToSecureStore = async () => {
+        try {
+          const data = await SecureStore.getItemAsync('loginOtpObj');
+          if (data) {
+            const parsedData = JSON.parse(data);
+            setLoginObj(parsedData)
+            // console.log('Retrieved login obj Data:', parsedData);
+            // You can also set it to local state if needed
+          } else {
+            console.log('No login obj data found in SecureStore');
+            setLoginObj({})
+          }
+        } catch (error) {
+          console.error('Error retrieving SecureStore data:', error);
+          setLoginObj({});
+        }
+      
+      };
+      useEffect(() => {
+        getLoginDataToSecureStore(); // ✅ function called on screen mount
+      }, []);
       const verifyOtpHandler=()=>{
        if(recieveOtpObj.otp!==myOtp){
         setOtpError('Otp is not valid')
         return
        }
-       const finalOtpObj={
-        phone:recieveOtpObj.phoneNumber,
-        hotelName:hotelObj?.hotelName,
-        hotelId:hotelObj?.hotelId
-       }
+      //  const finalOtpObj={
+      //   phone:recieveOtpObj.phoneNumber,
+      //   hotelName:hotelObj?.hotelName,
+      //   hotelId:hotelObj?.hotelId,
+      //   anotherPhone:loginObj?.phone,
+      //   anotherHotelId:loginObj?.matchedHotels[0]?._id
+      //  }
+      const finalOtpObj = {
+        phone: recieveOtpObj?.phoneNumber,
+        hotelName: hotelObj?.hotelName || '',
+        hotelId: hotelObj?.hotelId || '',
+        anotherPhone: loginObj?.phone || '',
+        anotherHotelId: loginObj?.matchedHotels?.[0]?._id || '',
+      };
        console.log('final otp obj',finalOtpObj)
       dispatch(compareOtpAsync(finalOtpObj))
       removeOtpData()
@@ -89,6 +163,14 @@ const GetOtpInput=({hotelObj,data})=>{
         }
        removeOtpData()
       }
+
+      useEffect(() => {
+        if (loginMssg === "Login with existing account of same hotel name not possible") {
+          setModalMsg(loginMssg);
+          setShowModal(true);
+        }
+      }, [loginMssg]);
+          
 return (
     <>
     <SafeAreaView style={{ flex: 1 }}>
@@ -138,6 +220,56 @@ return (
        </View>
       </View>
     </SafeAreaView>
+    <Modal
+  visible={showModal}
+  transparent
+  animationType="fade"
+  onRequestClose={() => setShowModal(false)}
+>
+  <View
+    style={{
+      flex: 1,
+      backgroundColor: 'rgba(0,0,0,0.5)',
+      justifyContent: 'center',
+      alignItems: 'center',
+    }}
+  >
+    <View
+      style={{
+        backgroundColor: 'white',
+        borderRadius: 12,
+        padding: 20,
+        width: '80%',
+        alignItems: 'center',
+      }}
+    >
+      <Text
+        style={{
+          fontSize: 16,
+          fontWeight: '500',
+          textAlign: 'center',
+          marginBottom: 15,
+        }}
+      >
+        {modalMsg}
+      </Text>
+
+      <Button
+        mode="contained"
+        onPress={() => setShowModal(false)}
+        buttonColor="rgba(234, 88, 12, 1)"
+        style={{
+          borderRadius: 8,
+          paddingHorizontal: 20,
+          paddingVertical: 4,
+        }}
+      >
+        Close
+      </Button>
+    </View>
+  </View>
+</Modal>
+
     </>
 )
 }

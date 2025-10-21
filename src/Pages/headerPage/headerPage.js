@@ -12,6 +12,7 @@ const HeaderPage=()=>{
     const [loginObj, setLoginObj] = useState(null);
     const [profileObj,setProfileObj]=useState({})
     const [allStaffOwnerObj,setAllStaffOwnerObj]=useState({})
+    const [finalProfileArray,setFinalProfileArray]=useState([])
     const dispatch=useDispatch()
     const navigation = useNavigation();
     const hotelDetailSelector=useSelector((state)=>state.getHotelDetails.getHotelDetailsObj.hotelObj)
@@ -60,7 +61,7 @@ navigation.navigate('LoginPage')
       useEffect(() => {
         getLoginDataToSecureStore(); // ✅ function called on screen mount
       }, []);
-       console.log('login obj is',loginObj)
+      //  console.log('login obj is',loginObj)
       const phone=loginObj?.phone
       console.log('phone is',phone)
       const id=loginObj?.matchedHotels[0]?._id
@@ -133,9 +134,19 @@ navigation.navigate('LoginPage')
           
           const hotelId=finalHotelDetailSelector?._id
           // console.log('hotelid',hotelId)
+          const profileArray=finalHotelDetailSelector?.profileArray
+
+          useEffect(()=>{
+           if(phone){
+            const array=profileArray?.filter((profile)=>profile?.loginNumber===phone)
+            setFinalProfileArray(array)
+           }
+          },[phone,profileArray])
+          console.log('final profile',finalProfileArray)
 return (
+  
     <>
-    <Header profile={profileObj} allStaffPlusOwner={allStaffOwnerObj} hotelId={hotelId}/>
+    <Header profile={profileObj} allStaffPlusOwner={allStaffOwnerObj} hotelId={hotelId} profileArrays={finalProfileArray}/>
     </>
 )
 }

@@ -1,71 +1,15 @@
-// import React, { useRef } from "react";
-// import { View, Text, Image, Pressable } from "react-native";
-// import RBSheet from "react-native-raw-bottom-sheet";
-// import account from "../../../assets/settingIcon/account.png";
 
-// // Dummy component for Bottom Sheet content
-// const BottomSheetContent = () => (
-//   <View style={{ padding: 20 }}>
-// <Text style={{fontSize:16,fontWeight:'700',textAlign:'center'}}>Add account</Text>
-//   </View>
-// );
-
-// const Settings = () => {
-//   const refRBSheet = useRef();
-
-//   const addAccountHandler = () => {
-//     refRBSheet.current.open(); // Open the bottom sheet
-//   };
-
-//   return (
-//     <>
-//       <View style={{ width: "100%", backgroundColor: "white" }}>
-//         <View>
-//           <Text style={{ paddingLeft: 32, paddingTop: 16, fontSize: 15, fontWeight: "500" }}>
-//             Login
-//           </Text>
-//           <Pressable onPress={addAccountHandler}>
-//             <View style={{ flexDirection: "row", gap: 5, marginTop: 20, marginLeft: 26, marginBottom: 30 }}>
-//               <Image source={account} style={{ width: 20, height: 20 }} />
-//               <Text style={{ fontSize: 15, marginTop: -2 }}>Add account</Text>
-//             </View>
-//           </Pressable>
-//         </View>
-//       </View>
-
-//       <RBSheet
-//         ref={refRBSheet}
-//         useNativeDriver={false}
-//         customStyles={{
-//           wrapper: { backgroundColor: "transparent" },
-//           container: {
-//             borderTopLeftRadius: 40,  // rounded top-left corner
-//             borderTopRightRadius: 40, // rounded top-right corner
-//             padding: 20,
-//             backgroundColor: "white", // sheet background
-//             height:200
-//           },
-//           draggableIcon: { backgroundColor: "#000" },
-//         }}
-//         customModalProps={{
-//           animationType: "slide",
-//           statusBarTranslucent: true,
-//         }}
-//         customAvoidingViewProps={{ enabled: false }}
-//       >
-//         <BottomSheetContent />
-//       </RBSheet>
-//     </>
-//   );
-// };
-
-// export default Settings;
-import React, { useRef, useState } from "react";
-import { View, Text, Image, Pressable } from "react-native";
+import React, { useRef, useState,useEffect } from "react";
+import { View, Text, Image, Pressable,ScrollView } from "react-native";
 import RBSheet from "react-native-raw-bottom-sheet";
 import account from "../../../assets/settingIcon/account.png";
-import { Button } from "react-native-paper";
+import deleteImg from "../../../assets/settingIcon/delete.png";
+import * as SecureStore from 'expo-secure-store';
+import { Button,Card } from "react-native-paper";
 import { useNavigation } from '@react-navigation/native';
+import { useDispatch,useSelector } from "react-redux";
+import { switchProfileAsync, switchProfileData } from "../../Redux/Slice/switchProfileSlice/switchProfileSlice";
+
 
 // Bottom sheet content
 const BottomSheetContent = ({ existingAccountHandler }) => (
@@ -105,10 +49,102 @@ const BottomSheetContent = ({ existingAccountHandler }) => (
   </View>
 );
 
-const Settings = () => {
+const SwitchAccountSheet = ({ profileArray,profileClickHandler }) => (
+  <View>
+    <Text style={{ textAlign: "center", marginTop: -20, fontWeight: "700" }}>
+      _____
+    </Text>
+    <View style={{ paddingTop: 23 }}>
+      <Text style={{ fontSize: 15, fontWeight: "500", textAlign: "center" }}>
+        Switch Account
+      </Text>
+    </View>
+    <View
+      style={{
+        height: 1,
+        width: "100%",
+        backgroundColor: "#ccc",
+        marginVertical: 15,
+      }}
+    />
+
+    {/* {profileArray && profileArray.length > 0 ? (
+      profileArray.map((item, index) => (
+        <Pressable
+          key={index}
+          onPress={() => onSelectAccount(item)}
+          style={{
+            paddingVertical: 10,
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 15,
+              fontWeight: "500",
+              textAlign: "center",
+            }}
+          >
+            {item.name}
+          </Text>
+        </Pressable>
+      ))
+    ) : (
+      <Text style={{ textAlign: "center", color: "gray" }}>
+        No accounts available
+      </Text>
+    )} */}
+<ScrollView  
+contentContainerStyle={{
+  paddingBottom: 100, // last card ke liye space
+}}
+>
+{
+        profileArray.map((profile)=>{
+          return (
+            <>
+            <Card style={{marginTop:20}} >
+              <Pressable onPress={()=>profileClickHandler(profile)}>
+              <View style={{flexDirection:"row",gap:22}}>
+                <Image source={{uri:profile.image}} 
+                 style={{
+                  width: 50,
+                  height: 50,
+                  borderRadius: 40,
+                  marginBottom: 5,
+                  marginLeft:12,
+                  marginTop:6
+                }}
+                />
+                <View style={{paddingTop:8}}>
+                 <Text >{profile?.name}</Text>
+                 <Text style={{paddingTop:4}}>{profile?.hotelName}</Text>
+                </View>
+                <Image source={deleteImg} style={{width:18,height:18,marginTop:15,marginLeft:50}}/>
+            </View>
+              </Pressable>
+            
+            </Card>
+            </>
+          )
+        })
+      }
+</ScrollView>
+     
+
+  </View>
+);
+
+
+const Settings = ({profileArray}) => {
+  console.log('profile array',profileArray)
+const profileSelector=useSelector((state)=>state.switchProfileData.switchProfileObj)
+console.log('profile select',profileSelector)
   const refRBSheet = useRef();
+  const switchRBSheet=useRef()
+  const dispatch=useDispatch()
   const navigation=useNavigation()
   const [isOpen, setIsOpen] = useState(false);
+  const [isSwitchOpen, setIsSwitchOpen] = useState(false);
 
   const addAccountHandler = () => {
     setIsOpen(true);
@@ -123,7 +159,48 @@ const Settings = () => {
     navigation.navigate("ExistingAccountPage",{heading:'Add account'});
   };
 
+const switchAccountHandler=()=>{
+setIsSwitchOpen(true)
+switchRBSheet.current.open();
+}
+const closeSwitchSheet=()=>{
+  setIsSwitchOpen(false)
+}
 
+const profileClickHandler=(profile)=>{
+// console.log('profile',profile)
+const profileObj={
+  phone:profile?.phone,
+  hotelId:profile?.hotelId,
+  hotelName:profile?.hotelName
+}
+console.log('profile obj',profileObj)
+dispatch(switchProfileAsync(profileObj))
+}
+
+useEffect(() => {
+  const saveLoginDataToSecureStore = async () => {
+    try {
+      await SecureStore.setItemAsync(
+        'loginOtpObj',
+        JSON.stringify(profileSelector)
+      );
+      console.log('OTP obj saved to SecureStore');
+    } catch (error) {
+      console.error('Error saving to SecureStore:', error);
+    }
+  };
+
+  if (profileSelector?.mssg === "fetch data") {
+    saveLoginDataToSecureStore(); // ✅ Save to SecureStore
+    setIsSwitchOpen(false)
+    dispatch(switchProfileData())
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'HeaderPage' }], // or your home screen
+    });
+  }
+}, [profileSelector]);
   return (
     <>
       {/* Main Settings UI */}
@@ -152,6 +229,20 @@ const Settings = () => {
             <Text style={{ fontSize: 15, marginTop: -2 }}>Add account</Text>
           </View>
         </Pressable>
+
+      {profileArray?.length>0?  <Pressable onPress={switchAccountHandler}>
+          <View
+            style={{
+              flexDirection: "row",
+              gap: 5,
+              marginLeft: 26,
+              marginBottom: 30,
+            }}
+          >
+            <Image source={account} style={{ width: 20, height: 20 }} />
+            <Text style={{ fontSize: 15, marginTop: -2 }}>Switch account</Text>
+          </View>
+        </Pressable>:null}
       </View>
 
       {/* Semi-transparent overlay */}
@@ -193,6 +284,47 @@ const Settings = () => {
         customAvoidingViewProps={{ enabled: false }}
       >
         <BottomSheetContent existingAccountHandler={existingAccountHandler} />
+      </RBSheet>
+
+
+      {isSwitchOpen && (
+        <View
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "rgba(0,0,0,0.5)",
+            zIndex: 1,
+          }}
+        />
+      )}
+
+      {/* Bottom Sheet */}
+      <RBSheet
+        ref={switchRBSheet}
+        useNativeDriver={false} // avoids warning
+        onClose={closeSwitchSheet}
+        customStyles={{
+          wrapper: { backgroundColor: "transparent" },
+          container: {
+            borderTopLeftRadius: 40,
+            borderTopRightRadius: 40,
+            padding: 20,
+            backgroundColor: "white",
+            height:200,
+            zIndex: 2,
+          },
+          draggableIcon: { backgroundColor: "#000" },
+        }}
+        customModalProps={{
+          animationType: "slide",
+          statusBarTranslucent: true,
+        }}
+        customAvoidingViewProps={{ enabled: false }}
+      >
+        <SwitchAccountSheet  profileArray={profileArray}   profileClickHandler={profileClickHandler} dispatch={dispatch} />
       </RBSheet>
     </>
   );

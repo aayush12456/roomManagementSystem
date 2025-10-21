@@ -13,7 +13,7 @@ import myProfile from '../../../../assets/sidebarIcons/profile.png'
 import ProfilePage from '../../../Pages/profilePage/profilePage';
 import SettingsPage from '../../../Pages/settingsPage/settingsPage';
 
-const Header=({profile,allStaffPlusOwner,hotelId})=>{
+const Header=({profile,allStaffPlusOwner,hotelId,profileArrays})=>{
     const Drawer = createDrawerNavigator();
     const navigation = useNavigation();
     console.log('profile is',profile)
@@ -114,14 +114,16 @@ return (
 
         <Drawer.Screen
         name='Settings'
-        component={SettingsPage}
+        // component={SettingsPage}
         options={{
           drawerIcon:()=>(
             <Image  source={setting}
             style={{ width: 20, height: 20 }}/>
         ),
         }}
-      />
+      >
+      {(props) => <SettingsPage {...props}  profileArray={profileArrays}/>}
+        </Drawer.Screen>
      </Drawer.Navigator>
      
     </>
