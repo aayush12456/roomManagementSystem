@@ -1,13 +1,14 @@
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { OtpInput } from "react-native-otp-entry";
-import { View,Text } from 'react-native';
+import { View,Text,Image } from 'react-native';
 import { Button } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import LoginImage from '../common/loginImage/loginImage';
+import unavailableImg from '../../../assets/settingIcon/unavailable.png'
 import * as SecureStore from 'expo-secure-store';
 import { useEffect,useState } from 'react';
 import { useDispatch,useSelector } from 'react-redux';
-import { compareOtpAsync } from '../../Redux/Slice/compareOtpSlice/compareOtpSlice';
+import { compareOtpAsync, compareOtpData } from '../../Redux/Slice/compareOtpSlice/compareOtpSlice';
 import {Modal} from 'react-native'
 
 const GetOtpInput=({hotelObj,data})=>{
@@ -59,6 +60,7 @@ const GetOtpInput=({hotelObj,data})=>{
         if (compareOtpSelector?.mssg === "fetch data") {
           saveLoginDataToSecureStore(); // ✅ Save to SecureStore
           navigation.navigate('HeaderPage');
+          dispatch(compareOtpData())
         }
       }, [compareOtpSelector]);
 
@@ -168,6 +170,7 @@ const GetOtpInput=({hotelObj,data})=>{
         if (loginMssg === "Login with existing account of same hotel name not possible") {
           setModalMsg(loginMssg);
           setShowModal(true);
+          dispatch(compareOtpData())
         }
       }, [loginMssg]);
           
@@ -243,12 +246,14 @@ return (
         alignItems: 'center',
       }}
     >
+      <Image source={unavailableImg} style={{width:60,height:60}}/>
       <Text
         style={{
           fontSize: 16,
           fontWeight: '500',
           textAlign: 'center',
           marginBottom: 15,
+          paddingTop:10
         }}
       >
         {modalMsg}

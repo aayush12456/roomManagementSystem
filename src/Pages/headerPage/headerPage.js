@@ -6,6 +6,7 @@ import { getHotelDetailsAsync } from "../../Redux/Slice/getHotelDetailSlice/getH
 import { useNavigation } from '@react-navigation/native';
 import io from "socket.io-client";
 import axios from "axios";
+import { deleteSwitchProfileData } from "../../Redux/Slice/deleteSwitchProfileSlice/deleteSwitchProfileSlice";
 const socket = io.connect("http://192.168.29.169:4000")
 const HeaderPage=()=>{
   const BASE_URL = "http://192.168.29.169:4000";
@@ -17,6 +18,11 @@ const HeaderPage=()=>{
     const navigation = useNavigation();
     const hotelDetailSelector=useSelector((state)=>state.getHotelDetails.getHotelDetailsObj.hotelObj)
     const updateHotelDetailSelector=useSelector((state)=>state?.updateMyProfiles?.updateMyProfileObj?.updatedData)
+    const deleteSwitchProfileArray=useSelector((state)=>state?.deleteSwitchProfileData?.
+    deleteSwitchProfileObj?.hotelArray)
+    const deleteId=useSelector((state)=>state?.deleteSwitchProfileData?.
+    deleteSwitchProfileObj?.deleteId)
+    console.log('delete switch profile',deleteSwitchProfileArray)
     console.log('hotel update',updateHotelDetailSelector)
     console.log('hotel details',hotelDetailSelector)
     const oldNumber=useSelector((state)=>state?.updateMyProfiles?.updateMyProfileObj?.oldPhone)
@@ -142,6 +148,44 @@ navigation.navigate('LoginPage')
             setFinalProfileArray(array)
            }
           },[phone,profileArray])
+          // useEffect(() => {
+          //   if (phone) {
+          //     // loginNumber से अपने profiles निकालो
+          //     let array = profileArray?.filter(
+          //       (profile) => profile?.loginNumber === phone
+          //     );
+          
+          //     // delete list के phones वाले profiles हटा दो
+          //     if (deleteSwitchProfileArray?.length > 0) {
+          //       array = array.filter(
+          //         (profile) =>
+          //           !deleteSwitchProfileArray.some(
+          //             (del) => del.phone === profile.phone
+          //           )
+          //       );
+          //     }
+          
+          //     setFinalProfileArray(array);
+          //   }
+          // }, [phone, profileArray, deleteSwitchProfileArray]);
+          useEffect(() => {
+            if (!deleteId) return;
+          
+            setFinalProfileArray((prev) => {
+              // ✅ delete based on current visible profiles (not Redux array)
+              const updated = prev.filter((profile) => profile?._id !== deleteId);
+              return updated;
+            });
+          
+            // ✅ backend update bhi karo (Redux slice reset karne se pehle)
+            const timer = setTimeout(() => {
+              dispatch(deleteSwitchProfileData());
+            }, 0);
+          
+            return () => clearTimeout(timer);
+          }, [deleteId]);
+          
+          
           console.log('final profile',finalProfileArray)
 return (
   

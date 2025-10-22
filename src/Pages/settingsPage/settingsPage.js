@@ -1,8 +1,8 @@
 import Settings from "../../components/settings/settings"
-const SettingsPage=({profileArray})=>{
+const SettingsPage=({profileArray,hotelId,phone})=>{
 return (
     <>
-    <Settings profileArray={profileArray}/>
+    <Settings profileArray={profileArray} hotelId={hotelId} phone={phone} />
     </>
 )
 }

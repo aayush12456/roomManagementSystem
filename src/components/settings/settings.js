@@ -4,11 +4,13 @@ import { View, Text, Image, Pressable,ScrollView } from "react-native";
 import RBSheet from "react-native-raw-bottom-sheet";
 import account from "../../../assets/settingIcon/account.png";
 import deleteImg from "../../../assets/settingIcon/delete.png";
+import switchImg from "../../../assets/settingIcon/switch.png";
 import * as SecureStore from 'expo-secure-store';
 import { Button,Card } from "react-native-paper";
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch,useSelector } from "react-redux";
 import { switchProfileAsync, switchProfileData } from "../../Redux/Slice/switchProfileSlice/switchProfileSlice";
+import { deleteSwitchProfileAsync } from "../../Redux/Slice/deleteSwitchProfileSlice/deleteSwitchProfileSlice";
 
 
 // Bottom sheet content
@@ -49,7 +51,7 @@ const BottomSheetContent = ({ existingAccountHandler }) => (
   </View>
 );
 
-const SwitchAccountSheet = ({ profileArray,profileClickHandler }) => (
+const SwitchAccountSheet = ({ profileArray,profileClickHandler,deleteSwitchProfileHandler }) => (
   <View>
     <Text style={{ textAlign: "center", marginTop: -20, fontWeight: "700" }}>
       _____
@@ -104,7 +106,7 @@ contentContainerStyle={{
             <>
             <Card style={{marginTop:20}} >
               <Pressable onPress={()=>profileClickHandler(profile)}>
-              <View style={{flexDirection:"row",gap:22}}>
+              <View style={{flexDirection:"row",justifyContent:'space-between'}}>
                 <Image source={{uri:profile.image}} 
                  style={{
                   width: 50,
@@ -119,7 +121,14 @@ contentContainerStyle={{
                  <Text >{profile?.name}</Text>
                  <Text style={{paddingTop:4}}>{profile?.hotelName}</Text>
                 </View>
-                <Image source={deleteImg} style={{width:18,height:18,marginTop:15,marginLeft:50}}/>
+                <Pressable 
+                onPress={(event) => {
+                  event.stopPropagation(); // 🛑 stop parent press
+                  deleteSwitchProfileHandler(profile);
+                }}
+                >
+                <Image source={deleteImg} style={{width:18,height:18,marginTop:15,marginLeft:50,marginRight:10}}/>
+                </Pressable>
             </View>
               </Pressable>
             
@@ -135,7 +144,7 @@ contentContainerStyle={{
 );
 
 
-const Settings = ({profileArray}) => {
+const Settings = ({profileArray, hotelId,phone}) => {
   console.log('profile array',profileArray)
 const profileSelector=useSelector((state)=>state.switchProfileData.switchProfileObj)
 console.log('profile select',profileSelector)
@@ -177,6 +186,18 @@ const profileObj={
 console.log('profile obj',profileObj)
 dispatch(switchProfileAsync(profileObj))
 }
+const deleteSwitchProfileHandler=(profile)=>{
+  console.log('profile',profile)
+  const deleteProfileObj={
+    hotelId:hotelId,
+    phone:phone,
+    anotherHotelId:profile?.hotelId,
+    anotherPhone:profile?.phone
+  }
+  console.log('delete switch',deleteProfileObj)
+  dispatch(deleteSwitchProfileAsync(deleteProfileObj))
+}
+
 
 useEffect(() => {
   const saveLoginDataToSecureStore = async () => {
@@ -239,7 +260,7 @@ useEffect(() => {
               marginBottom: 30,
             }}
           >
-            <Image source={account} style={{ width: 20, height: 20 }} />
+            <Image source={switchImg} style={{ width: 20, height: 20 }} />
             <Text style={{ fontSize: 15, marginTop: -2 }}>Switch account</Text>
           </View>
         </Pressable>:null}
@@ -324,7 +345,8 @@ useEffect(() => {
         }}
         customAvoidingViewProps={{ enabled: false }}
       >
-        <SwitchAccountSheet  profileArray={profileArray}   profileClickHandler={profileClickHandler} dispatch={dispatch} />
+        <SwitchAccountSheet  profileArray={profileArray}   profileClickHandler={profileClickHandler}
+         dispatch={dispatch} deleteSwitchProfileHandler={deleteSwitchProfileHandler} />
       </RBSheet>
     </>
   );

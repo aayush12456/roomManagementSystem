@@ -122,7 +122,7 @@ return (
         ),
         }}
       >
-      {(props) => <SettingsPage {...props}  profileArray={profileArrays}/>}
+      {(props) => <SettingsPage {...props}  profileArray={profileArrays} hotelId={hotelId} phone={profile?.phone} />}
         </Drawer.Screen>
      </Drawer.Navigator>
      
