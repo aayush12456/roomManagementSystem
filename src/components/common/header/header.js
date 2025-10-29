@@ -12,12 +12,15 @@ import setting from '../../../../assets/sidebarIcons/settingImg.png'
 import myProfile from '../../../../assets/sidebarIcons/profile.png'
 import ProfilePage from '../../../Pages/profilePage/profilePage';
 import SettingsPage from '../../../Pages/settingsPage/settingsPage';
+import PerformancePage from '../../../Pages/performancePage/performancePage';
 
-const Header=({profile,allStaffPlusOwner,hotelId,profileArrays})=>{
+const Header=({profile,allStaffPlusOwner,hotelId,profileArrays,policeReport,totalRoom})=>{
     const Drawer = createDrawerNavigator();
     const navigation = useNavigation();
     console.log('profile is',profile)
     // console.log('hotelid',hotelId)
+    console.log('polive',policeReport)
+    const policeReportArray=policeReport
 
     const removeLoginData = async () => {
         try {
@@ -82,14 +85,15 @@ return (
       />
          <Drawer.Screen
         name='Performance Graph'
-        component={DashboardPage}
         options={{
           drawerIcon:()=>(
             <Image  source={chart}
             style={{ width: 20, height: 20 }}/>
         ),
         }}
-      />
+      >
+            {(props) => <PerformancePage {...props} policeReport={policeReportArray} totalRoom={totalRoom}/>}
+        </Drawer.Screen>
          <Drawer.Screen
         name='Reports'
         component={ReportPage}

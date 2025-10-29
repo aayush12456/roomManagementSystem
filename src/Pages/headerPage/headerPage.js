@@ -13,6 +13,7 @@ const HeaderPage=()=>{
     const [loginObj, setLoginObj] = useState(null);
     const [profileObj,setProfileObj]=useState({})
     const [allStaffOwnerObj,setAllStaffOwnerObj]=useState({})
+    const [reportObj,setReportObj]=useState({})
     const [finalProfileArray,setFinalProfileArray]=useState([])
     const dispatch=useDispatch()
     const navigation = useNavigation();
@@ -96,7 +97,8 @@ navigation.navigate('LoginPage')
           updateHotelDetailSelector && Object.keys(updateHotelDetailSelector).length > 0
             ? updateHotelDetailSelector
             : hotelDetailSelector;
-
+          
+            console.log('final hotel',finalHotelDetailSelector)
           useEffect(() => {
             if (finalHotelDetailSelector && phone) {
               const matchedObj = findByPhone(finalHotelDetailSelector, phone);
@@ -187,10 +189,60 @@ navigation.navigate('LoginPage')
           
           
           console.log('final profile',finalProfileArray)
+
+          //report
+          useEffect(() => {
+            const fetchReportDetails = async () => {
+              try {
+                if (hotelId) {
+                  const response = await axios.get(
+                    `${BASE_URL}/hotel/getCustomerDetails/${hotelId}`
+                  );
+                  console.log('report detail response in header',response?.data)
+                  setReportObj(response?.data || {} )
+                }
+              } catch (error) {
+                // console.error("Error fetching visitors:", error);
+              }
+            };
+          
+            fetchReportDetails();
+            socket.on("getCustomerDetails", (newUser) => {
+              setReportObj(newUser);
+            });
+    
+            socket.on("updateCustomerDetails", (data) => {
+              if (data.hotelId === hotelId) {
+                setReportObj(prev => ({
+                  ...prev,
+                  reportArray: data.reportArray,
+                }));
+              }
+            });
+    
+            socket.on("updatePersonalCustomerDetails", (data) => {
+              if (data.hotelId === hotelId) {
+                setReportObj(prev => ({
+                  ...prev,
+                  getCustomerDetailsArray: data.getCustomerDetailsArray,
+                }));
+              }
+            });
+            return () => {
+              socket.off("getReportDetails");
+              socket.off("updateCustomerDetails");
+              socket.off("updatePersonalCustomerDetails");
+            };
+          }, [hotelId]);
+
+        const reportArray=reportObj?.reportArray
+        // console.log('report',reportArray)
+        const totalRoom=finalHotelDetailSelector?.totalRoom
 return (
   
     <>
-    <Header profile={profileObj} allStaffPlusOwner={allStaffOwnerObj} hotelId={hotelId} profileArrays={finalProfileArray}/>
+    <Header profile={profileObj} allStaffPlusOwner={allStaffOwnerObj} hotelId={hotelId}
+     profileArrays={finalProfileArray} policeReport={reportArray} totalRoom={totalRoom} />
     </>
 )
 }

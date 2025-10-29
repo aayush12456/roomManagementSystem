@@ -33,6 +33,7 @@
     "react-native": "0.79.5",
     "react-native-alert-notification": "^0.4.2",
     "react-native-gesture-handler": "~2.24.0",
+    "react-native-gifted-charts": "^1.4.64",
     "react-native-modal": "^14.0.0-rc.1",
     "react-native-otp-entry": "^1.8.5",
     "react-native-paper": "^5.14.5",
@@ -46,7 +47,8 @@
     "socket.io": "^4.8.1",
     "socket.io-client": "^4.7.2",
     "to-words": "^4.7.0",
-    "yup": "^1.6.1"
+    "yup": "^1.6.1",
+    "expo-linear-gradient": "~14.1.5"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
