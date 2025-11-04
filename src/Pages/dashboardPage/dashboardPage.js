@@ -2,12 +2,23 @@ import Dashboard from "../../components/dashboard/dashboard"
 import { useEffect,useState } from "react"
 import { useDispatch,useSelector } from "react-redux";
 import * as SecureStore from 'expo-secure-store';
+import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import { getHotelDetailsAsync } from "../../Redux/Slice/getHotelDetailSlice/getHotelDetailSlice";
-const DashboardPage=()=>{
+import { deleteRoomData } from "../../Redux/Slice/deleteRoomSlice/deleteRoomSlice";
+import { addRoomData } from "../../Redux/Slice/addRoomSlice/addRoomSlice";
+const DashboardPage=({profile})=>{
     const dispatch=useDispatch()
     const hotelDetailSelector=useSelector((state)=>state.getHotelDetails.getHotelDetailsObj.hotelObj)
+    const addRoomSelector=useSelector((state)=>state.addRoomData.addRoomObj)
+    const deleteRoomSelector=useSelector((state)=>state.deleteRoomData.deleteRoomObj)
+    console.log('deelte room',deleteRoomSelector)
+    console.log('add room selctsdddd',addRoomSelector)
     console.log('hotel details',hotelDetailSelector)
+    const roomMssg=addRoomSelector?.mssg ||deleteRoomSelector?.mssg
+    console.log('room mssg',roomMssg)
+    const roomArraySelector=addRoomSelector?.matchedHotels || deleteRoomSelector?.matchedHotels
     const [loginObj, setLoginObj] = useState(null);
+    
     const getLoginDataToSecureStore = async () => {
         try {
           const data = await SecureStore.getItemAsync('loginOtpObj');
@@ -38,9 +49,47 @@ const DashboardPage=()=>{
       dispatch(getHotelDetailsAsync(id))
       }
       },[id])
+
+      const finalHotelDetailSelector=roomArraySelector?roomArraySelector:hotelDetailSelector
+
+      useEffect(() => {
+        if (roomMssg === "New room added successfully") {
+          Toast.show({
+            type: ALERT_TYPE.SUCCESS,
+            title: "Room Added Successfully",
+            autoClose: 5000,
+          });
+      
+          // Re-fetch hotel details
+          if (id) dispatch(getHotelDetailsAsync(hotelDetailSelector?._id));
+      
+          // Reset add slice after a small delay (so UI can use matchedHotels)
+          setTimeout(() => {
+            dispatch(addRoomData());
+          }, 3000);
+        } 
+        
+        else if (roomMssg === "Room deleted successfully") {
+          Toast.show({
+            type: ALERT_TYPE.SUCCESS,
+            title: "Room Deleted Successfully",
+            autoClose: 5000,
+          });
+      
+          // Re-fetch hotel details
+          if (id) dispatch(getHotelDetailsAsync(hotelDetailSelector?._id));
+      
+          // Reset delete slice after delay
+          setTimeout(() => {
+            dispatch(deleteRoomData());
+          }, 1000);
+        }
+      }, [roomMssg]);
+      
+      
 return (
     <>
-    <Dashboard hotelDetails={hotelDetailSelector}/>
+    <Dashboard hotelDetails={finalHotelDetailSelector} profile={profile}/>
     </>
 )
 }

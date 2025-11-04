@@ -10,6 +10,8 @@ import passReportObjSlice from "../Slice/passReportObjSlice/passReportObjSlice"
 import updateMyProfileSlice from "../Slice/updateMyProfileSlice/updateMyProfileSlice"
 import switchProfileSlice from "../Slice/switchProfileSlice/switchProfileSlice"
 import deleteSwitchProfileSlice from "../Slice/deleteSwitchProfileSlice/deleteSwitchProfileSlice"
+import addRoomSlice from "../Slice/addRoomSlice/addRoomSlice"
+import deleteRoomSlice from "../Slice/deleteRoomSlice/deleteRoomSlice"
 const store=configureStore({
     reducer:{
         hotelRegisterData:hotelRegisterSlice,
@@ -22,7 +24,9 @@ const store=configureStore({
         passReportObj:passReportObjSlice,
         updateMyProfiles:updateMyProfileSlice,
         switchProfileData:switchProfileSlice,
-        deleteSwitchProfileData:deleteSwitchProfileSlice
+        deleteSwitchProfileData:deleteSwitchProfileSlice,
+        addRoomData:addRoomSlice,
+        deleteRoomData:deleteRoomSlice
     }
 })
 export default store

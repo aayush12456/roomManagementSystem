@@ -9,10 +9,10 @@ import { View } from "react-native";
 import { ScrollView,Pressable } from "react-native";
 import RoomDetailCard from "../common/roomDetailCard/roomDetailCard";
 import { SafeAreaView } from "react-native-safe-area-context";
-import {useSelector} from 'react-redux'
+import {useSelector,useDispatch} from 'react-redux'
 import BookedModal from "../bookedModal/bookedModal";
 const socket = io.connect("http://192.168.29.169:4000")
-const Dashboard=({hotelDetails})=>{
+const Dashboard=({hotelDetails,profile})=>{
   const BASE_URL = "http://192.168.29.169:4000";
   // console.log('hotel details is',hotelDetails)
   const [customerObj,setCustomerObj]=useState({})
@@ -22,13 +22,15 @@ const Dashboard=({hotelDetails})=>{
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [matchRoomArray,setMatchRoomArray]=useState([])
     const navigation = useNavigation();
+    const dispatch=useDispatch()
     const totalRoom=hotelDetails?.totalRoom
     const room=hotelDetails?.room
+    console.log('room is',room)
     const hotelDetailSelector=useSelector((state)=>state.getHotelDetails.getHotelDetailsObj.hotelObj)
     // console.log('hotel id dashboard',hotelDetailSelector?._id)
-
     const finalDate=new Date()
-    const todayDate=finalDate.toLocaleDateString("en-GB") 
+    const todayDate=finalDate.toLocaleDateString("en-GB")
+
     useEffect(() => {
       const fetchRoomDetails = async () => {
         try {
@@ -53,6 +55,7 @@ const Dashboard=({hotelDetails})=>{
         socket.off("getCustomerDetails");
       };
     }, [hotelDetailSelector?._id]);
+
     const customerArray=customerObj?.getCustomerDetailsArray
     // console.log('customer array dashboard is',customerArray)
     // console.log('room is',Object.entries(room))
@@ -83,7 +86,6 @@ setShowBookedAlert(true)
     // console.log('select date',selectedDate.toLocaleDateString("en-GB"))
     const currentDate=selectedDate.toLocaleDateString("en-GB")
 
-    
     useEffect(() => {
       const fetchRoomDetailsAdvance = async () => {
         try {
@@ -108,6 +110,7 @@ setShowBookedAlert(true)
         socket.off("getCustomerDetailsAdvance");
       };
     }, [hotelDetailSelector?._id]);
+
     useEffect(()=>{
       if(currentDate){
       const matchRoom=customerArrayAdvance?.filter((item)=>item.selectedDate==currentDate)
@@ -241,7 +244,7 @@ return (
           room && typeof room==='object'?Object.entries(room).map(([floorKey,floorRooms],floorIndex)=>{
                         return (
                           <View style={{marginTop:12,marginLeft:8,marginRight:8}} key={floorIndex}>
-                            <RoomDetailCard roomTitle={floorKey} roomDetails={floorRooms} currentDate={currentDate}  />
+                            <RoomDetailCard roomTitle={floorKey} roomDetails={floorRooms} currentDate={currentDate} profile={profile}  />
                           </View>
                         )
                       }):null

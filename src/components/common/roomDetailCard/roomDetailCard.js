@@ -1,25 +1,37 @@
 import { Card,Text } from "react-native-paper"
-import { View,Pressable } from "react-native";
-import { useState,useEffect } from "react";
+import { View,Pressable,Image } from "react-native";
+import { useState,useEffect,useRef } from "react";
 import axios from 'axios'
 import moment from "moment";
 import io from "socket.io-client";
-import {useSelector} from 'react-redux'
+import {useSelector,useDispatch} from 'react-redux'
 import CustomerDetailModal from "../../customerDetailModal/customerDetailModal";
 import AdvanceBookModal from "../../advanceBookModal/advanceBookModal";
+import plus from '../../../../assets/roomIcon/plus.png'
+import AddRoomModal from "../../addRoomModal/addRoomModal";
+import AwesomeAlert from 'react-native-awesome-alerts';
+import { deleteRoomAsync } from "../../../Redux/Slice/deleteRoomSlice/deleteRoomSlice";
 const socket = io.connect("http://192.168.29.169:4000")
-const RoomDetailCard=({roomTitle,roomDetails,currentDate})=>{
+const RoomDetailCard=({roomTitle,roomDetails,currentDate,profile})=>{
+  console.log('profile data',profile)
   // console.log('curent date',currentDate)
-  console.log('room details',roomDetails)
+  // console.log('room details',roomDetails)
+  // console.log('titles',roomTitle)
+  const dispatch=useDispatch()
   const BASE_URL = "http://192.168.29.169:4000";
   const [showAlert, setShowAlert] = useState(false);
   const [selectedRoomId, setSelectedRoomId] = useState(null);
   const [customerObj,setCustomerObj]=useState({})
+  const [label,setLabel]=useState('')
+  const [anotherShowAlert, setAnotherShowAlert] = useState(false);
   const [customerArrayAdvance,setCustomerArrayAdvance]=useState([])
   const [roomType,setRoomType]=useState('')
   const [floors,setFloors]=useState('')
   const [roomNo,setRoomNo]=useState('')
+  const [selectFloor,setSelectFloor]=useState('')
+  const [roomIds,setRoomIds]=useState('')
   const [advanceAlert,setAdvanceAlert]=useState(false)
+  const [roomAlert,setRoomAlert]=useState(false)
   const hotelDetailSelector=useSelector((state)=>state.getHotelDetails.getHotelDetailsObj.hotelObj)
   
   // console.log('hotel id',hotelDetailSelector?._id)
@@ -45,6 +57,39 @@ const RoomDetailCard=({roomTitle,roomDetails,currentDate})=>{
     
         return `${ordinal} Floor`;
       };
+      const lastPress = useRef(0);
+      const timeoutRef = useRef(null);
+
+      const handlePress = (roomId, roomType, shortLabel) => {
+        const time = new Date().getTime();
+        const delta = time - lastPress.current;
+    
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+        }
+    
+        if (delta < 300 && !profile.post) {
+          // 🔁 Double tap detected → cancel single tap
+          clearTimeout(timeoutRef.current);
+          anotherClickHandler(roomId, roomType, shortLabel);
+        } else {
+          // 🕓 Wait 300ms to confirm it's single tap
+          timeoutRef.current = setTimeout(() => {
+            roomClickHandler(roomId, roomType, shortLabel);
+          }, 300);
+        }
+    
+        lastPress.current = time;
+      };
+      
+      const anotherClickHandler = (roomId, roomType, shortLabel) => {
+        console.log("🔴 Double tap → anotherRoomClickHandler called for:", roomId,shortLabel);
+        setLabel(shortLabel)
+        setAnotherShowAlert(true)
+        setRoomIds(roomId)
+        // --- yahan aap delete logic, confirm modal, etc. laga sakte ho
+      };
+
   const roomClickHandler = (id, type, num) => {
     console.log('num is',num)
   // console.log("id is", id);
@@ -101,6 +146,12 @@ const RoomDetailCard=({roomTitle,roomDetails,currentDate})=>{
   // console.log('floor us',floors)
   // console.log('room no',roomNo)
   // console.log('show alert in advance',showAlert)
+const addRoomHandler=(roomTitle)=>{
+  console.log('room title',roomTitle)
+  setSelectFloor(roomTitle)
+setRoomAlert(true)
+}
+
 useEffect(() => {
   const fetchRoomDetails = async () => {
     try {
@@ -199,7 +250,9 @@ return (
        const roomType=roomData.roomType
             return (
                 <View key={roomIndex} style={{ padding: 6 }}>
-                <Pressable onPress={()=>roomClickHandler(roomId,roomType,shortLabel)}>
+                {/* <Pressable onPress={()=>roomClickHandler(roomId,roomType,shortLabel)}> */}
+                <Pressable onPress={() => handlePress(roomId, roomType, shortLabel)}>
+
                  <View
                    style={{
                      borderWidth: 1,
@@ -226,14 +279,63 @@ return (
            </View>
             )
         } )}
+        {!profile.post?<Pressable onPress={()=>addRoomHandler(roomTitle)} >
+                 <View
+                   style={{
+                     borderWidth: 1,
+                    //  borderColor:`${isAdvanceMatched ===true && todayDate !== currentDate?"pink":isMatched===true &&  todayDate === currentDate ?'red':roomType==='Ac'?'blue':roomType === "Non Ac"?'green':''}`,
+                    borderColor:`orange`,
+                     borderRadius:12,
+                     padding:12,
+                     marginBottom: 3,
+                     marginTop:5,
+                     width:50
+                     
+                   }}
+                 >
+     <Image source={plus} style={{width:20,height:20}}/>
+                 </View>
+                 <Text style={{textAlign:'center',paddingTop:2}}>Add Room</Text>
+                </Pressable>:null}
     </View>
     </Card>
   <CustomerDetailModal floor={floors} roomType={roomType} roomNo={roomNo} showAlert={showAlert} setShowAlert={setShowAlert} 
   selectedRoomId={selectedRoomId} customerArray={customerArray} currentDates={currentDate}/>
+
   <AdvanceBookModal floor={floors} roomType={roomType} roomNo={roomNo} advanceAlert={advanceAlert} roomNum={roomNo}
   setAdvanceAlert={setAdvanceAlert}  selectedRoomId={selectedRoomId}
    customerArrayAdvance={customerArrayAdvance} todayDate={todayDate} currentDates={currentDate}/>
+
+   <AddRoomModal roomAlert={roomAlert} setRoomAlert={setRoomAlert} 
+   hotelId={hotelDetailSelector?._id} floorSelect={selectFloor}/>
     
+    <AwesomeAlert
+          show={anotherShowAlert}
+          showProgress={false}
+          message={`Are you sure you want to delete ${label} `}
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showCancelButton={true}
+          showConfirmButton={true}
+          cancelText="No"
+          confirmText="Yes"
+          confirmButtonColor="#DD6B55"
+          onCancelPressed={() => {
+       setAnotherShowAlert(false)
+          }}
+    
+    onConfirmPressed={() => {
+      // Perform your delete logic here if needed
+      const deleteRoomObj={
+        id:hotelDetailSelector?._id,
+        floor:roomTitle,
+        floorId:roomIds
+      }
+      console.log('Room deleted!',deleteRoomObj);
+      dispatch(deleteRoomAsync(deleteRoomObj))
+      setAnotherShowAlert(false);
+    }}
+        />
     </>
 )
 }

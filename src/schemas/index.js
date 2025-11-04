@@ -70,3 +70,10 @@ export const advanceCustomerBookingSchema=Yup.object({
   totalPayment:Yup.string().min(2).required("Please enter total payment"),
   advancePayment:Yup.string().min(2).required("Please enter advance payment"),
 })
+
+
+export const roomAdd=Yup.object({
+  roomType:Yup.string().min(2).required("Please select room type"),
+  bedType:Yup.string().min(2).required("Please select bed type"),
+  roomNumber:Yup.string().min(2).required("Please enter room number"),
+})

@@ -72,7 +72,7 @@ return (
     </DrawerContentScrollView>
   )}
 >
-     <Drawer.Screen
+     {/* <Drawer.Screen
         name='Room Preview'
         component={DashboardPage}
         options={{
@@ -82,7 +82,20 @@ return (
         ),
         }}
         
-      />
+      /> */}
+        <Drawer.Screen
+        name='Room Preview'
+        options={{
+          drawerIcon:()=>(
+            <Image  source={room}
+            style={{ width: 20, height: 20 }}/>
+        ),
+        }}
+        
+      >
+           {(props) => <DashboardPage {...props} profile={profile}/>}
+        </Drawer.Screen>
+
          <Drawer.Screen
         name='Performance Graph'
         options={{
