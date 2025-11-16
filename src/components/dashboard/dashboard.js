@@ -6,37 +6,86 @@ import { useNavigation } from '@react-navigation/native';
 import axios from 'axios'
 import io from "socket.io-client";
 import { View } from "react-native";
-import { ScrollView,Pressable } from "react-native";
+import { ScrollView,Pressable,Image } from "react-native";
 import RoomDetailCard from "../common/roomDetailCard/roomDetailCard";
+import plus from '../../../assets/roomIcon/plus.png'
 import { SafeAreaView } from "react-native-safe-area-context";
 import {useSelector,useDispatch} from 'react-redux'
 import BookedModal from "../bookedModal/bookedModal";
+import AddFloorModal from "../addFloorModal/addFloorModal";
+import { getHotelDetailsAsync } from "../../Redux/Slice/getHotelDetailSlice/getHotelDetailSlice";
+
 const socket = io.connect("http://192.168.29.169:4000")
 const Dashboard=({hotelDetails,profile})=>{
   const BASE_URL = "http://192.168.29.169:4000";
-  // console.log('hotel details is',hotelDetails)
+  console.log('hotel details is',hotelDetails)
   const [customerObj,setCustomerObj]=useState({})
   const [customerArrayAdvance,setCustomerArrayAdvance]=useState([])
   const [showBookedAlert, setShowBookedAlert] = useState(false);
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [floorAlert,setFloorAlert]=useState(false)
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [matchRoomArray,setMatchRoomArray]=useState([])
+  const [deletedFloorName, setDeletedFloorName] = useState(null);
     const navigation = useNavigation();
     const dispatch=useDispatch()
     const totalRoom=hotelDetails?.totalRoom
     const room=hotelDetails?.room
     console.log('room is',room)
+    
     const hotelDetailSelector=useSelector((state)=>state.getHotelDetails.getHotelDetailsObj.hotelObj)
     // console.log('hotel id dashboard',hotelDetailSelector?._id)
+    
+  const deleteFloorSelector=useSelector((state)=>state.deleteFloorData.deleteFloorObj)
+
+  // const filterRoom =
+  // room && typeof room === "object"
+  //   ? Object.fromEntries(
+  //       Object.entries(room).filter(
+  //         ([floorKey]) =>
+  //           floorKey.toLowerCase() !==
+  //           deleteFloorSelector?.floorName?.toLowerCase()
+  //       )
+  //     )
+  //   : {};
+  // console.log('delete floor selector in room',deleteFloorSelector)
+  // console.log('filter,room',filteredRoom)
+
+  const [filterRoom, setFilterRoom] = useState(room || {});
+ // Filter floors locally
+ useEffect(() => {
+  if (!room || typeof room !== "object") return;
+
+  const floorToRemove =
+ deletedFloorName;
+
+  if (floorToRemove) {
+    const filtered = Object.fromEntries(
+      Object.entries(room).filter(
+        ([floorKey]) => floorKey.toLowerCase() !== floorToRemove.toLowerCase()
+      )
+    );
+    setFilterRoom(filtered);
+  } else {
+    setFilterRoom(room);
+  }
+}, [room, deletedFloorName]);
+
+console.log('filter,room',filterRoom)
+
+const handleFloorDeleted = (floorName) => {
+  setDeletedFloorName(floorName);
+};
+
     const finalDate=new Date()
     const todayDate=finalDate.toLocaleDateString("en-GB")
 
     useEffect(() => {
       const fetchRoomDetails = async () => {
         try {
-          if (hotelDetailSelector?._id) {
+          if (hotelDetails?._id) {
             const response = await axios.get(
-              `${BASE_URL}/hotel/getCustomerDetails/${hotelDetailSelector?._id}`
+              `${BASE_URL}/hotel/getCustomerDetails/${hotelDetails?._id}`
             );
             // console.log('visitor user dashboard in response',response?.data)
             setCustomerObj(response?.data || {})
@@ -54,7 +103,7 @@ const Dashboard=({hotelDetails,profile})=>{
       return () => {
         socket.off("getCustomerDetails");
       };
-    }, [hotelDetailSelector?._id]);
+    }, [hotelDetails?._id]);
 
     const customerArray=customerObj?.getCustomerDetailsArray
     // console.log('customer array dashboard is',customerArray)
@@ -89,9 +138,9 @@ setShowBookedAlert(true)
     useEffect(() => {
       const fetchRoomDetailsAdvance = async () => {
         try {
-          if (hotelDetailSelector?._id) {
+          if (hotelDetails?._id) {
             const response = await axios.get(
-              `${BASE_URL}/hotel/getCustomerDetailsAdvance/${hotelDetailSelector?._id}`
+              `${BASE_URL}/hotel/getCustomerDetailsAdvance/${hotelDetails?._id}`
             );
             // console.log('visitor user in response',response?.data)
             setCustomerArrayAdvance(response?.data?.getAdvanceCustomerDetailsArray || {} )
@@ -109,7 +158,7 @@ setShowBookedAlert(true)
       return () => {
         socket.off("getCustomerDetailsAdvance");
       };
-    }, [hotelDetailSelector?._id]);
+    }, [hotelDetails?._id]);
 
     useEffect(()=>{
       if(currentDate){
@@ -122,6 +171,10 @@ setShowBookedAlert(true)
 
       const bookedNumber=todayDate!==currentDate?matchRoomArray.length: customerArray?.length
       const finalTotalRoom=totalRoom-bookedNumber
+
+      const addFloorHandler=()=>{
+        setFloorAlert(true)
+      }
 return (
     <>
     {/* {
@@ -237,25 +290,61 @@ return (
     </View>
   ))
 } */}
-<ScrollView  contentContainerStyle={{
+<ScrollView 
+ contentContainerStyle={{
     paddingBottom: 100, // last card ke liye space
   }}>
 {
-          room && typeof room==='object'?Object.entries(room).map(([floorKey,floorRooms],floorIndex)=>{
+          room && typeof room==='object'?Object.entries(filterRoom).map(([floorKey,floorRooms],floorIndex)=>{
                         return (
                           <View style={{marginTop:12,marginLeft:8,marginRight:8}} key={floorIndex}>
-                            <RoomDetailCard roomTitle={floorKey} roomDetails={floorRooms} currentDate={currentDate} profile={profile}  />
+                            <RoomDetailCard roomTitle={floorKey} roomDetails={floorRooms} 
+                             currentDate={currentDate} profile={profile}      onFloorDeleted={handleFloorDeleted}   />
                           </View>
                         )
                       }):null
                     }
+
+                    
+                   {/* {!profile.post? <View style={{flexDirection:'row',justifyContent:'center'}}>
+                 <Pressable onPress={addFloorHandler} >
+                 <View
+                   style={{
+                     borderWidth: 1,
+                    //  borderColor:`${isAdvanceMatched ===true && todayDate !== currentDate?"pink":isMatched===true &&  todayDate === currentDate ?'red':roomType==='Ac'?'blue':roomType === "Non Ac"?'green':''}`,
+                    borderColor:`orange`,
+                     borderRadius:12,
+                     padding:12,
+                     marginBottom: 3,
+                     marginTop:5,
+                     width:50,    
+                   }}
+                 >
+     <Image source={plus} style={{width:20,height:20}}/>
+                 </View>
+                 <Text style={{textAlign:'center',paddingTop:2}}>Add Floor</Text>
+                </Pressable>
+                    </View>:null} */}
+                    {!profile.post? <Pressable onPress={addFloorHandler} >
+                     <View style={{width:'100%', height:'100%', marginTop:15,backgroundColor:'orange', 
+                    padding:12, position: "relative",bottom:0}}>
+                      <View style={{flexDirection:'row',justifyContent:'center'}}>
+                      <Image source={plus} style={{width:20,height:20,tintColor: 'white'}}/>
+                      </View>
+                      <Text style={{textAlign:'center',paddingTop:6,color:"white"}}>Add Floor</Text>
+                    </View>
+                     </Pressable>:null}
+                    
+                      
 </ScrollView>
 
                     </View>
                     <BookedModal room={room} customerArray={customerArray} customerArrayAdvance={customerArrayAdvance}
                      showBookedAlert={showBookedAlert} setShowBookedAlert={setShowBookedAlert} todayDate={todayDate} currentDate={currentDate}/> 
-                    
-                    </SafeAreaView>    
+                      
+                      <AddFloorModal floorAlert={floorAlert} setFloorAlert={setFloorAlert} hotelId={hotelDetails?._id}/>
+                    </SafeAreaView>  
+
     </>
 )
 }

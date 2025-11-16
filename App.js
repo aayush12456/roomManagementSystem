@@ -19,11 +19,16 @@ import EditStaffProfilePage from './src/Pages/editStaffProfilePage/editStaffProf
 import ProfilePage from './src/Pages/profilePage/profilePage';
 import { LogBox } from 'react-native';
 import ExistingAccountPage from './src/Pages/existingAccountPage/exisingAccountPage';
-
+import { BackHandler } from "react-native";
 
 LogBox.ignoreLogs([
-  'Each child in a list should have a unique "key" prop.%s%s See https://react.dev/link/warning-keys for more information.'
+  'Each child in a list should have a unique "key" prop.%s%s See https://react.dev/link/warning-keys for more information.',
+  // "HwBackHandler.removeEventListener"
+  "HwBackHandler.removeEventListener is not a function",
 ]);
+if (!BackHandler.removeEventListener) {
+  BackHandler.removeEventListener = () => {};
+}
 const Stack = createNativeStackNavigator();
 
 export default function App() {

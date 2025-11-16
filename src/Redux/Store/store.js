@@ -12,6 +12,8 @@ import switchProfileSlice from "../Slice/switchProfileSlice/switchProfileSlice"
 import deleteSwitchProfileSlice from "../Slice/deleteSwitchProfileSlice/deleteSwitchProfileSlice"
 import addRoomSlice from "../Slice/addRoomSlice/addRoomSlice"
 import deleteRoomSlice from "../Slice/deleteRoomSlice/deleteRoomSlice"
+import addFloorSlice from "../Slice/addFloorSlice/addFloorSlice"
+import deleteFloorSlice from "../Slice/deleteFloorSlice/deleteFloorSlice"
 const store=configureStore({
     reducer:{
         hotelRegisterData:hotelRegisterSlice,
@@ -26,7 +28,9 @@ const store=configureStore({
         switchProfileData:switchProfileSlice,
         deleteSwitchProfileData:deleteSwitchProfileSlice,
         addRoomData:addRoomSlice,
-        deleteRoomData:deleteRoomSlice
+        deleteRoomData:deleteRoomSlice,
+        addFloorData:addFloorSlice,
+        deleteFloorData:deleteFloorSlice
     }
 })
 export default store
