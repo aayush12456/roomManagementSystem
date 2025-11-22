@@ -14,7 +14,7 @@ import ProfilePage from '../../../Pages/profilePage/profilePage';
 import SettingsPage from '../../../Pages/settingsPage/settingsPage';
 import PerformancePage from '../../../Pages/performancePage/performancePage';
 
-const Header=({profile,allStaffPlusOwner,hotelId,profileArrays,policeReport,totalRoom})=>{
+const Header=({profile,allStaffPlusOwner,hotelId,profileArrays,policeReport,totalRoom,hotelImgFirst})=>{
     const Drawer = createDrawerNavigator();
     const navigation = useNavigation();
     console.log('profile is',profile)
@@ -139,7 +139,8 @@ return (
         ),
         }}
       >
-      {(props) => <SettingsPage {...props}  profileArray={profileArrays} hotelId={hotelId} phone={profile?.phone} />}
+      {(props) => <SettingsPage {...props}  profileArray={profileArrays} hotelId={hotelId}  
+       phone={profile?.phone}  hotelImgFirst={hotelImgFirst} />}
         </Drawer.Screen>
      </Drawer.Navigator>
      

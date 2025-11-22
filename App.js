@@ -20,6 +20,7 @@ import ProfilePage from './src/Pages/profilePage/profilePage';
 import { LogBox } from 'react-native';
 import ExistingAccountPage from './src/Pages/existingAccountPage/exisingAccountPage';
 import { BackHandler } from "react-native";
+import MaintenancePage from './src/Pages/maintenancePage/maintenancePage';
 
 LogBox.ignoreLogs([
   'Each child in a list should have a unique "key" prop.%s%s See https://react.dev/link/warning-keys for more information.',
@@ -169,6 +170,11 @@ export default function App() {
               <Stack.Screen
               name="ExistingAccountPage"
               component={ExistingAccountPage}
+              options={{ headerShown: false }}
+            />
+             <Stack.Screen
+              name="MaintenancePage"
+              component={MaintenancePage}
               options={{ headerShown: false }}
             />
           </Stack.Navigator>

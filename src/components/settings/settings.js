@@ -144,7 +144,7 @@ contentContainerStyle={{
 );
 
 
-const Settings = ({profileArray, hotelId,phone}) => {
+const Settings = ({profileArray, hotelId,phone,hotelImgFirst}) => {
   console.log('profile array',profileArray)
 const profileSelector=useSelector((state)=>state.switchProfileData.switchProfileObj)
 console.log('profile select',profileSelector)
@@ -264,6 +264,20 @@ useEffect(() => {
             <Text style={{ fontSize: 15, marginTop: -2 }}>Switch account</Text>
           </View>
         </Pressable>:null}
+
+        <Pressable>
+        <View
+            style={{
+              flexDirection: "row",
+              gap: 5,
+              marginLeft: 26,
+              marginBottom: 30,
+            }}
+          >
+            <Image source={{uri:hotelImgFirst}} style={{ width: 35, height: 35,borderRadius:20,marginLeft:-7 }} />
+            <Text style={{ fontSize: 15,paddingTop:3 }}>Delete Hotel</Text>
+          </View>
+        </Pressable>
       </View>
 
       {/* Semi-transparent overlay */}

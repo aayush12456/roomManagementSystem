@@ -238,11 +238,12 @@ navigation.navigate('LoginPage')
         const reportArray=reportObj?.reportArray
         // console.log('report',reportArray)
         const totalRoom=finalHotelDetailSelector?.totalRoom
+        const hotelImgFirst=finalHotelDetailSelector?.hotelImg1
 return (
   
     <>
     <Header profile={profileObj} allStaffPlusOwner={allStaffOwnerObj} hotelId={hotelId}
-     profileArrays={finalProfileArray} policeReport={reportArray} totalRoom={totalRoom} />
+     profileArrays={finalProfileArray} policeReport={reportArray} totalRoom={totalRoom} hotelImgFirst={hotelImgFirst} />
     </>
 )
 }

@@ -348,6 +348,7 @@
 import { Card, Text } from "react-native-paper";
 import { View, Pressable, Image} from "react-native";
 import { useState, useEffect, useRef } from "react";
+import { useNavigation } from '@react-navigation/native';
 import axios from "axios";
 import moment from "moment";
 import io from "socket.io-client";
@@ -360,17 +361,25 @@ import AwesomeAlert from "react-native-awesome-alerts";
 import { deleteRoomAsync } from "../../../Redux/Slice/deleteRoomSlice/deleteRoomSlice";
 import { deleteFloorAsync } from "../../../Redux/Slice/deleteFloorSlice/deleteFloorSlice";
 import MessageModal from "../messageModal/messageModal";
+import MaintenanceModal from "../maintenanceModal/maintenanceModal";
+
 
 const socket = io.connect("http://192.168.29.169:4000");
 
 const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDeleted }) => {
  console.log('profile in card',profile)
+ console.log('room details',roomDetails)
+ console.log('current date',currentDate)
   const dispatch = useDispatch();
+  const navigation = useNavigation();
   const BASE_URL = "http://192.168.29.169:4000";
 
   const [showAlert, setShowAlert] = useState(false);
   const [selectedRoomId, setSelectedRoomId] = useState(null);
   const [customerObj, setCustomerObj] = useState({});
+  const [mainCleanObj,setMainCleanObj]=useState({})
+  const [anotherMainCleanObj,setAnotherMainCleanObj]=useState({})
+  const [finalMainCleanObj,setFinalMainCleanObj]=useState({})
   const [label, setLabel] = useState("");
   const [anotherShowAlert, setAnotherShowAlert] = useState(false);
   const [floorAlert,setFloorAlert]=useState(false)
@@ -388,7 +397,10 @@ const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDe
   const [roomAlert, setRoomAlert] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false); // ✅ guard to prevent double reopen
   const [floorDeleting, setFloorDeleting] = useState(false)
+  const [maintainAlert,setMaintainAlert]=useState(false)
  const [floorLabel,setFloorLabel]=useState('')
+ const [cardHeight, setCardHeight] = useState(0);
+
   const hotelDetailSelector = useSelector(
     (state) => state.getHotelDetails.getHotelDetailsObj.hotelObj
   );
@@ -551,13 +563,33 @@ const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDe
     const hasAdvanceBooking = customerArrayAdvance?.some(
       (item) => item.roomId === id && item.selectedDate === currentDate
     );
+    const mainClean=maintainCleanRoomArray?.some((item)=>item.roomId===id && 
+    item.type==="Clean Room" && item.todayDate===currentDate )
 
-    if ((todayDate === currentDate && !hasAdvanceBooking) || isRoomBooked) {
-      setShowAlert(true);
+    const mainMaintenance=maintainCleanRoomArray?.some((item)=>item.roomId===id && 
+    item.type==="Maintenance Room" )
+
+    // if ((todayDate === currentDate && !hasAdvanceBooking) || isRoomBooked) {
+    //   setShowAlert(true);
+    // } else {
+    //   setAdvanceAlert(true);
+    // }
+    if (mainClean || mainMaintenance) {
+      const mainObj={
+        roomId:id,
+        roomType:type,
+        roomNo:num
+      }
+      setAnotherMainCleanObj(mainObj)
+      setMaintainAlert(true);   // maintenance pe alert
     } else {
-      setAdvanceAlert(true);
+      // ✔ Normal booking flow
+      if ((todayDate === currentDate && !hasAdvanceBooking) || isRoomBooked) {
+        setShowAlert(true);
+      } else {
+        setAdvanceAlert(true);
+      }
     }
-
     setRoomType(type);
     setFloors(convertFloorName(roomTitle));
     setRoomNo(num);
@@ -663,10 +695,97 @@ const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDe
       setAdvanceMessageAlertObj(customerObj)
       }
       },[selectedRoomId,customerArrayAdvance])
+
+      const maintainHandler=(roomDetails)=>{
+      console.log('details is',roomDetails)
+      navigation.navigate('MaintenancePage',{ formData:roomDetails,heading:`${convertFloorName(roomTitle)} Maintenance`,
+      title:`${convertFloorName(roomTitle)} Maintenance`,titles:`${convertFloorName(roomTitle)}`,profileName:profile?.name });
+      }
+
+      useEffect(() => {
+        const fetchMainCleanDetails = async () => {
+          try {
+            if (hotelDetailSelector?._id) {
+              const response = await axios.get(
+                `${BASE_URL}/hotel/getMaintenanceCleanRoom/${hotelDetailSelector?._id}`
+              );
+              setMainCleanObj(response?.data || {});
+            }
+          } catch (error) {}
+        };
+    
+        fetchMainCleanDetails();
+    
+        socket.on("getMaintainCleanRoom", (newUser) => {
+          setMainCleanObj(newUser);
+        });
+        return () => {
+          socket.off("getMaintainCleanRoom");
+        };
+      }, [hotelDetailSelector?._id]);
+  
+      console.log('clen room detail',mainCleanObj)
+  
+      const maintainCleanRoomArray=mainCleanObj?.maintainCleanRoom
+  console.log('cleam man',maintainCleanRoomArray)
+      useEffect(()=>{
+        if(selectedRoomId){
+   const obj=maintainCleanRoomArray?.find((item)=>item.roomId===selectedRoomId)
+   console.log('obj is',obj)
+  setFinalMainCleanObj(obj)
+        }
+      },[selectedRoomId,maintainCleanRoomArray])
+  
+      console.log('final main obj detail',finalMainCleanObj)
   return (
     <>
     <Pressable onPress={()=>deleteFloorHandler(roomTitle)}>
-    <Card style={{ borderRadius: 6, marginVertical: 5, padding: 10 }}>
+    <Card style={{ borderRadius: 6, marginVertical: 5, padding: 10 }}
+     onLayout={(event) => {
+      const { height } = event.nativeEvent.layout;
+      console.log('height is',height)
+      setCardHeight(height)
+    }}
+    >
+     
+     <Pressable
+  onPress={() => maintainHandler(roomDetails)}
+  style={{
+    position: "absolute",
+    right: -10,
+    top: -10,
+    bottom: -10,
+    width: 30,
+  }}
+>
+  <View
+    style={{
+      flex: 1,
+      backgroundColor: "yellow",
+      justifyContent: "center",
+      alignItems: "center",
+      paddingVertical: 10,
+    }}
+  >
+    {"MAINTENANCE".split("").map((ch, i) => (
+      <Text
+        key={i}
+        style={{
+          color: "black",
+          fontWeight: "bold",
+          fontSize: cardHeight > 200 ? 11 : 7,
+        }}
+      >
+        {ch}
+      </Text>
+    ))}
+  </View>
+</Pressable>
+
+
+       <View style={{flexDirection:"row",justifyContent:'space-between'}}>
+        
+       </View>
         <Text>{convertFloorName(roomTitle)}</Text>
         <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 10 }}>
           {roomDetails &&
@@ -678,6 +797,7 @@ const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDe
                 .split(",")
                 .map((item) => item.replace(" Bed", ""));
               const today = moment(todayDate, "DD/MM/YYYY");
+              console.log('toay us',today)
               const current = moment(currentDate, "DD/MM/YYYY");
               const isMatched = customerArray?.some((cust) => cust.roomId === roomId);
               const isRoomBooked = customerArray
@@ -707,13 +827,19 @@ const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDe
 
               const hasAdvanceBooking = isAdvanceMatched;
               const roomType = roomData.roomType;
-
+              const todayString = moment(todayDate, "DD/MM/YYYY").format("DD/MM/YYYY");
+              
+              const cleanMatched=maintainCleanRoomArray?.some((item)=>item?.roomId===roomId 
+              && item.type==="Clean Room" && item.todayDate===currentDate)
+              const maintenanceMatched=maintainCleanRoomArray?.some((item)=>item?.roomId===roomId 
+              && item.type==="Maintenance Room")
+            console.log('clean match',cleanMatched)
               return (
                 <View key={roomIndex} style={{ padding: 6 }}>
                   <Pressable onPress={() => handlePress(roomId, roomType, shortLabel)}>
                     <View
                       style={{
-                        borderWidth: 1,
+                        borderWidth: cleanMatched || maintenanceMatched? 0 : 1,
                         borderColor: `${
                           isAdvanceMatched && todayDate !== currentDate
                             ? "pink"
@@ -731,6 +857,11 @@ const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDe
                         padding: 12,
                         marginBottom: 5,
                         width: 50,
+                        backgroundColor: cleanMatched
+                        ? "#2ECC71"
+                        : maintenanceMatched
+                        ? "#FF9800"
+                        : "transparent",
                       }}
                     >
                       <View style={{ flexDirection: "row", justifyContent: "center" }}>
@@ -764,6 +895,7 @@ const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDe
               <Text style={{ textAlign: "center", paddingTop: 2 }}>Add Room</Text>
             </Pressable>
           ) : null}
+           
         </View>
       </Card>
     </Pressable>
@@ -804,6 +936,10 @@ const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDe
       messageObj={messageAlertObj} currentDate={currentDate} todayDate={todayDate} 
       advanceMessageObj={AdvanceMessageAlertObj} floorMessageAlert={floorMessageAlert}  
       setFloorMessageAlert={setFloorMessageAlert} floorLabel={floorLabel} setFloorLabel={setFloorLabel}/>
+
+      <MaintenanceModal  maintainAlert={maintainAlert} setMaintainAlert={setMaintainAlert}
+    finalMainCleanObj={finalMainCleanObj} maintainObj={anotherMainCleanObj}
+    />
 
       <AwesomeAlert
         show={anotherShowAlert}
