@@ -325,7 +325,7 @@ return (
                  <Text style={{textAlign:'center',paddingTop:2}}>Add Floor</Text>
                 </Pressable>
                     </View>:null} */}
-                    {!profile.post? <Pressable onPress={addFloorHandler} >
+                    {!profile?.post? <Pressable onPress={addFloorHandler} >
                      <View style={{width:'100%', height:'100%', marginTop:15,backgroundColor:'orange', 
                     padding:12, position: "relative",bottom:0}}>
                       <View style={{flexDirection:'row',justifyContent:'center'}}>

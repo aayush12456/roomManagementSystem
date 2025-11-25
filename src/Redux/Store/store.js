@@ -14,6 +14,7 @@ import addRoomSlice from "../Slice/addRoomSlice/addRoomSlice"
 import deleteRoomSlice from "../Slice/deleteRoomSlice/deleteRoomSlice"
 import addFloorSlice from "../Slice/addFloorSlice/addFloorSlice"
 import deleteFloorSlice from "../Slice/deleteFloorSlice/deleteFloorSlice"
+import deleteHotelSlice from "../Slice/deleteHotelSlice/deleteHotelSlice"
 const store=configureStore({
     reducer:{
         hotelRegisterData:hotelRegisterSlice,
@@ -30,7 +31,8 @@ const store=configureStore({
         addRoomData:addRoomSlice,
         deleteRoomData:deleteRoomSlice,
         addFloorData:addFloorSlice,
-        deleteFloorData:deleteFloorSlice
+        deleteFloorData:deleteFloorSlice,
+        deleteHotel:deleteHotelSlice
     }
 })
 export default store

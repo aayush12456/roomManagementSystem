@@ -1,17 +1,20 @@
 
 import React, { useRef, useState,useEffect } from "react";
-import { View, Text, Image, Pressable,ScrollView } from "react-native";
+import { View, Text,  Pressable,ScrollView,Modal } from "react-native";
+import { Image } from 'expo-image';
 import RBSheet from "react-native-raw-bottom-sheet";
 import account from "../../../assets/settingIcon/account.png";
 import deleteImg from "../../../assets/settingIcon/delete.png";
 import switchImg from "../../../assets/settingIcon/switch.png";
+import successImage from "../../../assets/AllIcons/successImg.gif"
 import * as SecureStore from 'expo-secure-store';
 import { Button,Card } from "react-native-paper";
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch,useSelector } from "react-redux";
 import { switchProfileAsync, switchProfileData } from "../../Redux/Slice/switchProfileSlice/switchProfileSlice";
 import { deleteSwitchProfileAsync } from "../../Redux/Slice/deleteSwitchProfileSlice/deleteSwitchProfileSlice";
-
+import AwesomeAlert from "react-native-awesome-alerts";
+import { deleteHotelAsync, resetHotelData } from '../../Redux/Slice/deleteHotelSlice/deleteHotelSlice';
 
 // Bottom sheet content
 const BottomSheetContent = ({ existingAccountHandler }) => (
@@ -144,9 +147,12 @@ contentContainerStyle={{
 );
 
 
-const Settings = ({profileArray, hotelId,phone,hotelImgFirst}) => {
+const Settings = ({profileArray, hotelId,phone,hotelImgFirst,hotelName,profile}) => {
   console.log('profile array',profileArray)
+  console.log('profiles is',profile)
 const profileSelector=useSelector((state)=>state.switchProfileData.switchProfileObj)
+const deleteHotelSelector=useSelector((state)=>state.deleteHotel.deleteHotelObj)
+console.log('delete hotel select',deleteHotelSelector)
 console.log('profile select',profileSelector)
   const refRBSheet = useRef();
   const switchRBSheet=useRef()
@@ -154,6 +160,8 @@ console.log('profile select',profileSelector)
   const navigation=useNavigation()
   const [isOpen, setIsOpen] = useState(false);
   const [isSwitchOpen, setIsSwitchOpen] = useState(false);
+  const [hotelAlert,setHotelAlert]=useState(false)
+  const [messageAlert,setMessageAlert]=useState(false)
 
   const addAccountHandler = () => {
     setIsOpen(true);
@@ -222,6 +230,33 @@ useEffect(() => {
     });
   }
 }, [profileSelector]);
+
+const deleteHotelHandler=()=>{
+  setHotelAlert(true)
+}
+
+const removeLoginData = async () => {
+  try {
+    await SecureStore.deleteItemAsync('loginOtpObj');
+    console.log('login obj removed from SecureStore');
+  } catch (error) {
+    console.error('Error removing login obj:', error);
+  }
+};
+useEffect(() => {
+  if (deleteHotelSelector?.mssg==="Hotel deleted successfully") {  
+    setMessageAlert(true); // ✅ Show Alert
+     
+    setTimeout(() => {
+      setMessageAlert(false); // ❌ Hide alert
+      dispatch(resetHotelData()); // 🔄 Reset
+      removeLoginData()
+      navigation.navigate('LoginPage'); // 🚀 Navigate
+    }, 3000);
+  }
+}, [deleteHotelSelector?.mssg]);
+
+
   return (
     <>
       {/* Main Settings UI */}
@@ -265,7 +300,7 @@ useEffect(() => {
           </View>
         </Pressable>:null}
 
-        <Pressable>
+        {!profile?.post?<Pressable onPress={deleteHotelHandler}>
         <View
             style={{
               flexDirection: "row",
@@ -277,7 +312,7 @@ useEffect(() => {
             <Image source={{uri:hotelImgFirst}} style={{ width: 35, height: 35,borderRadius:20,marginLeft:-7 }} />
             <Text style={{ fontSize: 15,paddingTop:3 }}>Delete Hotel</Text>
           </View>
-        </Pressable>
+        </Pressable>:null}
       </View>
 
       {/* Semi-transparent overlay */}
@@ -362,6 +397,68 @@ useEffect(() => {
         <SwitchAccountSheet  profileArray={profileArray}   profileClickHandler={profileClickHandler}
          dispatch={dispatch} deleteSwitchProfileHandler={deleteSwitchProfileHandler} />
       </RBSheet>
+
+      <AwesomeAlert
+        show={hotelAlert}
+        showProgress={false}
+        message={`Are you sure you want to delete ${hotelName}`}
+        closeOnTouchOutside={true}
+        closeOnHardwareBackPress={false}
+        showCancelButton={true}
+        showConfirmButton={true}
+        cancelText="No"
+        confirmText="Yes"
+        confirmButtonColor="#DD6B55"
+        onCancelPressed={() => setHotelAlert(false)}
+        onConfirmPressed={() => {
+          dispatch(deleteHotelAsync({id:hotelId}))
+         setHotelAlert(false)
+        }}
+      />
+        <Modal visible={messageAlert} transparent animationType="fade">
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: 'rgba(0,0,0,0.4)',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <View
+          style={{
+            backgroundColor: 'white',
+            padding: 25,
+            borderRadius: 10,
+            alignItems: 'center',
+            borderWidth: 1,
+            width: 300,
+          }}
+        >
+          <Image
+            source={successImage}
+            style={{
+              width: 160,
+              height: 160,
+              marginBottom: 10,
+              marginTop:-20
+            }}
+            resizeMode="contain"
+          />
+          <Text
+            style={{
+              fontWeight: '700',
+              fontSize: 17,
+              textAlign: 'center',
+              marginBottom: 10,
+              position:'relative',
+              top:-30
+            }}
+          >
+            Hotel Deleted Successfully!
+          </Text>
+        </View>
+      </View>
+    </Modal>
     </>
   );
 };
