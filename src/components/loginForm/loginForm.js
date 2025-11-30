@@ -179,19 +179,25 @@ return (
             borderRadius: 10,
             justifyContent: 'center',
             alignItems: 'center',
+            width:"100%",
+            maxHeight: Dimensions.get('window').height * 0.4
           }}>
            {phoneNameObj?.matchedNames?.length>0?<Text style={{ fontSize: 18, fontWeight: '800' }}>
-             Your Hotel Name:
+           Select your hotel to continue
             </Text>:null}
             <ScrollView>
             {
                   phoneNameObj?.matchedNames?.length>0? phoneNameObj?.matchedNames?.map((hotelNameObj,index)=>{
+                    console.log('hotel names',hotelNameObj)
                 return (
-                 <View key={hotelNameObj?.hotelName}>
+   
+     <View key={hotelNameObj?.hotelName} style={{flexDirection:'row',gap:12}}>
+                 <Image source={{uri:hotelNameObj.hotelImg}} style={{width:30,height:30,borderRadius:15,marginTop:10}}/>
                   <Text style={{ marginTop: 10,fontSize:16 }} onPress={()=>hotelClickHandler(hotelNameObj?.hotelName,hotelNameObj)}>
                   {hotelNameObj.hotelName}
                 </Text>
                 </View>
+
                 )
               }):
               <Text style={{ marginTop: 10 ,fontSize:14,textAlign:'center'}}>

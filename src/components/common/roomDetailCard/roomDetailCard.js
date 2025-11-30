@@ -346,7 +346,7 @@
 // export default RoomDetailCard
 
 import { Card, Text } from "react-native-paper";
-import { View, Pressable, Image} from "react-native";
+import { View, Pressable, Image,ScrollView} from "react-native";
 import { useState, useEffect, useRef } from "react";
 import { useNavigation } from '@react-navigation/native';
 import axios from "axios";
@@ -400,6 +400,11 @@ const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDe
   const [maintainAlert,setMaintainAlert]=useState(false)
  const [floorLabel,setFloorLabel]=useState('')
  const [cardHeight, setCardHeight] = useState(0);
+ const [lastTap, setLastTap] = useState(null);
+ const [localScrollLock, setLocalScrollLock] = useState(false);
+ const [disableDoubleTap, setDisableDoubleTap] = useState(false);
+
+
 
   const hotelDetailSelector = useSelector(
     (state) => state.getHotelDetails.getHotelDetailsObj.hotelObj
@@ -450,6 +455,20 @@ const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDe
     }
 
     lastPress.current = time;
+  };
+
+  
+  
+
+  const handleDoubleTap = (roomTitle) => {
+    if (disableDoubleTap===true) return;  
+    const now = Date.now();
+  
+    if (lastTap && (now - lastTap) < 300) {
+      deleteFloorHandler(roomTitle);   // run on double tap only
+    } else {
+      setLastTap(now);
+    }
   };
 
   // const anotherClickHandler = (id, roomType, shortLabel) => {
@@ -739,23 +758,34 @@ const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDe
       console.log('final main obj detail',finalMainCleanObj)
   return (
     <>
-    <Pressable onPress={()=>deleteFloorHandler(roomTitle)}>
-    <Card style={{ borderRadius: 6, marginVertical: 5, padding: 10 }}
-     onLayout={(event) => {
-      const { height } = event.nativeEvent.layout;
-      console.log('height is',height)
-      setCardHeight(height)
-    }}
+    <Pressable
+    onPress={
+      ()=>handleDoubleTap(roomTitle)}
+      pointerEvents="box-none" 
+    >
+    <Card style={{ borderRadius: 6, marginVertical: 5, padding: 10,height:211 }}
+    //  onLayout={(event) => {
+    //   const { height } = event.nativeEvent.layout;
+    //   console.log('height is',height)
+    //   setCardHeight(height)
+    // }}
     >
      
      <Pressable
-  onPress={() => maintainHandler(roomDetails)}
+  onPress={(event) => {
+    setDisableDoubleTap(true);   // ⛔ अब double-tap disabled
+    maintainHandler(roomDetails);
+    setTimeout(() => setDisableDoubleTap(false), 700); 
+  }}
+  pointerEvents="box-only" 
   style={{
     position: "absolute",
     right: -10,
     top: -10,
-    bottom: -10,
+    bottom: -32,
+    borderRadius:3,
     width: 30,
+    overflow:"hidden"
   }}
 >
   <View
@@ -764,7 +794,7 @@ const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDe
       backgroundColor: "yellow",
       justifyContent: "center",
       alignItems: "center",
-      paddingVertical: 10,
+      paddingVertical:10,
     }}
   >
     {"MAINTENANCE".split("").map((ch, i) => (
@@ -773,7 +803,8 @@ const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDe
         style={{
           color: "black",
           fontWeight: "bold",
-          fontSize: cardHeight > 200 ? 11 : 7,
+          // fontSize: cardHeight > 200 ? 11 : 7,
+          fontSize:11 
         }}
       >
         {ch}
@@ -787,7 +818,13 @@ const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDe
         
        </View>
         <Text>{convertFloorName(roomTitle)}</Text>
-        <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 10 }}>
+     <ScrollView 
+       style={{ maxHeight: 150 }} 
+       scrollEventThrottle={16}   // smooth scroll
+       overScrollMode="never"     // android overscroll remove
+       showsVerticalScrollIndicator={false}
+     >
+     <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 10 }}>
           {roomDetails &&
             typeof roomDetails === "object" &&
             Object.entries(roomDetails).map(([roomLabel, roomData], roomIndex) => {
@@ -897,6 +934,7 @@ const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDe
           ) : null}
            
         </View>
+     </ScrollView>
       </Card>
     </Pressable>
       

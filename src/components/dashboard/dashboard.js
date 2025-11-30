@@ -1,4 +1,4 @@
-import { Text,Button,TextInput } from "react-native-paper"
+import { Text,Button,TextInput,Switch } from "react-native-paper"
 import { useEffect,useState } from "react"
 import * as SecureStore from 'expo-secure-store';
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -27,6 +27,8 @@ const Dashboard=({hotelDetails,profile})=>{
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [matchRoomArray,setMatchRoomArray]=useState([])
   const [deletedFloorName, setDeletedFloorName] = useState(null);
+  const [isDashboardScrollEnabled, setIsDashboardScrollEnabled] = useState(true);
+console.log('das scroll',isDashboardScrollEnabled)
     const navigation = useNavigation();
     const dispatch=useDispatch()
     const totalRoom=hotelDetails?.totalRoom
@@ -177,6 +179,7 @@ setShowBookedAlert(true)
       }
 return (
     <>
+
     {/* {
     <Button
                       mode="contained"
@@ -196,7 +199,14 @@ return (
            logout
                     </Button> } */}
                     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
+                    <View style={{position:'absolute',right:0}}>
+                    <Switch  
+                    value={!isDashboardScrollEnabled}    // ← important
+                   onValueChange={() => setIsDashboardScrollEnabled(!isDashboardScrollEnabled)}
+                   />
+                        </View>
                     <View style={{ marginTop:-24,flexDirection:'row',justifyContent:'center' }}>
+                      
         <Pressable
         onPress={() => setShowDatePicker(true)}
         style={{
@@ -291,6 +301,7 @@ return (
   ))
 } */}
 <ScrollView 
+  scrollEnabled={isDashboardScrollEnabled}
  contentContainerStyle={{
     paddingBottom: 100, // last card ke liye space
   }}>
@@ -299,7 +310,8 @@ return (
                         return (
                           <View style={{marginTop:12,marginLeft:8,marginRight:8}} key={floorIndex}>
                             <RoomDetailCard roomTitle={floorKey} roomDetails={floorRooms} 
-                             currentDate={currentDate} profile={profile}      onFloorDeleted={handleFloorDeleted}   />
+                             currentDate={currentDate} profile={profile} 
+                             onFloorDeleted={handleFloorDeleted}   />
                           </View>
                         )
                       }):null
@@ -326,13 +338,16 @@ return (
                 </Pressable>
                     </View>:null} */}
                     {!profile?.post? <Pressable onPress={addFloorHandler} >
-                     <View style={{width:'100%', height:'100%', marginTop:15,backgroundColor:'orange', 
-                    padding:12, position: "relative",bottom:0}}>
-                      <View style={{flexDirection:'row',justifyContent:'center'}}>
+                      <View style={{flexDirection:"row",justifyContent:"center"}}>
+                      <View style={{width:'90%', marginTop:15,backgroundColor:'orange', 
+                    padding:12, position: "relative",bottom:0,borderRadius:30}}>
+                      {/* <View style={{flexDirection:'row',justifyContent:'center'}}>
                       <Image source={plus} style={{width:20,height:20,tintColor: 'white'}}/>
-                      </View>
-                      <Text style={{textAlign:'center',paddingTop:6,color:"white"}}>Add Floor</Text>
+                      </View> */}
+                      <Text style={{textAlign:'center',paddingTop:6,paddingBottom:6,color:"white"}}>Add Floor</Text>
                     </View>
+                      </View>
+                    
                      </Pressable>:null}
                     
                       

@@ -72,7 +72,8 @@ setFinalMainCleanObj(obj)
     console.log('final main obj',finalMainCleanObj)
 return (
     <>
-       <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 10,marginLeft:13,marginTop:15 }}>
+    <ScrollView>
+    <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 10,marginLeft:13,marginTop:15 }}>
           {roomDetails &&
             typeof roomDetails === "object" &&
             Object.entries(roomDetails).map(([roomLabel, roomData], roomIndex) => {
@@ -158,6 +159,8 @@ return (
       
            
         </View>
+    </ScrollView>
+   
         <MaintenanceModal maintainAlert={maintainAlert} setMaintainAlert={setMaintainAlert} maintainObj={maintainObj}
         finalMainCleanObj={finalMainCleanObj}
         />
