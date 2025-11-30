@@ -31,7 +31,9 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
   const [staffNamesArray,setStaffNamesArray]=useState([])
   const [roomNamesArray,setRoomNamesArray]=useState([])
   const [totalFloorArray,setTotalFloorArray]=useState([])
-  const [hotelImagesArray,setHotelImagesArray]=useState([])
+  // const [hotelImagesArray,setHotelImagesArray]=useState([])
+  const [hotelImage, setHotelImage] = useState(null);
+  const [error, setError] = useState("");
   const [totalStaff,setTotalStaff]=useState('')
   const [totalRooms,setTotalRooms]=useState('')
   const [totalFloors,setTotalFloors]=useState('')
@@ -129,18 +131,18 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
 
   
 
-  useEffect(() => {
-    const hotelImageCount = parseInt(hotelImagesList);
-    if (!isNaN(hotelImageCount) && hotelImageCount > 0) {
-      const hotelObj = {};
-      for (let i = 1; i <= hotelImageCount; i++) {
-        hotelObj[`hotelImg${i}`] = {image:null };
-      }
-      setHotelImagesArray(hotelObj);
-    } else {
-      setHotelImagesArray({});
-    }
-  }, [hotelImagesList]);
+  // useEffect(() => {
+  //   const hotelImageCount = parseInt(hotelImagesList);
+  //   if (!isNaN(hotelImageCount) && hotelImageCount > 0) {
+  //     const hotelObj = {};
+  //     for (let i = 1; i <= hotelImageCount; i++) {
+  //       hotelObj[`hotelImg${i}`] = {image:null };
+  //     }
+  //     setHotelImagesArray(hotelObj);
+  //   } else {
+  //     setHotelImagesArray({});
+  //   }
+  // }, [hotelImagesList]);
 
   const handleOwnerNameChange = (type, text, index) => {
     const key = `owner${index + 1}`;
@@ -340,42 +342,42 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
     
     console.log('total floor array',totalFloorArray)
   console.log('floor data is',floorData)
-  const uploadHotelImage = async (hotelKey) => {
-    try {
-      const maxFileSize = 5 * 1024 * 1024; // 5MB
+  // const uploadHotelImage = async (hotelKey) => {
+  //   try {
+  //     const maxFileSize = 5 * 1024 * 1024; // 5MB
   
-      let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+  //     let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
   
-      if (!permissionResult.granted) {
-        alert("Permission to access media library is required!");
-        return;
-      }
+  //     if (!permissionResult.granted) {
+  //       alert("Permission to access media library is required!");
+  //       return;
+  //     }
   
-      let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images, // 👈 only images
-        allowsEditing: true,
-        aspect: [1, 1],
-        quality: 1,
-      });
+  //     let result = await ImagePicker.launchImageLibraryAsync({
+  //       mediaTypes: ImagePicker.MediaTypeOptions.Images, // 👈 only images
+  //       allowsEditing: true,
+  //       aspect: [1, 1],
+  //       quality: 1,
+  //     });
   
-      if (!result.canceled && result.assets && result.assets.length > 0) {
-        const selectedImage = result.assets[0];
+  //     if (!result.canceled && result.assets && result.assets.length > 0) {
+  //       const selectedImage = result.assets[0];
   
     
-        setHotelImagesArray((prev) => ({
-          ...prev,
-          [hotelKey]: {
-            ...prev[hotelKey],
-            image: selectedImage.uri,
-          },
-        }));
-      } else {
-        console.log('No image selected or operation canceled.');
-      }
-    } catch (error) {
-      console.log('Error during image picking:', error);
-    }
-  };
+  //       setHotelImagesArray((prev) => ({
+  //         ...prev,
+  //         [hotelKey]: {
+  //           ...prev[hotelKey],
+  //           image: selectedImage.uri,
+  //         },
+  //       }));
+  //     } else {
+  //       console.log('No image selected or operation canceled.');
+  //     }
+  //   } catch (error) {
+  //     console.log('Error during image picking:', error);
+  //   }
+  // };
 
   // const registerFormSubmitHandler=()=>{
    
@@ -467,219 +469,272 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
   //   setHotelImagesList('Hotel Images'); // default value
   //   setHotelImagesArray({});
   // }
+  const pickHotelImage = async () => {
+    try {
+      // const result = await ImagePicker.launchImageLibraryAsync({
+      //   mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      //   allowsMultipleSelection: false, // 👈 only single image
+      //   quality: 0.7,
+      // });
+      let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+  
+      if (!permissionResult.granted) {
+        alert("Permission to access media library is required!");
+        return;
+      }
+  
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images, // 👈 only images
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 1,
+      });
+  
+      if (!result.canceled) {
+        setHotelImage(result.assets[0].uri);
+        setError("");
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  
   const registerFormSubmitHandler = async () => {
     const errors = {};
   
-    // ✅ VALIDATIONS
+    // ----------------------------
+    // ✅ BASIC VALIDATIONS
+    // ----------------------------
+  
     if (!hotelName || hotelName.trim().length < 2 || hotelName.trim().length > 64) {
-      errors.hotelName = "Hotel name is required and must be between 2-64 characters.";
+      errors.hotelName = "Hotel name is required and must be between 2–64 characters.";
     }
+  
     if (!hotelAddress || hotelAddress.trim().length < 2 || hotelAddress.trim().length > 64) {
-      errors.hotelAddress = "Hotel address is required and must be between 2-64 characters.";
+      errors.hotelAddress = "Hotel address is required and must be between 2–64 characters.";
     }
-    if (!hotelRegistrationNumber || hotelRegistrationNumber.trim().length < 2 || hotelRegistrationNumber.trim().length > 64) {
-      errors.hotelRegistrationNumber = "Hotel registration number is required and must be between 2-64 characters.";
+  
+    if (
+      !hotelRegistrationNumber ||
+      hotelRegistrationNumber.trim().length < 2 ||
+      hotelRegistrationNumber.trim().length > 64
+    ) {
+      errors.hotelRegistrationNumber =
+        "Hotel registration number is required and must be between 2–64 characters.";
     }
+  
     if (!checkOutTime || checkOutTime.trim().length < 2 || checkOutTime.trim().length > 64) {
-      errors.hotelName = "Checkout time is required ";
+      errors.checkOutTime = "Checkout time is required.";
     }
+  
     if (!totalFloors || totalFloors.trim().length === 0) {
       errors.totalFloors = "Total number of floors is required.";
     }
-    
+  
     if (!totalRooms || totalRooms.trim().length === 0) {
       errors.totalRooms = "Total number of rooms is required.";
     }
-
+  
     if (!totalStaff || totalStaff.trim().length === 0) {
       errors.totalStaff = "Total number of staff is required.";
     }
-
+  
+    // ----------------------------
+    // ⭐ SINGLE HOTEL IMAGE VALIDATION
+    // ----------------------------
+    if (!hotelImage) {
+      errors.hotelImage = "Hotel image is required.";
+    }
+  
+    // ----------------------------
+    // 👤 OWNERS VALIDATION
+    // ----------------------------
     if (Object.keys(ownerNames).length === 0) {
       errors.owners = "At least one hotel owner is required.";
     } else {
       for (const key in ownerNames) {
         const owner = ownerNames[key];
+  
         if (!owner.name || owner.name.trim().length < 2) {
           errors[`ownerName_${key}`] = `${key} name is invalid.`;
         }
+  
         if (!owner.phone || !/^\d{10}$/.test(owner.phone)) {
           errors[`ownerPhone_${key}`] = `${key} phone must be 10 digits.`;
         }
+  
         if (!owner.address || owner.address.trim().length < 2) {
           errors[`ownerAddress_${key}`] = `${key} address is invalid.`;
         }
+  
         if (!owner.image) {
           errors[`ownerImage_${key}`] = `${key} image is required.`;
         }
       }
     }
   
+    // ----------------------------
+    // 👷 STAFF VALIDATION
+    // ----------------------------
     if (Object.keys(staffNamesArray).length === 0) {
       errors.staff = "At least one staff member is required.";
     } else {
       for (const key in staffNamesArray) {
         const staff = staffNamesArray[key];
+  
         if (!staff.name || staff.name.trim().length < 2) {
           errors[`staffName_${key}`] = `${key} name is invalid.`;
         }
+  
         if (!staff.phone || !/^\d{10}$/.test(staff.phone)) {
           errors[`staffPhone_${key}`] = `${key} phone must be 10 digits.`;
         }
+  
         if (!staff.address || staff.address.trim().length < 2) {
           errors[`staffAddress_${key}`] = `${key} address is invalid.`;
         }
+  
         if (!staff.post) {
           errors[`staffPost_${key}`] = `${key} post is required.`;
         }
+  
         if (!staff.image) {
           errors[`staffImage_${key}`] = `${key} image is required.`;
         }
       }
     }
-  
-    if (Object.keys(hotelImagesArray).length === 0) {
-      errors.hotelImages = "At least one hotel image is required.";
-    } else {
-      for (const key in hotelImagesArray) {
-        const img = hotelImagesArray[key];
-        if (!img.image) {
-          errors[`hotelImage_${key}`] = `Hotel image ${key} is required.`;
-        }
-      }
-    }
-
-   
+  // if (Object.keys(hotelImagesArray).length === 0) { // errors.hotelImages = "At least one hotel image is required."; // } else { // for (const key in hotelImagesArray) { // const img = hotelImagesArray[key]; // if (!img.image) { // errors[hotelImage_${key}] = Hotel image ${key} is required.; // } // } // }
+    // ----------------------------
+    // 🏢 FLOOR VALIDATION
+    // ----------------------------
     floorData.forEach((floorName) => {
       const data = floorObj[floorName];
-      if (!data || !data.floorNumber || data.floorNumber.trim() === '') {
-        errors[`floorNumber_${floorName}`] = `${floorName}is required.`;
+  
+      if (!data || !data.floorNumber || data.floorNumber.trim() === "") {
+        errors[`floorNumber_${floorName}`] = `${floorName} floor number is required.`;
       }
     });
-    
+  
+    // ----------------------------
+    // 🚪 ROOM VALIDATION
+    // ----------------------------
     Object.entries(roomNamesArray).forEach(([roomKey, roomData]) => {
-      console.log('room key',roomKey)
-      console.log('room data',roomData)
-      if (!roomData.roomType || roomData.roomType.trim().length === 0) {
+      if (!roomData.roomType|| roomData.roomType.trim().length === 0) {
         errors[`roomType_${roomKey}`] = `${roomKey} room type is required.`;
       }
+  
       if (!roomData.bedType || roomData.bedType.trim().length === 0) {
         errors[`bedType_${roomKey}`] = `${roomKey} bed type is required.`;
       }
+  
       if (!roomData.number || roomData.number.trim().length === 0) {
         errors[`number_${roomKey}`] = `${roomKey} room number is required.`;
       }
     });
   
+    // ----------------------------
+    // ❌ If ERRORS → show & stop
+    // ----------------------------
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
       return;
     }
   
     setFormErrors({});
+  
+    // -------------------------------------
+    // 📦 BUILDING FORMDATA
+    // -------------------------------------
     const formData = new FormData();
   
-    // 🏨 Append Hotel Name
-    formData.append('hotelName', hotelName);
-    formData.append('hotelAddress', hotelAddress);
-    formData.append('hotelRegistrationNumber', hotelRegistrationNumber);
-    formData.append('checkOutTime', checkOutTime);
-    // 👤 Append Owners
+    // BASIC DETAILS
+    formData.append("hotelName", hotelName);
+    formData.append("hotelAddress", hotelAddress);
+    formData.append("hotelRegistrationNumber", hotelRegistrationNumber);
+    formData.append("checkOutTime", checkOutTime);
+  
+    // ⭐ SINGLE HOTEL IMAGE
+    formData.append("hotelImage", {
+      uri: hotelImage,
+      name: "hotel_main.jpg",
+      type: "image/jpeg",
+    });
+  
+    // OWNERS
     Object.keys(ownerNames).forEach((key, index) => {
       const owner = ownerNames[key];
+  
       formData.append(`owner${index + 1}`, JSON.stringify({
         name: owner.name,
         phone: owner.phone,
-        address:owner.address
+        address: owner.address,
       }));
-      formData.append('ownerImages', {
+  
+      formData.append("ownerImages", {
         uri: owner.image,
         name: `owner_${index + 1}.jpg`,
-        type: 'image/jpeg',
+        type: "image/jpeg",
       });
     });
   
-    // 👷‍♂️ Append Staff Members
+    // STAFF
     Object.keys(staffNamesArray).forEach((key, index) => {
       const staff = staffNamesArray[key];
+  
       formData.append(`staff${index + 1}`, JSON.stringify({
         name: staff.name,
         phone: staff.phone,
-        address:staff.address,
+        address: staff.address,
         post: staff.post,
       }));
-      formData.append('staffImages', {
+  
+      formData.append("staffImages", {
         uri: staff.image,
         name: `staff_${index + 1}.jpg`,
-        type: 'image/jpeg',
+        type: "image/jpeg",
       });
     });
   
-    // 🏨 Append Hotel Images
-    Object.keys(hotelImagesArray).forEach((key, index) => {
-      const img = hotelImagesArray[key];
-      formData.append('hotelImages', {
-        uri: img.image,
-        name: `hotelImg_${index + 1}.jpg`,
-        type: 'image/jpeg',
-      });
-    });
-
-    //✅ roomNamesArray - room data
-  // Object.keys(roomNamesArray).forEach((roomKey, index) => {
-  //   const room = roomNamesArray[roomKey];
-  //   formData.append(`room${index + 1}`, JSON.stringify({
-  //     roomKey,
-  //     roomType: room.roomType,
-  //     bedType: room.bedType
-  //   }));
-  // });
-  formData.append('roomData', JSON.stringify(roomNamesArray));
-  formData.append('totalRoom', totalRooms);
-  formData.append('totalFloor', totalFloors);
-  console.log('form data is',formData)
-    // 📤 Axios Post
+    // ROOMS
+    formData.append("roomData", JSON.stringify(roomNamesArray));
+  
+    formData.append("totalRoom", totalRooms);
+    formData.append("totalFloor", totalFloors);
+    console.log('form data is',formData)
+    // ----------------------------
+    // 📤 API CALL
+    // ----------------------------
     try {
-      // const response = await axios.post(
-      //   'http://yourserverurl.com/api/hotel/register', // replace with your API
-      //   formData,
-      //   {
-      //     headers: {
-      //       'Content-Type': 'multipart/form-data',
-      //     },
-      //   }
-      // );
-      // console.log("✅ Response:", response.data);
-      // alert("Hotel registered successfully");
+      // const response = await axios.post("YOUR_API_URL", formData, {
+      //   headers: { "Content-Type": "multipart/form-data" },
+      // });
   
-      // Clear form
-      dispatch(hotelRegisterAsync(formData))
-      // setHotelName('');
-      // setOwnerNames({});
-      // setStaffNamesArray({});
-      // setHotelImagesArray({});
-
-
-  setHotelName('');
-  setCheckOutTime('')
-    setSelectedOwnerList('Hotel Owner'); // default value
-    setOwnerNames({});
-    setTotalStaff('');
-    setStaffNamesArray({});
-    setRoomNamesArray({});
-    setHotelImagesList('Hotel Images'); // default value
-    setHotelImagesArray({});
-    setTotalFloorArray({})
-    setTotalFloors('')
-    setTotalRooms({})
-    setHotelRegistrationNumber('')
-    setHotelAddress('')
-    setFloorObj({})
+      // console.log(response.data);
+  dispatch(hotelRegisterAsync(formData))
+      // 🧹 RESET FORM
+      setHotelName('');
+       setCheckOutTime('')
+        setSelectedOwnerList('Hotel Owner');
+         // default value 
+         setOwnerNames({});
+          setTotalStaff(''); 
+          setStaffNamesArray({});
+          setRoomNamesArray({}); 
+          setHotelImagesList('Hotel Images'); // default value // 
+          setHotelImage({}); 
+          setTotalFloorArray({}) 
+          setTotalFloors('') 
+          setTotalRooms({}) 
+          setHotelRegistrationNumber('')
+           setHotelAddress('') 
+           setFloorObj({})
+  
     } catch (error) {
       console.log("❌ Error submitting form:", error.response?.data || error.message);
       alert("Something went wrong");
     }
   };
+  
 return (
     <>
    <KeyboardAvoidingView
@@ -1231,7 +1286,7 @@ return (
   </Text>
 )}
         </View>:null}
-    { Object.keys(staffNamesArray).length>0?
+    {/* { Object.keys(staffNamesArray).length>0?
     <View style={{ paddingHorizontal: 16, marginBottom: 10,marginTop:6 }}>
       <View style={{
         borderWidth: 1,
@@ -1260,9 +1315,9 @@ return (
         </Picker>
       </View>
     </View>
-    :null}
+    :null} */}
 
-{Object.keys(hotelImagesArray).map((key, index) => (
+{/* {Object.keys(hotelImagesArray).map((key, index) => (
   <View key={key} style={{ paddingHorizontal: 16, marginTop: 16 }}>
     <View style={{ flexDirection: 'row', justifyContent:'space-between' }}>
       {hotelImagesArray[key]?.image ? (
@@ -1307,8 +1362,112 @@ return (
       </Text>
     )}
   </View>
-))}
-   {Object.keys(hotelImagesArray).length>0?<View style={{ width: '100%', overflow: 'hidden' }}>
+))} */}
+{/* <View key={key} style={{ paddingHorizontal: 16, marginTop: 16 }}>
+    <View style={{ flexDirection: 'row', justifyContent:'space-between' }}>
+      {hotelImagesArray[key]?.image ? (
+        <>
+          <Image source={{ uri: hotelImagesArray[key].image }} style={{ width: 60, height: 60, borderRadius: 30 }} />
+          <Button
+            mode="contained"
+            style={{
+              height: 40,
+              borderRadius: 11,
+              justifyContent: 'center',
+              marginTop: 2
+            }}
+            buttonColor="rgba(234, 88, 12, 1)"
+            // onPress={() => uploadHotelImage(key)} // 👈 pass correct key
+          >
+            Change
+          </Button>
+        </>
+      ) : (
+        <>
+          <Image source={hotel} style={{ width: 60, height: 60 }} />
+          <Button
+            mode="contained"
+            style={{
+              height: 40,
+              borderRadius: 11,
+              justifyContent: 'center',
+              marginTop: 8
+            }}
+            buttonColor="rgba(234, 88, 12, 1)"
+            // onPress={() => uploadHotelImage(key)} // 👈 pass correct key
+          >
+            Upload
+          </Button>
+        </>
+      )}
+    </View>
+    {formErrors[`hotelImage_${key}`] && (
+      <Text style={{ color: 'red', marginTop: 6 }}>
+        {formErrors[`hotelImage_${key}`]}
+      </Text>
+    )}
+  </View> */}
+  {checkOutTime?<View style={{ paddingHorizontal: 16, marginTop: 16 }}>
+  <View style={{ 
+      flexDirection: 'row', 
+      justifyContent: 'space-between',
+      alignItems: 'center'
+  }}>
+    
+    {/* Show selected image OR default placeholder */}
+    {hotelImage ? (
+      <Image 
+        source={{ uri: hotelImage }} 
+        style={{ width: 70, height: 70, borderRadius: 35 }} 
+      />
+    ) : (
+      <Image 
+        source={hotel} 
+        style={{ width: 70, height: 70, borderRadius: 10 }} 
+      />
+    )}
+
+    <Button
+      mode="contained"
+      style={{
+        height: 40,
+        borderRadius: 11,
+        justifyContent: 'center',
+      }}
+      buttonColor="rgba(234, 88, 12, 1)"
+      onPress={pickHotelImage}
+    >
+      {hotelImage ? "Change" : "Upload"}
+    </Button>
+  </View>
+
+  {formErrors?.hotelImage && (
+      <Text style={{ color: 'red', marginTop: 6 }}>
+        {formErrors.hotelImage}
+      </Text>
+    )}
+</View>:null}
+
+   {/* {Object.keys(hotelImagesArray).length>0?<View style={{ width: '100%', overflow: 'hidden' }}>
+         <Button
+                      mode="contained"
+                      style={{
+                        height: 50, // Set the desired height
+                        borderRadius:11,
+                        color: '#FFFFFF',
+                         fontSize: 16, 
+                         justifyContent:'center',
+                         marginTop: 20,
+                         marginLeft: 12,
+                         marginRight: 20,
+                      }}
+                      buttonColor="rgba(234, 88, 12, 1)"
+                      onPress={registerFormSubmitHandler}
+                    >
+           SUBMIT
+                    </Button>
+      </View>:null} */}
+      {checkOutTime?<View style={{ width: '100%', overflow: 'hidden' }}>
          <Button
                       mode="contained"
                       style={{

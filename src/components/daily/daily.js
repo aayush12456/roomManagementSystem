@@ -24,7 +24,7 @@ const handleDateChange = (event, date) => {
 
   useEffect(()=>{
     if(currentDate){
-const arr=policeReport.filter((police)=>police.checkInDate==currentDate)
+const arr=policeReport?.filter((police)=>police.checkInDate==currentDate)
 setDailyReportArray(arr)
     }
   },[currentDate,policeReport])

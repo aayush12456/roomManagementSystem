@@ -38,7 +38,7 @@ const Weekly = ({ policeReport, totalRoom }) => {
       const start = Math.min(parseToTimestamp(currentDate), parseToTimestamp(anotherCurrentDate));
       const end = Math.max(parseToTimestamp(currentDate), parseToTimestamp(anotherCurrentDate));
 
-      const filtered = policeReport.filter((police) => {
+      const filtered = policeReport?.filter((police) => {
         const checkIn = parseToTimestamp(police.checkInDate);
         return checkIn >= start && checkIn <= end;
       });

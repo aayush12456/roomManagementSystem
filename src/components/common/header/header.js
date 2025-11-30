@@ -10,9 +10,11 @@ import chart from '../../../../assets/sidebarIcons/pieChart.png'
 import report from '../../../../assets/sidebarIcons/report.png'
 import setting from '../../../../assets/sidebarIcons/settingImg.png'
 import myProfile from '../../../../assets/sidebarIcons/profile.png'
+import hotelIcon from '../../../../assets/sidebarIcons/hotelIcon.png'
 import ProfilePage from '../../../Pages/profilePage/profilePage';
 import SettingsPage from '../../../Pages/settingsPage/settingsPage';
 import PerformancePage from '../../../Pages/performancePage/performancePage';
+import HotelGalleryPage from '../../../Pages/hotelGalleryPage/hotelGalleryPage';
 
 const Header=({profile,allStaffPlusOwner,hotelId,profileArrays,policeReport,totalRoom,hotelImgFirst,hotelName})=>{
     const Drawer = createDrawerNavigator();
@@ -142,6 +144,19 @@ return (
       {(props) => <SettingsPage {...props}  profileArray={profileArrays} hotelId={hotelId}  
        phone={profile?.phone}  hotelImgFirst={hotelImgFirst} hotelName={hotelName} profile={profile}/>}
         </Drawer.Screen>
+
+        {!profile.post?<Drawer.Screen
+        name='Hotel Gallery'
+        // component={SettingsPage}
+        options={{
+          drawerIcon:()=>(
+            <Image  source={hotelIcon}
+            style={{ width: 20, height: 20 }}/>
+        ),
+        }}
+      >
+      {(props) => <HotelGalleryPage hotelImg={hotelImgFirst} hotelId={hotelId}  />}
+        </Drawer.Screen>:null}
      </Drawer.Navigator>
      
     </>

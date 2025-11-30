@@ -238,7 +238,7 @@ navigation.navigate('LoginPage')
         const reportArray=reportObj?.reportArray
         // console.log('report',reportArray)
         const totalRoom=finalHotelDetailSelector?.totalRoom
-        const hotelImgFirst=finalHotelDetailSelector?.hotelImg1
+        const hotelImgFirst=finalHotelDetailSelector?.hotelImg
         const hotelName=finalHotelDetailSelector?.hotelName
 return (
   
