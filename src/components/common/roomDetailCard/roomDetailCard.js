@@ -781,8 +781,8 @@ const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDe
   style={{
     position: "absolute",
     right: -10,
-    top: -10,
-    bottom: -32,
+    // top: -10,
+    // bottom: -32,
     borderRadius:3,
     width: 30,
     overflow:"hidden"
