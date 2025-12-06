@@ -59,7 +59,24 @@ export const customerDetailsSchema=Yup.object({
   paymentPaid:Yup.string().min(2).required("Please enter payment paid"),
   paymentDue:Yup.string().min(2).required("Please enter payment due"),
   executiveName:Yup.string().min(2).max(50).required("Please enter front desk executive name"),
-  customerSignature: Yup.string().required("Customer Signature required") 
+  customerSignature: Yup.string().required("Customer Signature required") ,
+  extraCustomers: Yup.array().when("totalCustomer", (totalCustomer, schema) => {
+    const count = parseInt(totalCustomer || "0");
+
+    if (count > 1) {
+      return schema.of(
+        Yup.object({
+          customerName: Yup.string().min(2).required("Extra customer name required"),
+          customerAddress: Yup.string().min(2).required("Extra customer address required"),
+          customerPhoneNumber: Yup.string().min(10).required("Extra customer phone required"),
+          customerAadharNumber: Yup.string().min(12).required("Extra customer Aadhar required"),
+        })
+      ).min(count - 1, `Please enter ${count - 1} extra customers`);
+    }
+
+    return schema.notRequired();
+  }),
+
 })
 
 export const advanceCustomerBookingSchema=Yup.object({

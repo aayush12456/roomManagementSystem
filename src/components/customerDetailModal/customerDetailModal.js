@@ -11,6 +11,53 @@ import io from "socket.io-client";
 import axios from "axios";
 import { passDataObjSliceAcions } from "../../Redux/Slice/passDataSliceObj/passDataSliceObj";
 const socket = io.connect("http://192.168.29.169:4000")
+
+const safeTimeToISOString = (timeStr) => {
+  // ✅ FULL SAFETY
+  if (!timeStr || typeof timeStr !== "string") return "";
+
+  try {
+    let hours = 0;
+    let minutes = 0;
+
+    const lower = timeStr.toLowerCase();
+
+    if (lower.includes("am") || lower.includes("pm")) {
+      const parts = timeStr.split(" ");
+      if (!parts[0]) return "";
+
+      const timePart = parts[0].split(":");
+      if (timePart.length !== 2) return "";
+
+      hours = parseInt(timePart[0], 10);
+      minutes = parseInt(timePart[1], 10);
+
+      if (lower.includes("pm") && hours < 12) hours += 12;
+      if (lower.includes("am") && hours === 12) hours = 0;
+    } 
+    else if (timeStr.includes(":")) {
+      const timePart = timeStr.split(":");
+      if (timePart.length !== 2) return "";
+
+      hours = parseInt(timePart[0], 10);
+      minutes = parseInt(timePart[1], 10);
+    } 
+    else {
+      return "";
+    }
+
+    const date = new Date(1970, 0, 1, hours, minutes, 0);
+
+    if (isNaN(date.getTime())) return "";
+
+    return date.toISOString();
+  } catch (error) {
+    console.log("safeTimeToISOString error:", error);
+    return "";
+  }
+};
+
+
 const CustomerDetailModal=({showAlert,setShowAlert,selectedRoomId,customerArray,roomType,floor,roomNo,currentDates})=>{
   // console.log('customer array',customerArray)
   const BASE_URL = "http://192.168.29.169:4000";
@@ -85,7 +132,7 @@ const CustomerDetailModal=({showAlert,setShowAlert,selectedRoomId,customerArray,
       }    
 
  
-    
+    console.log('filter customer',filterCustomerObj)
 return (
     <>
       <Formik  initialValues={{
@@ -101,31 +148,69 @@ return (
  customerDestination: filterCustomerObj?.customerDestination || '',
  reasonToStay: filterCustomerObj?.reasonToStay || '',
  checkInDate: filterCustomerObj?.checkInDate || '',
- checkInTime: filterCustomerObj?.checkInTime || '',
+//  checkInTime: filterCustomerObj?.checkInTime || '',
  checkOutDate: filterCustomerObj?.checkOutDate || '',
  checkOutTime: filterCustomerObj?.checkOutTime || '',
- personalCheckOutTime:filterCustomerObj?.personalCheckOutTime || '',
+//  personalCheckOutTime:filterCustomerObj?.personalCheckOutTime || '',
+checkInTime: safeTimeToISOString(filterCustomerObj?.checkInTime),
+personalCheckOutTime: safeTimeToISOString(
+  filterCustomerObj?.personalCheckOutTime
+),
+
  totalPayment: filterCustomerObj?.totalPayment ||'',
  paymentPaid: filterCustomerObj?.paymentPaid || '',
  paymentDue: filterCustomerObj?.paymentDue || '',
  executiveName: filterCustomerObj?.frontDeskExecutiveName || '',
- customerSignature: filterCustomerObj?.customerSignature || '' 
+ customerSignature: filterCustomerObj?.customerSignature || '',
+//  extraCustomers: [] 
+extraCustomers: filterCustomerObj?.extraCustomers?.map(item => ({
+  customerName: item.customerName || "",
+  customerAddress: item.customerAddress || "",
+  customerPhoneNumber: item.customerPhoneNumber || "",
+  customerAadharNumber: item.customerAadharNumber || "",
+})) || [],
       }}
       enableReinitialize 
       validationSchema={customerDetailsSchema}
       onSubmit={async(values,{ resetForm }) => {
-        const checkInTime=new Date(values.checkInTime).toLocaleTimeString("en-IN", {
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: true,
-          timeZone: "Asia/Kolkata"
-        })
-        const personalCheckOutTime=new Date(values.personalCheckOutTime).toLocaleTimeString("en-IN", {
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: true,
-          timeZone: "Asia/Kolkata"
-        })
+        // const checkInTime=new Date(values.checkInTime).toLocaleTimeString("en-IN", {
+        //   hour: "2-digit",
+        //   minute: "2-digit",
+        //   hour12: true,
+        //   timeZone: "Asia/Kolkata"
+        // })
+        // const personalCheckOutTime=new Date(values.personalCheckOutTime).toLocaleTimeString("en-IN", {
+        //   hour: "2-digit",
+        //   minute: "2-digit",
+        //   hour12: true,
+        //   timeZone: "Asia/Kolkata"
+        // })
+        const checkInTime = values.checkInTime
+        ? new Date(values.checkInTime).toLocaleTimeString("en-IN", {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true,
+            timeZone: "Asia/Kolkata",
+          })
+        : "";
+
+      const personalCheckOutTime = values.personalCheckOutTime
+        ? new Date(values.personalCheckOutTime).toLocaleTimeString("en-IN", {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true,
+            timeZone: "Asia/Kolkata",
+          })
+        : "";
+        const formattedExtraCustomers = values.extraCustomers.map((item, index) => ({
+          extraCustomerLabel: `Extra Customer ${index + 1}`,   // ✅ YE TEXT JAAYEGA
+          customerName: item.customerName,
+          customerAddress: item.customerAddress,
+          customerPhoneNumber: item.customerPhoneNumber,
+          customerAadharNumber: item.customerAadharNumber
+        }));
+        
+
       const customerDetailsObj={
         id:hotelDetailSelector._id,
         roomId:selectedRoomId || recentBookObj?.roomId,
@@ -137,6 +222,8 @@ return (
         customerAddress:values.customerAddress,
         customerPhoneNumber:values.customerPhoneNumber,
         totalCustomer:values.totalCustomer,
+        // extraCustomers: values.extraCustomers,
+        extraCustomers:formattedExtraCustomers,
         relation:values.relation,
         customerIdProof:values.customerIdProof,
         customerAadharNumber:values.customerAadharNumber,
@@ -189,7 +276,7 @@ return (
         console.error("Error in Add/Update Customer", error);
       }
 
-// console.log('customer',customerDetailsObj)
+// console.log('customer detailss',customerDetailsObj)
         resetForm()
         setShowAlert(false)
         setShowTextField(false); 
@@ -274,17 +361,7 @@ return (
          {touched.customerPhoneNumber && errors.customerPhoneNumber && <Text style={{ color: 'red', marginLeft: 12 }}>{errors.customerPhoneNumber}</Text>}
         </View>
 
-        {values.customerPhoneNumber?.trim().length > 0?<View>
-        <TextInput
-          label="Total Customer"
-          mode="outlined"
-          style={{ width: screenWidth * 0.75, marginBottom: 10 }}
-          onChangeText={handleChange('totalCustomer')}
-          onBlur={handleBlur('totalCustomer')}
-          value={values.totalCustomer}
-        />
-          {touched.totalCustomer && errors.totalCustomer && <Text style={{ color: 'red', marginLeft: 12 }}>{errors.totalCustomer}</Text>}
-        </View>:null}
+      
 
         {values.customerPhoneNumber?.trim().length > 0?<View>
         <TextInput
@@ -358,6 +435,122 @@ return (
         />
          {touched.customerDestination && errors.customerDestination && <Text style={{ color: 'red', marginLeft: 12 }}>{errors.customerDestination}</Text>}
         </View>:null}
+
+        {values.customerPhoneNumber?.trim().length > 0?<View>
+        <TextInput
+          label="Total Customer"
+          mode="outlined"
+          style={{ width: screenWidth * 0.75, marginBottom: 10 }}
+          // onChangeText={handleChange('totalCustomer')}
+          onChangeText={(text) => {
+            handleChange('totalCustomer')(text);
+        
+            const count = parseInt(text || "0");
+        
+            if (count > 1) {
+              // const newArr = Array.from({ length: count - 1 }, () => ({
+              //   customerName: "",
+              //   customerAddress: "",
+              //   customerPhoneNumber: "",
+              //   customerAadharNumber: "",
+              // }));
+              const existing = values.extraCustomers || [];
+
+    const newArr = Array.from({ length: count - 1 }, (_, i) => ({
+      customerName: existing[i]?.customerName || "",
+      customerAddress: existing[i]?.customerAddress || "",
+      customerPhoneNumber: existing[i]?.customerPhoneNumber || "",
+      customerAadharNumber: existing[i]?.customerAadharNumber || "",
+    }));
+              setFieldValue("extraCustomers", newArr);
+            } else {
+              setFieldValue("extraCustomers", []);
+            }
+          }}
+          onBlur={handleBlur('totalCustomer')}
+          value={values.totalCustomer}
+        />
+          {touched.totalCustomer && errors.totalCustomer && <Text style={{ color: 'red', marginLeft: 12 }}>{errors.totalCustomer}</Text>}
+        </View>:null}
+
+        {values.extraCustomers?.map((item, index) => {
+  const nameError =
+    touched.extraCustomers?.[index]?.customerName &&
+    errors.extraCustomers?.[index]?.customerName;
+
+  const addressError =
+    touched.extraCustomers?.[index]?.customerAddress &&
+    errors.extraCustomers?.[index]?.customerAddress;
+
+  const phoneError =
+    touched.extraCustomers?.[index]?.customerPhoneNumber &&
+    errors.extraCustomers?.[index]?.customerPhoneNumber;
+
+  const aadharError =
+    touched.extraCustomers?.[index]?.customerAadharNumber &&
+    errors.extraCustomers?.[index]?.customerAadharNumber;
+
+  return (
+    <View key={index} style={{ marginTop: 15 }}>
+
+      <Text style={{ fontWeight: "bold", marginBottom: 5 }}>
+        Extra Customer {index + 1}
+      </Text>
+
+      {/* ✅ NAME */}
+      <TextInput
+        label={`Customer Name ${index + 1}`}
+        mode="outlined"
+        style={{ width: screenWidth * 0.75, marginBottom: 5 }}
+        value={values.extraCustomers[index].customerName}
+        onChangeText={(text) =>
+          setFieldValue(`extraCustomers[${index}].customerName`, text)
+        }
+
+      />
+      {nameError && <Text style={{ color: "red" }}>{errors.extraCustomers[index].customerName}</Text>}
+
+      {/* ✅ ADDRESS */}
+      <TextInput
+        label={`Customer Address ${index + 1}`}
+        mode="outlined"
+        style={{ width: screenWidth * 0.75, marginBottom: 5 }}
+        value={values.extraCustomers[index].customerAddress}
+        onChangeText={(text) =>
+          setFieldValue(`extraCustomers[${index}].customerAddress`, text)
+        }
+      />
+      {addressError && <Text style={{ color: "red" }}>{errors.extraCustomers[index].customerAddress}</Text>}
+
+      {/* ✅ PHONE */}
+      <TextInput
+        label={`Customer Phone Number ${index + 1}`}
+        mode="outlined"
+        keyboardType="phone-pad"
+        style={{ width: screenWidth * 0.75, marginBottom: 5 }}
+        value={values.extraCustomers[index].customerPhoneNumber}
+        onChangeText={(text) =>
+          setFieldValue(`extraCustomers[${index}].customerPhoneNumber`, text)
+        }
+      />
+      {phoneError && <Text style={{ color: "red" }}>{errors.extraCustomers[index].customerPhoneNumber}</Text>}
+
+      {/* ✅ AADHAR */}
+      <TextInput
+        label={`Customer Aadhar Number ${index + 1}`}
+        mode="outlined"
+        style={{ width: screenWidth * 0.75, marginBottom: 10 }}
+        value={values.extraCustomers[index].customerAadharNumber}
+        onChangeText={(text) =>
+          setFieldValue(`extraCustomers[${index}].customerAadharNumber`, text)
+        }
+      />
+      {aadharError && <Text style={{ color: "red" }}>{errors.extraCustomers[index].customerAadharNumber}</Text>}
+
+    </View>
+  );
+})}
+
    
         {values.customerPhoneNumber?.trim().length > 0?<View>
         <TextInput
@@ -370,7 +563,7 @@ return (
         />
          {touched.reasonToStay && errors.reasonToStay && <Text style={{ color: 'red', marginLeft: 12 }}>{errors.reasonToStay}</Text>}
         </View>:null}
-
+      
        {values.customerPhoneNumber?.trim().length > 0?<View >
       {/* Date Field */}
       <Pressable onPress={() => setShowDatePicker(true)}>
@@ -394,13 +587,23 @@ return (
         <TextInput
           label="Check In Time"
           mode="outlined"
+          // value={
+          //   values.checkInTime
+          //     ? new Date(values.checkInTime).toLocaleTimeString("en-IN", {
+          //         hour: "2-digit",
+          //         minute: "2-digit",
+          //         hour12: true,
+          //         timeZone: "Asia/Kolkata"
+          //       })
+          //     : ""
+          // }
           value={
-            values.checkInTime
+            values.checkInTime &&
+            !isNaN(new Date(values.checkInTime).getTime())
               ? new Date(values.checkInTime).toLocaleTimeString("en-IN", {
                   hour: "2-digit",
                   minute: "2-digit",
                   hour12: true,
-                  timeZone: "Asia/Kolkata"
                 })
               : ""
           }
@@ -497,13 +700,23 @@ return (
       <TextInput
         label="Personal Check Out Time"
         mode="outlined"
+        // value={
+        //   values.personalCheckOutTime
+        //     ? new Date(values.personalCheckOutTime).toLocaleTimeString("en-IN", {
+        //         hour: "2-digit",
+        //         minute: "2-digit",
+        //         hour12: true,
+        //         timeZone: "Asia/Kolkata",
+        //       })
+        //     : ""
+        // }
         value={
-          values.personalCheckOutTime
+          values.personalCheckOutTime &&
+          !isNaN(new Date(values.personalCheckOutTime).getTime())
             ? new Date(values.personalCheckOutTime).toLocaleTimeString("en-IN", {
                 hour: "2-digit",
                 minute: "2-digit",
                 hour12: true,
-                timeZone: "Asia/Kolkata",
               })
             : ""
         }
@@ -716,11 +929,6 @@ return (
        <Text>{filterCustomerObj.customerPhoneNumber}</Text>
       </View>
       <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
-        <Text>Total Customer : </Text>
-       <Text>{filterCustomerObj.totalCustomer}</Text>
-      </View>
-
-      <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
         <Text>Relation : </Text>
        <Text>{filterCustomerObj.relation}</Text>
       </View>
@@ -744,6 +952,37 @@ return (
         <Text>Customer Destination: </Text>
        <Text>{filterCustomerObj.customerDestination}</Text>
       </View>
+      <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
+        <Text>Total Customer : </Text>
+       <Text>{filterCustomerObj.totalCustomer}</Text>
+      </View>
+    {
+      filterCustomerObj?.extraCustomers?.map((customer)=>{
+        return (
+          <>
+          <View style={{marginTop:18}}>
+            <Text>{customer?.extraCustomerLabel} </Text>
+            <View style={{flexDirection:"row",gap:6,paddingTop:6}}>
+            <Text>Customer Name : </Text>
+       <Text>{customer?.customerName}</Text>
+            </View>
+            <View style={{flexDirection:"row",gap:6,paddingTop:3}}>
+            <Text>Customer Address : </Text>
+       <Text>{customer?.customerAddress}</Text>
+            </View>
+            <View style={{flexDirection:"row",gap:6,paddingTop:3}}>
+            <Text>Customer Phone Number : </Text>
+       <Text>{customer?.customerPhoneNumber}</Text>
+            </View>
+            <View style={{flexDirection:"row",gap:6,paddingTop:3}}>
+            <Text>Customer Aadhar Number : </Text>
+       <Text>{customer?.customerAadharNumber}</Text>
+            </View>
+          </View>
+          </>
+        )
+      })
+    }
       <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
         <Text>Reason To Stay: </Text>
        <Text>{filterCustomerObj.reasonToStay}</Text>
