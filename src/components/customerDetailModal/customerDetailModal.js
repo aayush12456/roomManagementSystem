@@ -391,6 +391,7 @@ extraCustomers: filterCustomerObj?.extraCustomers?.map(item => ({
         <TextInput
           label="Customer Aadhar Number"
           mode="outlined"
+          keyboardType="phone-pad"
           style={{ width: screenWidth * 0.75, marginBottom: 10 }}
           onChangeText={handleChange('customerAadharNumber')}
           onBlur={handleBlur('customerAadharNumber')}
@@ -442,6 +443,7 @@ extraCustomers: filterCustomerObj?.extraCustomers?.map(item => ({
           mode="outlined"
           style={{ width: screenWidth * 0.75, marginBottom: 10 }}
           // onChangeText={handleChange('totalCustomer')}
+          keyboardType="phone-pad"
           onChangeText={(text) => {
             handleChange('totalCustomer')(text);
         
@@ -539,6 +541,7 @@ extraCustomers: filterCustomerObj?.extraCustomers?.map(item => ({
       <TextInput
         label={`Customer Aadhar Number ${index + 1}`}
         mode="outlined"
+        keyboardType="phone-pad"
         style={{ width: screenWidth * 0.75, marginBottom: 10 }}
         value={values.extraCustomers[index].customerAadharNumber}
         onChangeText={(text) =>
@@ -751,6 +754,7 @@ extraCustomers: filterCustomerObj?.extraCustomers?.map(item => ({
         <TextInput
           label="Total Payment"
           mode="outlined"
+          keyboardType="phone-pad"
           style={{ width: screenWidth * 0.75, marginBottom: 10 }}
           onChangeText={handleChange('totalPayment')}
           onBlur={handleBlur('totalPayment')}
@@ -763,6 +767,7 @@ extraCustomers: filterCustomerObj?.extraCustomers?.map(item => ({
         <TextInput
           label=" Payment Paid"
           mode="outlined"
+          keyboardType="phone-pad"
           style={{ width: screenWidth * 0.75, marginBottom: 10 }}
           onChangeText={handleChange('paymentPaid')}
           onBlur={handleBlur('paymentPaid')}
@@ -787,6 +792,7 @@ extraCustomers: filterCustomerObj?.extraCustomers?.map(item => ({
         <TextInput
           label=" Payment Due"
           mode="outlined"
+          keyboardType="phone-pad"
           style={{ width: screenWidth * 0.75, marginBottom: 10 }}
           onChangeText={handleChange('paymentDue')}
           onBlur={handleBlur('paymentDue')}

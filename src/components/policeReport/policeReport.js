@@ -21,28 +21,39 @@ const PoliceReport = ({ policeReport, dateSelector, isSmallScreen ,hotelDetailSe
   const BASE_URL = "http://192.168.29.169:4000";
   const dispatch = useDispatch();
   const [staffObj, setStaffObj] = useState({});
-  const [filterDate, setFilterDate] = useState('today');
+  const [filterDate, setFilterDate] = useState('default');
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [selectedFromDate, setSelectedFromDate] = useState(null);
   const [currentPicker, setCurrentPicker] = useState(null);
   const [selectedToDate, setSelectedToDate] = useState(null);
+  const [openRowId, setOpenRowId] = useState(null);
+
+
 
   const windowHeight = Dimensions.get('window').height;
   const containerHeight = windowHeight * 0.2;
   const finalDate = new Date();
   const todayDate = finalDate.toLocaleDateString("en-GB");
+  console.log('today s',todayDate)
   const staffArray = Object.values(hotelDetailSelector.staff || {});
-
+console.log('staff arry',staffArray)
   useEffect(() => {
-    const postObj = staffArray.find((staff) => staff.post === "Hotel Supervisor");
+    const postObj = staffArray?.find((staff) => staff?.post === "Hotel Supervisor");
     setStaffObj(postObj || {});
   }, [staffArray]);
 
-  useEffect(() => {
-    if (dateSelector?.type) {
-      setFilterDate(dateSelector.type);
-    }
-  }, [dateSelector?.type]);
+  // useEffect(() => {
+  //   if (dateSelector?.type) {
+  //     setFilterDate(dateSelector.type);
+  //   }
+  // }, [dateSelector?.type]);
+  
+ 
+
+  const moreDetailsHandler = (id) => {
+    setOpenRowId(prev => (prev === id ? null : id)); // toggle
+  };
+  
 
   const deleteCustomerReport = async (id) => {
     const deleteObj = {
@@ -86,7 +97,8 @@ const PoliceReport = ({ policeReport, dateSelector, isSmallScreen ,hotelDetailSe
     const rangeObj = {
       startDate: selectedFromDate,
       endDate: selectedToDate,
-      type: filterDate
+      type: filterDate,
+      report:"police"
     };
     dispatch(passReportObjSliceActions.passReportObj(rangeObj));
   };
@@ -203,7 +215,27 @@ const PoliceReport = ({ policeReport, dateSelector, isSmallScreen ,hotelDetailSe
                     <tr style="height: calc(700px / 7);">
                       <td>${index + 1}</td>
                       <td>${item.roomNo ? item.roomNo.split('R-').join('') : ''}</td>
-                      <td>${item.customerName} ${item.customerAddress} ${item.customerPhoneNumber}</td>
+                      <td>
+                      <div style="margin-bottom:6px; ">
+                        ${item.customerName || ''} 
+                        ${item.customerAddress || ''} 
+                        ${item.customerPhoneNumber || ''}
+                      </div>
+                    
+                      ${
+                        item.extraCustomers?.length
+                          ? item.extraCustomers.map(ex => `
+                            <div style="margin-top:4px; padding-left:10px;">
+                              ${ex.customerName || ''} 
+                              ${ex.customerAddress || ''} 
+                              ${ex.customerPhoneNumber || ''}
+                            </div>
+                          `).join('')
+                          : ''
+                      }
+                    </td>
+                    
+                    
                       <td>${item.customerOccupation}</td>
                       <td>${item.reasonToStay}</td>
                       <td>${item.totalCustomer}</td>
@@ -303,7 +335,26 @@ const PoliceReport = ({ policeReport, dateSelector, isSmallScreen ,hotelDetailSe
                   <tr style="height: calc(700px / 7);">
                     <td>${pageIndex * chunkSize + index + 1}</td>
                     <td>${item.roomNo ? item.roomNo.split('R-').join('') : ''}</td>
-                    <td>${item.customerName} ${item.customerAddress} ${item.customerPhoneNumber}</td>
+                    <td>
+                    <div style="margin-bottom:6px;">
+                      ${item.customerName || ''} 
+                      ${item.customerAddress || ''} 
+                      ${item.customerPhoneNumber || ''}
+                    </div>
+                  
+                    ${
+                      item.extraCustomers?.length
+                        ? item.extraCustomers.map(ex => `
+                          <div style="margin-top:4px; padding-left:10px">
+                            ${ex.customerName || ''} 
+                            ${ex.customerAddress || ''} 
+                            ${ex.customerPhoneNumber || ''}
+                          </div>
+                        `).join('')
+                        : ''
+                    }
+                  </td>
+                  
                     <td>${item.customerOccupation}</td>
                     <td>${item.reasonToStay}</td>
                     <td>${item.totalCustomer}</td>
@@ -398,9 +449,16 @@ style={{
 }}
 >
 <Picker
- selectedValue={filterDate}
- onValueChange={(itemValue) => filterReportHandler(itemValue)}
+  selectedValue={filterDate === 'Custom'?filterDate: dateSelector.type}
+  onValueChange={(itemValue) => {
+   
+    if (itemValue !== "default") filterReportHandler(itemValue);
+  }}
 >
+<Picker.Item 
+    label="Select your date" 
+    value="default"
+  />
            {
      filterReport.map((item)=>{
 
@@ -501,6 +559,7 @@ style={{
             style={{ borderRadius: 11 }}
             buttonColor="rgba(234, 88, 12, 1)"
             onPress={generateAndDownloadPDF}
+            disabled={policeReport?.length === 0 || !dateSelector.type}
           >
             Download Pdf
           </Button>
@@ -529,7 +588,11 @@ style={{
               </View>
               <View style={{ height: containerHeight }}>
                 <ScrollView showsVerticalScrollIndicator={true}>
-                  {policeReport?.map((item, index) => (
+                  { 
+                  !dateSelector.type?
+                  <Text style={{paddingTop:12,paddingLeft:40}}>please select your date</Text>:
+                  policeReport.length==0 ? <Text style={{paddingTop:12,paddingLeft:40}}>No data is available on {dateSelector?.dates}</Text> :
+                  policeReport?.map((item, index) => (
                     <View key={item._id} style={{
                       flexDirection: "row",
                       borderBottomWidth: 1,
@@ -538,9 +601,63 @@ style={{
                     }}>
                       <Text style={{ minWidth: 120, textAlign: "center", paddingHorizontal: 8 }}>{index + 1}</Text>
                       <Text style={{ minWidth: 120, textAlign: "center", paddingHorizontal: 8 }}>{item.roomNo}</Text>
-                      <Text style={{ minWidth: 120, textAlign: "center", paddingHorizontal: 8 }}>{item.customerName}</Text>
-                      <Text style={{ minWidth: 120, textAlign: "center", paddingHorizontal: 8 }}>{item.customerAddress}</Text>
-                      <Text style={{ minWidth: 120, textAlign: "center", paddingHorizontal: 8 }}>{item.customerPhoneNumber}</Text>
+                      {/* <Text style={{ minWidth: 120, textAlign: "center", paddingHorizontal: 8 }}>{item.customerName}</Text> */}
+                      {/* <Text style={{ minWidth: 120, textAlign: "center", paddingHorizontal: 8 }}>{item.customerAddress}</Text> */}
+                      {/* <Text style={{ minWidth: 120, textAlign: "center", paddingHorizontal: 8 }}>{item.customerPhoneNumber}</Text> */}
+                      <View style={{ minWidth: 120 }}>
+                <Text style={{ textAlign: "center" }}>
+                  {item.customerName}
+                </Text>
+
+                {openRowId === item._id &&
+                  item.extraCustomers?.map((ex) => (
+                    <Text
+                      key={ex._id}
+                      style={{
+                        textAlign: "center",
+                        marginTop: 4,
+                      }}
+                    >
+                      {ex.customerName}
+                    </Text>
+                  ))}
+              </View>
+              <View style={{ minWidth: 120 }}>
+                <Text style={{ textAlign: "center" }}>
+                  {item.customerAddress}
+                </Text>
+
+                {openRowId === item._id &&
+                  item.extraCustomers?.map((ex) => (
+                    <Text
+                      key={ex._id + "addr"}
+                      style={{
+                        textAlign: "center",
+                        marginTop: 4,
+                      }}
+                    >
+                      {ex.customerAddress}
+                    </Text>
+                  ))}
+              </View>
+              <View style={{ minWidth: 120 }}>
+                <Text style={{ textAlign: "center" }}>
+                  {item.customerPhoneNumber}
+                </Text>
+
+                {openRowId === item._id &&
+                  item.extraCustomers?.map((ex) => (
+                    <Text
+                      key={ex._id + "phone"}
+                      style={{
+                        textAlign: "center",
+                        marginTop: 4,
+                      }}
+                    >
+                      {ex.customerPhoneNumber}
+                    </Text>
+                  ))}
+              </View>
                       <Text style={{ minWidth: 120, textAlign: "center", paddingHorizontal: 8 }}>{item.customerOccupation}</Text>
                       <Text style={{ minWidth: 120, textAlign: "center", paddingHorizontal: 8 }}>{item.reasonToStay}</Text>
                       <Text style={{ minWidth: 120, textAlign: "center", paddingHorizontal: 8 }}>{item.totalCustomer}</Text>
@@ -549,10 +666,15 @@ style={{
                       <Text style={{ minWidth: 120, textAlign: "center", paddingHorizontal: 8 }}>{item.customerDestination}</Text>
                       <Text style={{ minWidth: 120, textAlign: "center", paddingHorizontal: 8 }}>{item.checkInDate}</Text>
                       <Text style={{ minWidth: 120, textAlign: "center", paddingHorizontal: 8 }}>{item.checkOutDate}</Text>
-                      <Button mode="contained" style={{ borderRadius: 11, marginLeft: 20 }} buttonColor="rgba(234, 88, 12, 1)" onPress={() => deleteCustomerReport(item._id)}>
+                      <Button mode="contained" style={{ borderRadius: 11, marginLeft: 20,height:40 }} buttonColor="rgba(234, 88, 12, 1)" onPress={() => moreDetailsHandler(item._id)}>
+                     Details
+                      </Button>
+                      <Button mode="contained" style={{ borderRadius: 11, marginLeft: 20,height:40 }} buttonColor="rgba(234, 88, 12, 1)" onPress={() => deleteCustomerReport(item._id)}>
                         Delete
                       </Button>
+                      
                     </View>
+                    
                   ))}
                 </ScrollView>
               </View>

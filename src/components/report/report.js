@@ -6,7 +6,7 @@ import PoliceReport from "../policeReport/policeReport"
 import { useSelector } from "react-redux"
 import PersonalReport from '../personalReport/personalReport';
 const Report=({totalReportArray,personalReportArray})=>{
-  // console.log('total report array',totalReportArray)
+  console.log('total report array',totalReportArray)
   console.log('personal report',personalReportArray)
     const finalDate=new Date()
     const todayDate=finalDate?.toLocaleDateString("en-GB") 
@@ -68,7 +68,7 @@ const Report=({totalReportArray,personalReportArray})=>{
       }
           }
     },[todayDate,totalReportArray,dateSelector?.dates,dateSelector.type,dateSelector.startDate, dateSelector.endDate,personalReportArray,dateSelector.report])
-    // console.log('filter report',filterReportArray)
+    console.log('filter report',filterReportArray)
 
     const screenHeight = Dimensions.get("window").height;
     console.log('screen height',screenHeight)
@@ -98,7 +98,7 @@ hotelDetailSelector={hotelDetailSelector} dateSelector={dateSelector} />
     policeReport: PoliceReportRoute,
     normalReport: NormalReportRoute,
   });
-  console.log('filter report personal',filterReportArray)
+  // console.log('filter report personal',filterReportArray)
   console.log('total report',filterReportArray)
 return (
     <>

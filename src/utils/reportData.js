@@ -12,7 +12,8 @@ export const reportArray=[
     {id:11,name:'Destination To'},
     {id:12,name:'Date In'},
     {id:13,name:'Date Out'},
-    {id:14,name:'Button'}
+    {id:14,name:'Details'},
+    {id:15,name:'Button'}
 
 ]
 
@@ -35,7 +36,8 @@ export const personalReportArray=[
     {id:16,name:'Total Amount'},
     {id:17,name:'Amount Paid'},
     {id:18,name:'Amount Due'},
-    {id:19,name:'Button'}
+    {id:19,name:'Details'},
+    {id:20,name:'Button'}
 
 ]
 export const filterReport=[

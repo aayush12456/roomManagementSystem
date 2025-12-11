@@ -7,7 +7,7 @@ const passReportObjSlice=createSlice({
     reducers:{
         passReportObj(state,action){
         state.passReportObj=action.payload
-        // console.log('pass data obj in slice',state.passDataObj)
+        console.log('pass data obj in slice',state.passReportObj)
         }
     }
 })
