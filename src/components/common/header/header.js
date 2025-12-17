@@ -16,7 +16,7 @@ import SettingsPage from '../../../Pages/settingsPage/settingsPage';
 import PerformancePage from '../../../Pages/performancePage/performancePage';
 import HotelGalleryPage from '../../../Pages/hotelGalleryPage/hotelGalleryPage';
 
-const Header=({profile,allStaffPlusOwner,hotelId,profileArrays,policeReport,totalRoom,hotelImgFirst,hotelName})=>{
+const Header=({profile,allStaffPlusOwner,hotelId,profileArrays,policeReport,totalRoom,hotelImgFirst,hotelName,notifyToken})=>{
     const Drawer = createDrawerNavigator();
     const navigation = useNavigation();
     console.log('profile is',profile)

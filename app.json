@@ -16,15 +16,13 @@
       "supportsTablet": true
     },
     "android": {
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      
       "edgeToEdgeEnabled": true,
       "permissions": [
-        "READ_EXTERNAL_STORAGE",
-        "WRITE_EXTERNAL_STORAGE",
         "READ_EXTERNAL_STORAGE",
         "WRITE_EXTERNAL_STORAGE"
       ],
@@ -33,13 +31,20 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
+    "plugins": [
+      "expo-font",
+      [
+        "expo-notifications",
+        {
+        "icon": "./assets/notification.png"
+        }
+      ]
+    ],
     "extra": {
       "eas": {
-        "projectId": "f217164a-c769-4123-820c-172d07d4c5c6"
+        "projectId": "a4474e8e-6655-4897-8003-a79ac0ca8c57"
       }
     },
-    "plugins": [
-      "expo-font"
-    ]
+    "owner": "anmoul_2001"
   }
 }

@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Provider } from 'react-redux';
-import { ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator, View ,Platform} from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import io from 'socket.io-client';
 import { AlertNotificationRoot } from 'react-native-alert-notification';
@@ -22,6 +22,8 @@ import ExistingAccountPage from './src/Pages/existingAccountPage/exisingAccountP
 import { BackHandler } from "react-native";
 import MaintenancePage from './src/Pages/maintenancePage/maintenancePage';
 
+
+
 LogBox.ignoreLogs([
   'Each child in a list should have a unique "key" prop.%s%s See https://react.dev/link/warning-keys for more information.',
   // "HwBackHandler.removeEventListener"
@@ -32,10 +34,13 @@ if (!BackHandler.removeEventListener) {
 }
 const Stack = createNativeStackNavigator();
 
+
+
 export default function App() {
   const [loginObj, setLoginObj] = useState(null);
   const [loading, setLoading] = useState(true);
   const socketRef = useRef(null);
+
 
   // ✅ SecureStore se login data lana
   useEffect(() => {
@@ -61,6 +66,7 @@ export default function App() {
     getLoginDataToSecureStore();
   }, []);
 
+  
   const isLoggedIn = loginObj && loginObj.token && loginObj.token !== "";
   const hotelId = loginObj?.matchedHotels?.[0]?._id;
 
@@ -104,6 +110,10 @@ export default function App() {
     };
   }, [hotelId]);
 
+
+
+
+
   return (
     <Provider store={store}>
       <AlertNotificationRoot theme='dark'>
@@ -140,6 +150,7 @@ export default function App() {
               name="HeaderPage"
               component={HeaderPage}
               options={{ headerShown: false }}
+              // initialParams={{ expoPushToken }}
             />
                
               {/* <Stack.Screen

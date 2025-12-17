@@ -6,15 +6,28 @@ import { getHotelDetailsAsync } from "../../Redux/Slice/getHotelDetailSlice/getH
 import { useNavigation } from '@react-navigation/native';
 import io from "socket.io-client";
 import axios from "axios";
+
+import * as Notifications from "expo-notifications";
+import * as Device from "expo-device";
+import { Platform } from "react-native";
 import { deleteSwitchProfileData } from "../../Redux/Slice/deleteSwitchProfileSlice/deleteSwitchProfileSlice";
 const socket = io.connect("http://192.168.29.169:4000")
 const HeaderPage=()=>{
   const BASE_URL = "http://192.168.29.169:4000";
+
+  Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowAlert: true,
+      shouldPlaySound: true,
+      shouldSetBadge: false,
+    }),
+  });
     const [loginObj, setLoginObj] = useState(null);
     const [profileObj,setProfileObj]=useState({})
     const [allStaffOwnerObj,setAllStaffOwnerObj]=useState({})
     const [reportObj,setReportObj]=useState({})
     const [finalProfileArray,setFinalProfileArray]=useState([])
+    const [expoPushToken, setExpoPushToken] = useState(null);
     const dispatch=useDispatch()
     const navigation = useNavigation();
     const hotelDetailSelector=useSelector((state)=>state.getHotelDetails.getHotelDetailsObj.hotelObj)
@@ -235,6 +248,41 @@ navigation.navigate('LoginPage')
             };
           }, [hotelId]);
 
+          const registerForPushNotificationsAsync = async () => {
+            if (!Device.isDevice) return null;
+        
+            if (Platform.OS === "android") {
+              await Notifications.setNotificationChannelAsync("default", {
+                name: "default",
+                importance: Notifications.AndroidImportance.MAX,
+              });
+            }
+        
+            const { status } = await Notifications.requestPermissionsAsync();
+            if (status !== "granted") return null;
+        
+            return (await Notifications.getExpoPushTokenAsync()).data;
+          };
+        
+          useEffect(() => {
+            if (!hotelId) return;
+        
+            const initPush = async () => {
+              const token = await registerForPushNotificationsAsync();
+              if (token) {
+                // await axios.post(`${BASE_URL}/hotel/saveExpoToken`, {
+                //   hotelId,
+                //   expoPushToken: token,
+                // });
+                setExpoPushToken(token)
+                console.log("🔥 EXPO PUSH TOKEN:", token);
+              }
+            };
+        
+            initPush();
+          }, [hotelId]);
+
+
         const reportArray=reportObj?.reportArray
         // console.log('report',reportArray)
         const totalRoom=finalHotelDetailSelector?.totalRoom
@@ -245,7 +293,7 @@ return (
     <>
     <Header profile={profileObj} allStaffPlusOwner={allStaffOwnerObj} hotelId={hotelId}
      profileArrays={finalProfileArray} policeReport={reportArray} totalRoom={totalRoom} 
-     hotelImgFirst={hotelImgFirst} hotelName={hotelName} />
+     hotelImgFirst={hotelImgFirst} hotelName={hotelName} notifyToken={expoPushToken} />
     </>
 )
 }
