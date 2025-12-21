@@ -1,9 +1,10 @@
 import HotelGallery from "../../components/hotelGallery/hotelGallery"
-
-const HotelGalleryPage=({hotelImg,hotelId})=>{
+const HotelGalleryPage=({hotelImg,hotelId,notifyTokenArray})=>{
+   
 return (
     <>
-    <HotelGallery hotelImg={hotelImg} hotelId={hotelId}/>
+    <HotelGallery hotelImg={hotelImg} hotelId={hotelId} notifyTokenArray={notifyTokenArray}/>
+    
     </>
 )
 }

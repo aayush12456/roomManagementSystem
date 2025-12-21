@@ -4,7 +4,7 @@ import { Button } from "react-native-paper"
 import * as ImagePicker from 'expo-image-picker';
 import { useDispatch,useSelector } from "react-redux";
 import { updateHotelImgAsync } from "../../Redux/Slice/updateHotelImgSlice/updateHotelImgSlice";
-const HotelGallery=({hotelImg,hotelId})=>{
+const HotelGallery=({hotelImg,hotelId,notifyTokenArray})=>{
     console.log('hotel img',hotelImg)
     const updateHotelImgSelector=useSelector((state)=>state?.updateHotelImg?.updateHotelImgObj?.updatedData)
     console.log('hotel upf',updateHotelImgSelector)
@@ -68,6 +68,9 @@ const hotelImgs=updateHotelImgSelector?updateHotelImgSelector.hotelImg:hotelImg
     setSelectHotelImage("")
   }
     },[updateHotelImgSelector?.hotelImg])
+
+  
+      
 return (
     <>
 {!selectHotelImage?<Pressable onPress={imgClickHandler}>
@@ -133,6 +136,9 @@ Submit
 Cancel
         </Button>
       </View>:null}
+
+ 
+
     </>
 )
 }

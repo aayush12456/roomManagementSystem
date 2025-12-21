@@ -6,7 +6,7 @@ import { Picker } from "@react-native-picker/picker";
 import { roomType,bedType } from "../../utils/signUpData";
 import {useDispatch} from 'react-redux'
 import { addFloorAsync } from "../../Redux/Slice/addFloorSlice/addFloorSlice";
-
+import axios from "axios"
 const screenWidth = Dimensions.get("window").width;
 
 // ✅ Validation Schema
@@ -29,8 +29,58 @@ const floorSchema = Yup.object().shape({
 });
 
 
-const AddFloorModal = ({ floorAlert, setFloorAlert,hotelId }) => {
+const AddFloorModal = ({ floorAlert, setFloorAlert,hotelId,notifyTokenArray,profile }) => {
+  console.log('notify token in floor',notifyTokenArray)
   const dispatch=useDispatch()
+  const chunkArray = (array, size) => {
+    const chunks = [];
+    for (let i = 0; i < array.length; i += size) {
+    chunks.push(array.slice(i, i + size));
+    }
+    return chunks;
+    };
+
+
+  const sendNotificationToAll = async () => {
+    if (!Array.isArray(notifyTokenArray) || notifyTokenArray.length === 0) {
+    return;
+    }
+    
+    try {
+    const tokenChunks = chunkArray(notifyTokenArray, 100);
+    
+    for (const chunk of tokenChunks) {
+    const messages = chunk.map(token => ({
+    to: token,
+    sound: 'default',
+    title: 'Floor Notification 🔔',
+    body: `${profile?.name} added a new Floor 🚀`,
+    data: {
+      type: 'FLOOR_ADDED' },
+    }));
+    
+    const response = await axios.post(
+    'https://exp.host/--/api/v2/push/send',
+    messages,
+    {
+    headers: {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+    },
+    }
+    );
+    
+    console.log('✅ Push sent:', response.data);
+    }
+    
+
+    } catch (error) {
+    console.log(
+    '❌ Push error:',
+    error.response?.data || error.message
+    );
+    }
+};
   return (
     <Formik
       initialValues={{
@@ -63,12 +113,18 @@ const AddFloorModal = ({ floorAlert, setFloorAlert,hotelId }) => {
         const finalData = {
           id:hotelId,
           [floorKey]: floorRooms,
+          floorName:floorName,
+          name:profile.name,
+          imgUrl:profile.image,
+          message:'added new floor'
+
         };
       
         console.log("✅ Final Submitted Data:", finalData);
         setTimeout(() => {
           dispatch(addFloorAsync(finalData));
         }, 100);
+        sendNotificationToAll()
         setFloorAlert(false);
         resetForm();
         // setFloorAlert(false);

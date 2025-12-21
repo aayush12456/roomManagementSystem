@@ -6,9 +6,63 @@ import { bedType, roomType } from "../../utils/signUpData";
 import {Picker} from '@react-native-picker/picker';
 import { roomAdd } from "../../schemas";
 import { addRoomAsync } from "../../Redux/Slice/addRoomSlice/addRoomSlice";
-const AddRoomModal=({roomAlert,setRoomAlert,hotelId,floorSelect})=>{
+import axios from "axios"
+const AddRoomModal=({roomAlert,setRoomAlert,hotelId,floorSelect,profile,notifyTokenArray})=>{
+  console.log('token in room',notifyTokenArray)
     const screenWidth = Dimensions.get("window").width;
+    console.log('profile in room',profile)
     const dispatch=useDispatch()
+
+    const chunkArray = (array, size) => {
+      const chunks = [];
+      for (let i = 0; i < array.length; i += size) {
+      chunks.push(array.slice(i, i + size));
+      }
+      return chunks;
+      };
+
+
+    const sendNotificationToAll = async () => {
+      if (!Array.isArray(notifyTokenArray) || notifyTokenArray.length === 0) {
+      return;
+      }
+      
+      try {
+      const tokenChunks = chunkArray(notifyTokenArray, 100);
+      
+      for (const chunk of tokenChunks) {
+      const messages = chunk.map(token => ({
+      to: token,
+      sound: 'default',
+      title: 'Room Notification 🔔',
+      body: `${profile?.name} added a new room 🚀`,
+      data: {
+        type: 'ROOM_ADDED',
+      },
+      }));
+      
+      const response = await axios.post(
+      'https://exp.host/--/api/v2/push/send',
+      messages,
+      {
+      headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      },
+      }
+      );
+      
+      console.log('✅ Push sent:', response.data);
+      }
+      
+
+      } catch (error) {
+      console.log(
+      '❌ Push error:',
+      error.response?.data || error.message
+      );
+      }
+  };
 return (
     <>
     <Formik 
@@ -25,10 +79,14 @@ return (
         roomType:values.roomType,
         bedType:values.bedType,
         roomNumber:values.roomNumber,
-        floor:floorSelect
+        floor:floorSelect,
+        name:profile.name,
+        imgUrl:profile.image,
+        message:'added new room'
       } 
       console.log("Rooms Added:", roomObj);
       dispatch(addRoomAsync(roomObj))
+      sendNotificationToAll()
       resetForm();          // ✅ form fields clear
       setRoomAlert(false);  // ✅ modal close
     }}

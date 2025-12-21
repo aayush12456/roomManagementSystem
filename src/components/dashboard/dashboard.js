@@ -16,9 +16,10 @@ import AddFloorModal from "../addFloorModal/addFloorModal";
 import { getHotelDetailsAsync } from "../../Redux/Slice/getHotelDetailSlice/getHotelDetailSlice";
 
 const socket = io.connect("http://192.168.29.169:4000")
-const Dashboard=({hotelDetails,profile})=>{
+const Dashboard=({hotelDetails,profile,notifyTokenArray})=>{
   const BASE_URL = "http://192.168.29.169:4000";
   console.log('hotel details is',hotelDetails)
+  console.log('notify tokens',notifyTokenArray)
   const [customerObj,setCustomerObj]=useState({})
   const [customerArrayAdvance,setCustomerArrayAdvance]=useState([])
   const [showBookedAlert, setShowBookedAlert] = useState(false);
@@ -311,7 +312,7 @@ return (
                           <View style={{marginTop:12,marginLeft:8,marginRight:8}} key={floorIndex}>
                             <RoomDetailCard roomTitle={floorKey} roomDetails={floorRooms} 
                              currentDate={currentDate} profile={profile} 
-                             onFloorDeleted={handleFloorDeleted}   />
+                             onFloorDeleted={handleFloorDeleted} notifyTokenArray={notifyTokenArray}  />
                           </View>
                         )
                       }):null
@@ -357,7 +358,9 @@ return (
                     <BookedModal room={room} customerArray={customerArray} customerArrayAdvance={customerArrayAdvance}
                      showBookedAlert={showBookedAlert} setShowBookedAlert={setShowBookedAlert} todayDate={todayDate} currentDate={currentDate}/> 
                       
-                      <AddFloorModal floorAlert={floorAlert} setFloorAlert={setFloorAlert} hotelId={hotelDetails?._id}/>
+                      <AddFloorModal floorAlert={floorAlert} setFloorAlert={setFloorAlert} hotelId={hotelDetails?._id}
+                      notifyTokenArray={notifyTokenArray} profile={profile} 
+                      />
                     </SafeAreaView>  
 
     </>

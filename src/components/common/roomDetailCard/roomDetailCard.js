@@ -366,7 +366,7 @@ import MaintenanceModal from "../maintenanceModal/maintenanceModal";
 
 const socket = io.connect("http://192.168.29.169:4000");
 
-const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDeleted }) => {
+const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDeleted,notifyTokenArray }) => {
  console.log('profile in card',profile)
  console.log('room details',roomDetails)
  console.log('current date',currentDate)
@@ -399,11 +399,9 @@ const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDe
   const [floorDeleting, setFloorDeleting] = useState(false)
   const [maintainAlert,setMaintainAlert]=useState(false)
  const [floorLabel,setFloorLabel]=useState('')
- const [cardHeight, setCardHeight] = useState(0);
  const [lastTap, setLastTap] = useState(null);
- const [localScrollLock, setLocalScrollLock] = useState(false);
  const [disableDoubleTap, setDisableDoubleTap] = useState(false);
-
+const [name,setName]=useState('')
 
 
   const hotelDetailSelector = useSelector(
@@ -756,6 +754,57 @@ const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDe
       },[selectedRoomId,maintainCleanRoomArray])
   
       console.log('final main obj detail',finalMainCleanObj)
+
+      const chunkArray = (array, size) => {
+        const chunks = [];
+        for (let i = 0; i < array.length; i += size) {
+        chunks.push(array.slice(i, i + size));
+        }
+        return chunks;
+        };
+  
+  
+      const sendNotificationToAll = async () => {
+        if (!Array.isArray(notifyTokenArray) || notifyTokenArray.length === 0) {
+        return;
+        }
+        
+        try {
+        const tokenChunks = chunkArray(notifyTokenArray, 100);
+        
+        for (const chunk of tokenChunks) {
+        const messages = chunk.map(token => ({
+        to: token,
+        sound: 'default',
+        title: `${name=="room"?'Room':'Floor'} Notification 🔔`,
+        body: `${profile?.name} deleted a ${name=="room"?"room":'floor'} 🚀`,
+        data: {
+          type: 'ROOM_DELETE',
+        },
+        }));
+        
+        const response = await axios.post(
+        'https://exp.host/--/api/v2/push/send',
+        messages,
+        {
+        headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        },
+        }
+        );
+        
+        console.log('✅ Push sent:', response.data);
+        }
+        
+  
+        } catch (error) {
+        console.log(
+        '❌ Push error:',
+        error.response?.data || error.message
+        );
+        }
+    };
   return (
     <>
     <Pressable
@@ -968,6 +1017,8 @@ const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDe
         setRoomAlert={setRoomAlert}
         hotelId={hotelDetailSelector?._id}
         floorSelect={selectFloor}
+        profile={profile}
+        notifyTokenArray={notifyTokenArray}
       />
       
       <MessageModal messageAlert={messageAlert} setMessageAlert={setMessageAlert} label={label} 
@@ -997,13 +1048,20 @@ const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDe
             id: hotelDetailSelector?._id,
             floor: roomTitle,
             floorId: roomIds,
+            name:profile.name,
+            imgUrl:profile.image,
+            message:'deleted a room',
+            roomNumber:label
           };
           console.log("Room deleted!", deleteRoomObj);
           setAnotherShowAlert(false);
           setTimeout(() => {
             dispatch(deleteRoomAsync(deleteRoomObj));
             setIsDeleting(false); // reset guard after done
+            setName('room')
           }, 500); // slight delay ensures clean close
+          sendNotificationToAll()
+          setName('')
         }}
       />
 
@@ -1024,7 +1082,9 @@ const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDe
           const deleteFloorObj = {
             id: hotelDetailSelector?._id,
             floorName: roomTitle,
-            
+            name:profile.name,
+            imgUrl:profile.image,
+            message:'deleted a',
           };
           console.log("floor deleted!", deleteFloorObj);
           setFloorAlert(false);
@@ -1032,7 +1092,10 @@ const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDe
             dispatch(deleteFloorAsync(deleteFloorObj));
             onFloorDeleted?.(roomTitle);
             setFloorDeleting(false); // reset guard after done
+            setName('floor')
           }, 500); // slight delay ensures clean close
+          sendNotificationToAll()
+          setName('')
         }}
       />
     </>

@@ -323,14 +323,19 @@ import { deleteRoomData } from "../../Redux/Slice/deleteRoomSlice/deleteRoomSlic
 import { addFloorData } from "../../Redux/Slice/addFloorSlice/addFloorSlice";
 import { deleteFloorData } from "../../Redux/Slice/deleteFloorSlice/deleteFloorSlice";
 
-const DashboardPage = ({ profile }) => {
+const DashboardPage = ({ profile,notifyTokenArray }) => {
   const dispatch = useDispatch();
+  console.log('profiles',profile)
+  console.log('notify tokens dash',notifyTokenArray)
 
   const hotelDetailSelector = useSelector(
     (state) => state.getHotelDetails.getHotelDetailsObj.hotelObj
   );
 
   const addRoomSelector = useSelector((state) => state.addRoomData.addRoomObj);
+  console.log('add rooms',addRoomSelector)
+
+  
   const deleteRoomSelector = useSelector(
     (state) => state.deleteRoomData.deleteRoomObj
   );
@@ -389,6 +394,73 @@ const DashboardPage = ({ profile }) => {
   // -----------------------------
   // ROOM HANDLER
   // -----------------------------
+  // const sendNotification = async (notifyTokenArray, name, image) => {
+  //   if (!notifyTokenArray || notifyTokenArray.length === 0) {
+  //     console.log("❌ No push tokens found");
+  //     return;
+  //   }
+  
+  //   // 🧠 Create notification payload for each token
+  //   const messages = notifyTokenArray.map((token) => ({
+  //     to: token,
+  //     sound: "default",
+  //     title: "New Room Added 🏨",
+  //     body: `${name} has added new room`,
+  //     data: {
+  //       screen: "Dashboard",
+  //       name,
+  //       image,
+  //     },
+  //   }));
+  
+  //   try {
+  //     await axios.post(
+  //       "https://exp.host/--/api/v2/push/send",
+  //       messages,
+  //       {
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           Accept: "application/json",
+  //         },
+  //       }
+  //     );
+  
+  //     console.log("✅ Notifications sent successfully");
+  //   } catch (error) {
+  //     console.log("❌ Notification error:", error.response?.data || error);
+  //   }
+  // };
+  // const sendNotification = async (name, image) => {
+   
+  
+  //   try {
+  //     await axios.post(
+  //       "https://exp.host/--/api/v2/push/send",
+  //       {
+  //         to: notifyTokenArray[0],
+  //         sound: "default",
+  //         title: "New Room Added 🏨",
+  //         body: `${name} has added new room`,
+  //         data: {
+  //           screen: "Dashboard",
+  //           name,
+  //           image,
+  //         },
+  //       },
+  //       {
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           Accept: "application/json",
+  //         },
+  //       }
+  //     );
+  //   } catch (error) {
+  //     console.log("Notification error:", error);
+  //   }
+  // };
+  
+  
+
   useEffect(() => {
     if (!roomMssg) return;
 
@@ -399,7 +471,11 @@ const DashboardPage = ({ profile }) => {
         type: ALERT_TYPE.SUCCESS,
         title: "Room Added Successfully",
       });
-
+      // sendNotification(
+      //   notifyTokenArray,
+      //   addRoomSelector?.name,
+      //   addRoomSelector?.image
+      // );
       resetRoomSlices();
       safeRefetch();
     }
@@ -449,7 +525,7 @@ const DashboardPage = ({ profile }) => {
   // ONLY BACKEND FINAL DATA RETURNED
   // -----------------------------
 
-  return <Dashboard hotelDetails={hotelDetailSelector} profile={profile} />;
+  return <Dashboard hotelDetails={hotelDetailSelector} profile={profile} notifyTokenArray={notifyTokenArray} />;
 };
 
 export default DashboardPage;

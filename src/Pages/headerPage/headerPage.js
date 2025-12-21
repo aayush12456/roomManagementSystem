@@ -28,6 +28,7 @@ const HeaderPage=()=>{
     const [reportObj,setReportObj]=useState({})
     const [finalProfileArray,setFinalProfileArray]=useState([])
     const [expoPushToken, setExpoPushToken] = useState(null);
+    const [notifyTokenObj,setNotifyTokenObj]=useState({})
     const dispatch=useDispatch()
     const navigation = useNavigation();
     const hotelDetailSelector=useSelector((state)=>state.getHotelDetails.getHotelDetailsObj.hotelObj)
@@ -259,41 +260,104 @@ navigation.navigate('LoginPage')
             }
         
             const { status } = await Notifications.requestPermissionsAsync();
+            console.log('status is',status)
             if (status !== "granted") return null;
         
             return (await Notifications.getExpoPushTokenAsync()).data;
           };
         
+          // useEffect(() => {
+          //   if (!hotelId) return;
+        
+          //   const initPush = async () => {
+          //     const token = await registerForPushNotificationsAsync();
+          //     if (token) {
+          //       await axios.post(`${BASE_URL}/hotel/addNotificationToken/${hotelId}`,  {
+          //         notifyToken: token,   // ✅ backend ke according
+          //         phone:phone,   // ✅ jo phone save karna ho
+          //       });
+          //       setExpoPushToken(token)
+          //       console.log("🔥 EXPO PUSH TOKEN:", token);
+          //     }
+          //   };
+        
+          //   initPush();
+          // }, [hotelId]);
           useEffect(() => {
             if (!hotelId) return;
-        
+          
             const initPush = async () => {
-              const token = await registerForPushNotificationsAsync();
-              if (token) {
-                // await axios.post(`${BASE_URL}/hotel/saveExpoToken`, {
-                //   hotelId,
-                //   expoPushToken: token,
-                // });
-                setExpoPushToken(token)
+              try {
+                const token = await registerForPushNotificationsAsync();
+                if (!token) return;
+          
+                const response = await axios.post(
+                  `${BASE_URL}/hotel/addNotificationToken/${hotelId}`,
+                  {
+                    notifyToken: token,
+                    phone,
+                  }
+                );
+          
+                setExpoPushToken(token);
                 console.log("🔥 EXPO PUSH TOKEN:", token);
+          
+                // 🔥 YAHIN EMIT CHALANA HAI
+                socket.emit("addNotifyToken", response?.data);
+          
+              } catch (err) {
+                console.log("addNotificationToken error", err);
               }
             };
-        
+          
             initPush();
           }, [hotelId]);
+          
 
+          useEffect(() => {
+            const fetchNotifyToken = async () => {
+              try {
+                if (phone) {
+                  const response = await axios.get(
+                    `${BASE_URL}/hotel/getNotificationToken/${hotelId}`,
+                    {
+                      params: {
+                        token: expoPushToken,
+                      },
+                    }
+                  );
+                  console.log('notify detail response in header',response?.data)
+                  setReportObj(response?.data || {} )
+                }
+              } catch (error) {
+                // console.error("Error fetching visitors:", error);
+              }
+            };
+          
+            fetchNotifyToken();
+            socket.on("getNotifyToken", (newUser) => {
+            setNotifyTokenObj(newUser)
+            });
+            return () => {
+              socket.off("getNotifyToken");
+            };
+          }, [hotelId]);
 
+          console.log('token obj',notifyTokenObj)
         const reportArray=reportObj?.reportArray
         // console.log('report',reportArray)
         const totalRoom=finalHotelDetailSelector?.totalRoom
         const hotelImgFirst=finalHotelDetailSelector?.hotelImg
         const hotelName=finalHotelDetailSelector?.hotelName
+
+        const tokenArray=notifyTokenObj.notifyTokenArray?.map((item)=>item.token)
+        console.log('token array',tokenArray)
 return (
   
     <>
     <Header profile={profileObj} allStaffPlusOwner={allStaffOwnerObj} hotelId={hotelId}
      profileArrays={finalProfileArray} policeReport={reportArray} totalRoom={totalRoom} 
-     hotelImgFirst={hotelImgFirst} hotelName={hotelName} notifyToken={expoPushToken} />
+     hotelImgFirst={hotelImgFirst} hotelName={hotelName} notifyTokenArray={tokenArray} />
     </>
 )
 }

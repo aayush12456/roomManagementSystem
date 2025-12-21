@@ -11,12 +11,14 @@ import report from '../../../../assets/sidebarIcons/report.png'
 import setting from '../../../../assets/sidebarIcons/settingImg.png'
 import myProfile from '../../../../assets/sidebarIcons/profile.png'
 import hotelIcon from '../../../../assets/sidebarIcons/hotelIcon.png'
+import notifyIcon from '../../../../assets/notification.png'
 import ProfilePage from '../../../Pages/profilePage/profilePage';
 import SettingsPage from '../../../Pages/settingsPage/settingsPage';
 import PerformancePage from '../../../Pages/performancePage/performancePage';
 import HotelGalleryPage from '../../../Pages/hotelGalleryPage/hotelGalleryPage';
+import NotificationPage from '../../../Pages/notificationPage/notificationPage';
 
-const Header=({profile,allStaffPlusOwner,hotelId,profileArrays,policeReport,totalRoom,hotelImgFirst,hotelName,notifyToken})=>{
+const Header=({profile,allStaffPlusOwner,hotelId,profileArrays,policeReport,totalRoom,hotelImgFirst,hotelName,notifyTokenArray})=>{
     const Drawer = createDrawerNavigator();
     const navigation = useNavigation();
     console.log('profile is',profile)
@@ -95,7 +97,7 @@ return (
         }}
         
       >
-           {(props) => <DashboardPage {...props} profile={profile}/>}
+           {(props) => <DashboardPage {...props} profile={profile} notifyTokenArray={notifyTokenArray}/>}
         </Drawer.Screen>
 
          <Drawer.Screen
@@ -157,6 +159,19 @@ return (
       >
       {(props) => <HotelGalleryPage hotelImg={hotelImgFirst} hotelId={hotelId}  />}
         </Drawer.Screen>:null}
+
+ <Drawer.Screen
+        name='Notification'
+        // component={SettingsPage}
+        options={{
+          drawerIcon:()=>(
+            <Image  source={notifyIcon}
+            style={{ width: 20, height: 20 }}/>
+        ),
+        }}
+      >
+      {(props) =><NotificationPage hotelId={hotelId}/>}
+        </Drawer.Screen>
      </Drawer.Navigator>
      
     </>
