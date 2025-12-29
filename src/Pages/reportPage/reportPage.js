@@ -4,8 +4,10 @@ import { useDispatch,useSelector } from "react-redux";
 import io from "socket.io-client";
 import axios from 'axios'
 const socket = io.connect("http://192.168.29.169:4000")
+// const socket = io.connect("https://roommanagementsystembackend-1.onrender.com")
 const ReportPage=()=>{
     const BASE_URL = "http://192.168.29.169:4000";
+    // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
     const dispatch=useDispatch()
     const hotelDetailSelector=useSelector((state)=>state.getHotelDetails.getHotelDetailsObj.hotelObj)
     console.log('hotel details',hotelDetailSelector)

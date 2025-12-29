@@ -362,10 +362,11 @@ import { deleteRoomAsync } from "../../../Redux/Slice/deleteRoomSlice/deleteRoom
 import { deleteFloorAsync } from "../../../Redux/Slice/deleteFloorSlice/deleteFloorSlice";
 import MessageModal from "../messageModal/messageModal";
 import MaintenanceModal from "../maintenanceModal/maintenanceModal";
+import { getMessageNotifyAsync } from "../../../Redux/Slice/getMessageNotifySlice/getMessageNotifySlice";
 
 
 const socket = io.connect("http://192.168.29.169:4000");
-
+// const socket = io.connect("https://roommanagementsystembackend-1.onrender.com");
 const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDeleted,notifyTokenArray }) => {
  console.log('profile in card',profile)
  console.log('room details',roomDetails)
@@ -373,7 +374,7 @@ const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDe
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const BASE_URL = "http://192.168.29.169:4000";
-
+  // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
   const [showAlert, setShowAlert] = useState(false);
   const [selectedRoomId, setSelectedRoomId] = useState(null);
   const [customerObj, setCustomerObj] = useState({});
@@ -401,7 +402,7 @@ const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDe
  const [floorLabel,setFloorLabel]=useState('')
  const [lastTap, setLastTap] = useState(null);
  const [disableDoubleTap, setDisableDoubleTap] = useState(false);
-const [name,setName]=useState('')
+
 
 
   const hotelDetailSelector = useSelector(
@@ -764,7 +765,7 @@ const [name,setName]=useState('')
         };
   
   
-      const sendNotificationToAll = async () => {
+      const sendNotificationToAll = async (type) => {
         if (!Array.isArray(notifyTokenArray) || notifyTokenArray.length === 0) {
         return;
         }
@@ -776,8 +777,8 @@ const [name,setName]=useState('')
         const messages = chunk.map(token => ({
         to: token,
         sound: 'default',
-        title: `${name=="room"?'Room':'Floor'} Notification 🔔`,
-        body: `${profile?.name} deleted a ${name=="room"?"room":'floor'} 🚀`,
+        title: `${type=="room"?'Room':'Floor'} Notification 🔔`,
+        body: `${profile?.name} deleted a ${type=="room"?"room":'floor'} 🚀`,
         data: {
           type: 'ROOM_DELETE',
         },
@@ -1042,7 +1043,7 @@ const [name,setName]=useState('')
         confirmText="Yes"
         confirmButtonColor="#DD6B55"
         onCancelPressed={() => setAnotherShowAlert(false)}
-        onConfirmPressed={() => {
+        onConfirmPressed={async() => {
           setIsDeleting(true); // ✅ prevent re-trigger
           const deleteRoomObj = {
             id: hotelDetailSelector?._id,
@@ -1054,14 +1055,21 @@ const [name,setName]=useState('')
             roomNumber:label
           };
           console.log("Room deleted!", deleteRoomObj);
+          // setAnotherShowAlert(false);
+          // setTimeout(() => {
+          //   dispatch(deleteRoomAsync(deleteRoomObj));
+          //   setIsDeleting(false); // reset guard after done
+          // }, 500); // slight delay ensures clean close
+          // sendNotificationToAll()
+        
+
           setAnotherShowAlert(false);
-          setTimeout(() => {
-            dispatch(deleteRoomAsync(deleteRoomObj));
+          setTimeout(async() => {
+           await dispatch(deleteRoomAsync(deleteRoomObj)).unwrap();
+            dispatch(getMessageNotifyAsync(hotelDetailSelector?._id));
             setIsDeleting(false); // reset guard after done
-            setName('room')
           }, 500); // slight delay ensures clean close
-          sendNotificationToAll()
-          setName('')
+          sendNotificationToAll('room')
         }}
       />
 
@@ -1087,15 +1095,24 @@ const [name,setName]=useState('')
             message:'deleted a',
           };
           console.log("floor deleted!", deleteFloorObj);
+          // setFloorAlert(false);
+          // setTimeout(() => {
+          //   dispatch(deleteFloorAsync(deleteFloorObj));
+          //   onFloorDeleted?.(roomTitle);
+          //   setFloorDeleting(false); // reset guard after done
+          // }, 500); // slight delay ensures clean close
+          // sendNotificationToAll()
+
           setFloorAlert(false);
-          setTimeout(() => {
-            dispatch(deleteFloorAsync(deleteFloorObj));
+          setTimeout(async() => {
+           await dispatch(deleteFloorAsync(deleteFloorObj)).unwrap();
+           dispatch(getMessageNotifyAsync(hotelDetailSelector?._id));
             onFloorDeleted?.(roomTitle);
             setFloorDeleting(false); // reset guard after done
-            setName('floor')
+            // setName('floor')
           }, 500); // slight delay ensures clean close
-          sendNotificationToAll()
-          setName('')
+          sendNotificationToAll("floor")
+          // setName('')
         }}
       />
     </>

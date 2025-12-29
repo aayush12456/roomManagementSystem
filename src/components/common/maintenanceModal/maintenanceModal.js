@@ -2,11 +2,12 @@ import { View, Modal, Dimensions, ScrollView,Pressable } from "react-native";
 import { Image } from 'expo-image';
 import { Text,Button } from "react-native-paper";
 import { useEffect,useState } from "react";
-import cleanImg from '../../../../assets/roomIcon/cleaning.png'
+import cleanImg from '../../../../assets/roomIcon/cleaning_2.png'
 import personImg from '../../../../assets/roomIcon/mechanic.png'
 import axios from "axios";
 import io from "socket.io-client";
 const socket = io.connect("http://192.168.29.169:4000");
+// const socket = io.connect("https://roommanagementsystembackend-1.onrender.com");
 import { useNavigation } from "@react-navigation/native"
 const screenWidth = Dimensions.get("window").width;
 const MaintenanceModal=({ maintainAlert,setMaintainAlert,maintainObj,finalMainCleanObj})=>{
@@ -14,6 +15,7 @@ const MaintenanceModal=({ maintainAlert,setMaintainAlert,maintainObj,finalMainCl
     console.log('maintain obj',maintainObj)
     console.log('final main',finalMainCleanObj)
     const BASE_URL = "http://192.168.29.169:4000";
+    // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
     const maintainCleanHandler=async(type)=>{
       const finalMaintainObj={
         ...maintainObj,
@@ -85,7 +87,7 @@ return (
 {finalMainCleanObj?.roomId===maintainObj?.roomId && finalMainCleanObj?.type=="Clean Room"?<View>
 <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
   <Image
-    source={require('../../../../assets/roomIcon/Cleaning.gif')}
+    source={require('../../../../assets/roomIcon/cleaning_1.gif')}
     style={{ width:100, height:100 }}
     contentFit="cover"
   />

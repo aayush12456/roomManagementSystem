@@ -15,10 +15,12 @@ import { passReportObjSliceActions } from "../../Redux/Slice/passReportObjSlice/
 import HeaderReportCard from "../common/headerReportCard/headerReportCard";
 
 const socket = io.connect("http://192.168.29.169:4000");
+// const socket = io.connect("https://roommanagementsystembackend-1.onrender.com");
 const PersonalReport=({personalReport,isSmallScreen,hotelDetailSelector,dateSelector})=>{
     console.log('hotel detail',hotelDetailSelector)
     console.log('personal report',personalReport)
     const BASE_URL = "http://192.168.29.169:4000";
+    // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
     const dispatch=useDispatch()
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [selectedPersonalFromDate, setSelectedPersonalFromDate] = useState(null);

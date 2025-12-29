@@ -7,8 +7,10 @@ import io from "socket.io-client";
 import axios from "axios";
 import * as ImagePicker from 'expo-image-picker';
 const socket = io.connect("http://192.168.29.169:4000")
-const AddOwner=({hotelsId})=>{
+// const socket = io.connect("https://roommanagementsystembackend-1.onrender.com")
+const AddOwner=({hotelsId,profile,notifyTokenArray})=>{
     const BASE_URL = "http://192.168.29.169:4000";
+    // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
     const [ownerName,setOwnerName]=useState('')
     const [ownerPhoneNumber,setOwnerPhoneNumber]=useState('')
     const [ownerAddress,setOwnerAddress]=useState('')
@@ -86,6 +88,9 @@ const AddOwner=({hotelsId})=>{
               type: fileType,
               name: fileName,
             });
+            formData.append('personName',profile.name)
+            formData.append('imgUrl',profile.image)
+            formData.append('message','added new owner')
         }
         console.log('form',formData)
         try {
@@ -104,6 +109,7 @@ const AddOwner=({hotelsId})=>{
             title: "Owner Details Added Successfully",
             autoClose: 10000,
           });
+          sendNotificationToAll()
           socket.emit('addOwnerObj', response?.data)
         } catch (error) {
           console.error("Error in Add/Update Staff", error.message);
@@ -114,6 +120,56 @@ const AddOwner=({hotelsId})=>{
         setOwnerImage('')
         setErrors({});
       }
+
+      const chunkArray = (array, size) => {
+        const chunks = [];
+        for (let i = 0; i < array.length; i += size) {
+        chunks.push(array.slice(i, i + size));
+        }
+        return chunks;
+        };
+    
+      const sendNotificationToAll = async () => {
+        if (!Array.isArray(notifyTokenArray) || notifyTokenArray.length === 0) {
+        return;
+        }
+        
+        try {
+        const tokenChunks = chunkArray(notifyTokenArray, 100);
+        
+        for (const chunk of tokenChunks) {
+        const messages = chunk.map(token => ({
+        to: token,
+        sound: 'default',
+        title: 'Profile Notification 🔔',
+        body: `${profile?.name} added a new Owner 🚀`,
+        data: {
+          type: 'PROFILE_ADDED',
+        },
+        }));
+        
+        const response = await axios.post(
+        'https://exp.host/--/api/v2/push/send',
+        messages,
+        {
+        headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        },
+        }
+        );
+        
+        console.log('✅ Push sent:', response.data);
+        }
+        
+    
+        } catch (error) {
+        console.log(
+        '❌ Push error:',
+        error.response?.data || error.message
+        );
+        }
+    };
 return (
     <>
      <KeyboardAvoidingView

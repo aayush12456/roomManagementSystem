@@ -9,9 +9,11 @@ import axios from 'axios'
 import io from "socket.io-client";
 import { passDataObjSliceAcions } from "../../Redux/Slice/passDataSliceObj/passDataSliceObj";
 const socket = io.connect("http://192.168.29.169:4000")
+// const socket = io.connect("https://roommanagementsystembackend-1.onrender.com")
 const AdvanceBookModal=({floor,roomType,roomNo,advanceAlert,selectedRoomId,roomNum,customerArrayAdvance,todayDate,currentDates,setAdvanceAlert})=>{
   // console.log('customer array advance modal',customerArrayAdvance)
 const BASE_URL = "http://192.168.29.169:4000";  
+// const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";  
 const hotelDetailSelector=useSelector((state)=>state.getHotelDetails.getHotelDetailsObj.hotelObj)    
 const screenWidth = Dimensions.get("window").width;   
 const formikRef = useRef(null);

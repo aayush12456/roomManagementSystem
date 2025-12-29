@@ -11,7 +11,7 @@ import io from "socket.io-client";
 import axios from "axios";
 import { passDataObjSliceAcions } from "../../Redux/Slice/passDataSliceObj/passDataSliceObj";
 const socket = io.connect("http://192.168.29.169:4000")
-
+// const socket = io.connect("https://roommanagementsystembackend-1.onrender.com")
 const safeTimeToISOString = (timeStr) => {
   // ✅ FULL SAFETY
   if (!timeStr || typeof timeStr !== "string") return "";
@@ -61,6 +61,7 @@ const safeTimeToISOString = (timeStr) => {
 const CustomerDetailModal=({showAlert,setShowAlert,selectedRoomId,customerArray,roomType,floor,roomNo,currentDates})=>{
   // console.log('customer array',customerArray)
   const BASE_URL = "http://192.168.29.169:4000";
+  // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
   const hotelDetailSelector=useSelector((state)=>state.getHotelDetails.getHotelDetailsObj.hotelObj)
   const passDataSelector=useSelector((state)=>state.passDataObj.passDataObj)
   const recentBookObj=passDataSelector.obj

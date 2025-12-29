@@ -16,8 +16,10 @@ import AddFloorModal from "../addFloorModal/addFloorModal";
 import { getHotelDetailsAsync } from "../../Redux/Slice/getHotelDetailSlice/getHotelDetailSlice";
 
 const socket = io.connect("http://192.168.29.169:4000")
+// const socket = io.connect("https://roommanagementsystembackend-1.onrender.com")
 const Dashboard=({hotelDetails,profile,notifyTokenArray})=>{
   const BASE_URL = "http://192.168.29.169:4000";
+  // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
   console.log('hotel details is',hotelDetails)
   console.log('notify tokens',notifyTokenArray)
   const [customerObj,setCustomerObj]=useState({})

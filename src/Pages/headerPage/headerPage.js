@@ -12,9 +12,10 @@ import * as Device from "expo-device";
 import { Platform } from "react-native";
 import { deleteSwitchProfileData } from "../../Redux/Slice/deleteSwitchProfileSlice/deleteSwitchProfileSlice";
 const socket = io.connect("http://192.168.29.169:4000")
+// const socket = io.connect("https://roommanagementsystembackend-1.onrender.com")
 const HeaderPage=()=>{
   const BASE_URL = "http://192.168.29.169:4000";
-
+  // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
   Notifications.setNotificationHandler({
     handleNotification: async () => ({
       shouldShowAlert: true,
@@ -29,6 +30,8 @@ const HeaderPage=()=>{
     const [finalProfileArray,setFinalProfileArray]=useState([])
     const [expoPushToken, setExpoPushToken] = useState(null);
     const [notifyTokenObj,setNotifyTokenObj]=useState({})
+
+
     const dispatch=useDispatch()
     const navigation = useNavigation();
     const hotelDetailSelector=useSelector((state)=>state.getHotelDetails.getHotelDetailsObj.hotelObj)
@@ -134,7 +137,7 @@ navigation.navigate('LoginPage')
                   const response = await axios.get(
                     `${BASE_URL}/hotel/getStaffPlusOwner/${finalHotelDetailSelector?._id}`
                   );
-                  // console.log('visitor user in response',response?.data)
+                  console.log('visitor user in response',response?.data)
                   setAllStaffOwnerObj(response?.data || {} )
                 }
               } catch (error) {
@@ -283,6 +286,23 @@ navigation.navigate('LoginPage')
         
           //   initPush();
           // }, [hotelId]);
+          // const savePushToken = async (token) => {
+          //   try {
+          //     await SecureStore.setItemAsync("expoPushToken", token);
+          //   } catch (e) {
+          //     console.log("Token save error", e);
+          //   }
+          // };
+
+          // const getSavedPushToken = async () => {
+          //   try {
+          //     return await SecureStore.getItemAsync("expoPushToken");
+          //   } catch (e) {
+          //     console.log("Token fetch error", e);
+          //     return null;
+          //   }
+          // };
+
           useEffect(() => {
             if (!hotelId) return;
           
@@ -327,7 +347,7 @@ navigation.navigate('LoginPage')
                     }
                   );
                   console.log('notify detail response in header',response?.data)
-                  setReportObj(response?.data || {} )
+                  setNotifyTokenObj(response?.data || {} )
                 }
               } catch (error) {
                 // console.error("Error fetching visitors:", error);
@@ -344,6 +364,8 @@ navigation.navigate('LoginPage')
           }, [hotelId]);
 
           console.log('token obj',notifyTokenObj)
+
+         
         const reportArray=reportObj?.reportArray
         // console.log('report',reportArray)
         const totalRoom=finalHotelDetailSelector?.totalRoom
@@ -352,12 +374,15 @@ navigation.navigate('LoginPage')
 
         const tokenArray=notifyTokenObj.notifyTokenArray?.map((item)=>item.token)
         console.log('token array',tokenArray)
+        const finalTokenArray=tokenArray?.filter((token)=>token!==expoPushToken)
+        console.log('final token array',finalTokenArray)
+        // // console.log('filter token array',filteredTokenArray)
 return (
   
     <>
     <Header profile={profileObj} allStaffPlusOwner={allStaffOwnerObj} hotelId={hotelId}
      profileArrays={finalProfileArray} policeReport={reportArray} totalRoom={totalRoom} 
-     hotelImgFirst={hotelImgFirst} hotelName={hotelName} notifyTokenArray={tokenArray} />
+     hotelImgFirst={hotelImgFirst} hotelName={hotelName} notifyTokenArray={finalTokenArray} />
     </>
 )
 }

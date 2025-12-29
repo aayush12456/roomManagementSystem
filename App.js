@@ -21,6 +21,9 @@ import { LogBox } from 'react-native';
 import ExistingAccountPage from './src/Pages/existingAccountPage/exisingAccountPage';
 import { BackHandler } from "react-native";
 import MaintenancePage from './src/Pages/maintenancePage/maintenancePage';
+import * as Notifications from "expo-notifications";
+// import * as Updates from "expo-updates";
+import { DevSettings } from "react-native";
 
 
 
@@ -85,6 +88,18 @@ export default function App() {
         pingTimeout: 60000,
         pingInterval: 25000,
       });
+    // if (!socketRef.current) {
+    //   socketRef.current = io('https://roommanagementsystembackend-1.onrender.com', {
+    //     transports: ['websocket'],
+    //     reconnection: true,
+    //     reconnectionAttempts: 10,
+    //     reconnectionDelay: 1000,
+    //     reconnectionDelayMax: 5000,
+    //     timeout: 20000,
+    //     pingTimeout: 60000,
+    //     pingInterval: 25000,
+    //   });
+
 
       socketRef.current.emit('setup', hotelId);
 
@@ -110,9 +125,29 @@ export default function App() {
     };
   }, [hotelId]);
 
-
-
-
+  useEffect(() => {
+    const subscription =
+      Notifications.addNotificationResponseReceivedListener((response) => {
+        const data = response.notification.request.content.data;
+        console.log("🔔 Notification clicked:", data);
+  
+        if (data?.type === "ROOM_ADDED"||data?.type === "FLOOR_ADDED" 
+        ||data?.type === "ROOM_DELETE"||data?.type === "PROFILE_ADDED" || 
+        data?.type === "PROFILE_DELETE") {
+          console.log("🔄 Reloading app on THIS device only");
+  
+          if (__DEV__) {
+            DevSettings.reload();     // dev build
+          } 
+          // else {
+          //   Updates.reloadAsync();    // preview / production
+          // }
+        }
+      });
+  
+    return () => subscription.remove();
+  }, []);
+  
 
   return (
     <Provider store={store}>

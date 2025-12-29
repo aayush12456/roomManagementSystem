@@ -77,6 +77,7 @@ const Notification = ({ message }) => {
               {item.message} {" "}
               {item.roomNo?<Text style={{ fontWeight: "bold" }}>{item.message=="deleted a room"?item.roomNo:`R-${item.roomNo}`}</Text>:null}
               {item.floorName?<Text style={{ fontWeight: "bold" }}>{convertFloorName(item.floorName)}</Text>:null}
+              {item.personName?<Text style={{ fontWeight: "bold" }}>{item.personName}</Text>:null}
             </Text>
             <Text
                 style={{

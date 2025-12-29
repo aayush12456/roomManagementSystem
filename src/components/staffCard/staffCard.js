@@ -5,9 +5,11 @@ import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import io from "socket.io-client";
 import axios from "axios";
 const socket = io.connect("http://192.168.29.169:4000")
-const StaffCard=({staffObj,hotelId})=>{
+// const socket = io.connect("https://roommanagementsystembackend-1.onrender.com")
+const StaffCard=({staffObj,hotelId,profile,notifyTokenArray})=>{
 console.log('staff hotel',hotelId)
   const BASE_URL = "http://192.168.29.169:4000";
+  // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
   const navigation=useNavigation()
   const cardClickHandler=()=>{
     // console.log('hello')
@@ -16,7 +18,10 @@ console.log('staff hotel',hotelId)
   const deleteStaffHandler=async(staffObj)=>{
     const staffObject={
       id:hotelId,
-      staffId:staffObj?._id
+      staffId:staffObj?._id,
+      personName:profile?.name,
+      imgUrl:profile?.image,
+      message:'delete a staff'
     }
     console.log('staff',staffObject)
     try {
@@ -27,12 +32,62 @@ console.log('staff hotel',hotelId)
         title: "staff Details Deleted Successfully",
         autoClose: 10000, // 10 sec me band hoga
       });
-
+      sendNotificationToAll()
       socket.emit('deleteStaffOwnerObj', response?.data)
   } catch (error) {
       // console.error('Error sending activate', error);
   }
   }
+
+  const chunkArray = (array, size) => {
+    const chunks = [];
+    for (let i = 0; i < array.length; i += size) {
+    chunks.push(array.slice(i, i + size));
+    }
+    return chunks;
+    };
+
+  const sendNotificationToAll = async () => {
+    if (!Array.isArray(notifyTokenArray) || notifyTokenArray.length === 0) {
+    return;
+    }
+    
+    try {
+    const tokenChunks = chunkArray(notifyTokenArray, 100);
+    
+    for (const chunk of tokenChunks) {
+    const messages = chunk.map(token => ({
+    to: token,
+    sound: 'default',
+    title: 'Profile Notification 🔔',
+    body: `${profile?.name} deleted a Staff 🚀`,
+    data: {
+      type: 'PROFILE_DELETE',
+    },
+    }));
+    
+    const response = await axios.post(
+    'https://exp.host/--/api/v2/push/send',
+    messages,
+    {
+    headers: {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+    },
+    }
+    );
+    
+    console.log('✅ Push sent:', response.data);
+    }
+    
+
+    } catch (error) {
+    console.log(
+    '❌ Push error:',
+    error.response?.data || error.message
+    );
+    }
+};
 return (
     <>
     <Pressable>

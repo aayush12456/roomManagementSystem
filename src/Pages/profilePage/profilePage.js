@@ -6,7 +6,7 @@ import Hierarchy from "../../components/Hierarchy/hierarchy"
 import AddStaff from "../../components/addStaff/addStaff"
 import AllStaff from "../../components/allStaff/allStaff"
 import AddOwner from "../../components/addOwner/addOwner"
-const ProfilePage=({profile,allStaffOwner,hotelIds})=>{
+const ProfilePage=({profile,allStaffOwner,hotelIds,notifyTokenArray})=>{
   console.log('staff profile',allStaffOwner)
   console.log('id is',hotelIds)
     console.log('pofile page',profile)
@@ -78,11 +78,11 @@ const ProfilePage=({profile,allStaffOwner,hotelIds})=>{
         case "hierarchy":
           return <Hierarchy allStaff={allStaffArray} allOwner={allOwnerArray} />;
         case "allStaff":
-          return <AllStaff allStaff={allStaffArray} hotelsId={hotelIds}/>;
+          return <AllStaff allStaff={allStaffArray} hotelsId={hotelIds} profile={profile}notifyTokenArray={notifyTokenArray}/>;
         case "addStaff":
-          return <AddStaff />;
+          return <AddStaff profile={profile}notifyTokenArray={notifyTokenArray}/>;
         case "addOwner":
-          return <AddOwner  hotelsId={hotelIds} />;
+          return <AddOwner  hotelsId={hotelIds}  profile={profile}notifyTokenArray={notifyTokenArray} />;
         default:
           return null;
       }

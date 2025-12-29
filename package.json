@@ -54,6 +54,7 @@
     "expo-secure-store": "^14.2.3",
     "expo-sharing": "~13.1.5",
     "expo-status-bar": "~2.2.3",
+    "expo-updates": "~0.28.17",
     "formik": "^2.4.6",
     "moment": "^2.30.1",
     "react": "19.0.0",

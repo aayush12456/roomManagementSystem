@@ -7,6 +7,7 @@ import {Picker} from '@react-native-picker/picker';
 import { roomAdd } from "../../schemas";
 import { addRoomAsync } from "../../Redux/Slice/addRoomSlice/addRoomSlice";
 import axios from "axios"
+import { getMessageNotifyAsync } from "../../Redux/Slice/getMessageNotifySlice/getMessageNotifySlice";
 const AddRoomModal=({roomAlert,setRoomAlert,hotelId,floorSelect,profile,notifyTokenArray})=>{
   console.log('token in room',notifyTokenArray)
     const screenWidth = Dimensions.get("window").width;
@@ -72,7 +73,7 @@ return (
     roomNumber:''
      }}
      validationSchema={roomAdd}
-     onSubmit={(values, { resetForm }) => {
+     onSubmit={async(values, { resetForm }) => {
       console.log("Room Added:", values);
       const roomObj={
         hotelId:hotelId,
@@ -85,10 +86,19 @@ return (
         message:'added new room'
       } 
       console.log("Rooms Added:", roomObj);
-      dispatch(addRoomAsync(roomObj))
-      sendNotificationToAll()
-      resetForm();          // ✅ form fields clear
-      setRoomAlert(false);  // ✅ modal close
+      // dispatch(addRoomAsync(roomObj))
+      // sendNotificationToAll()
+      // resetForm();          // ✅ form fields clear
+      // setRoomAlert(false);
+      try{
+        await dispatch(addRoomAsync(roomObj)).unwrap()
+         await sendNotificationToAll()
+         dispatch(getMessageNotifyAsync(hotelId));
+        resetForm();       
+        setRoomAlert(false); 
+      } catch (error) {
+    console.log("❌ Room add error:", error);
+  } // ✅ modal close
     }}
       >
         {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue })=>(

@@ -16,9 +16,10 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { passReportObjSliceActions } from "../../Redux/Slice/passReportObjSlice/passReportObjSlice";
 
 const socket = io.connect("http://192.168.29.169:4000");
-
+// const socket = io.connect("https://roommanagementsystembackend-1.onrender.com");
 const PoliceReport = ({ policeReport, dateSelector, isSmallScreen ,hotelDetailSelector }) => {
   const BASE_URL = "http://192.168.29.169:4000";
+  // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
   const dispatch = useDispatch();
   const [staffObj, setStaffObj] = useState({});
   const [filterDate, setFilterDate] = useState('default');

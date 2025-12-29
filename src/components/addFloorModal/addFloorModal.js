@@ -7,6 +7,7 @@ import { roomType,bedType } from "../../utils/signUpData";
 import {useDispatch} from 'react-redux'
 import { addFloorAsync } from "../../Redux/Slice/addFloorSlice/addFloorSlice";
 import axios from "axios"
+import { getMessageNotifyAsync } from "../../Redux/Slice/getMessageNotifySlice/getMessageNotifySlice";
 const screenWidth = Dimensions.get("window").width;
 
 // ✅ Validation Schema
@@ -89,7 +90,7 @@ const AddFloorModal = ({ floorAlert, setFloorAlert,hotelId,notifyTokenArray,prof
         roomDetails: [],
       }}
       validationSchema={floorSchema}
-      onSubmit={(values,{ resetForm }) => {
+      onSubmit={async(values,{ resetForm }) => {
         const floorName = values.floorName?.trim();
       
         if (!floorName) {
@@ -121,13 +122,31 @@ const AddFloorModal = ({ floorAlert, setFloorAlert,hotelId,notifyTokenArray,prof
         };
       
         console.log("✅ Final Submitted Data:", finalData);
-        setTimeout(() => {
-          dispatch(addFloorAsync(finalData));
-        }, 100);
-        sendNotificationToAll()
-        setFloorAlert(false);
-        resetForm();
+        // setTimeout(() => {
+        //   dispatch(addFloorAsync(finalData));
+        // }, 100);
+        // sendNotificationToAll()
         // setFloorAlert(false);
+        // resetForm();
+
+        
+        try {
+          // ✅ 1. Add floor (wait till backend finishes)
+          await dispatch(addFloorAsync(finalData)).unwrap();
+      
+          // ✅ 2. Send push notification
+          await sendNotificationToAll();
+      
+          // ✅ 3. 🔥 MOST IMPORTANT — refresh notification slice
+          dispatch(getMessageNotifyAsync(hotelId));
+      
+          // ✅ 4. UI cleanup
+          resetForm();
+          setFloorAlert(false);
+      
+        } catch (error) {
+          console.log("❌ Add floor error:", error);
+        }
       }}
       
     >

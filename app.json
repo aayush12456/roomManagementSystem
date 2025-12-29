@@ -3,6 +3,10 @@
     "name": "hotelManagementSystem",
     "slug": "hotelManagementSystem",
     "version": "1.0.0",
+    "updates": {
+      "enabled": true,
+      "fallbackToCacheTimeout": 0
+    },
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",

@@ -130,7 +130,8 @@ return (
         ),
         }}
       >
-        {(props) => <ProfilePage {...props}  profile={profile} allStaffOwner={allStaffPlusOwner} hotelIds={hotelId}/>}
+        {(props) => <ProfilePage {...props}  profile={profile} allStaffOwner={allStaffPlusOwner}
+         hotelIds={hotelId} notifyTokenArray={notifyTokenArray}/>}
         </Drawer.Screen>
 
         <Drawer.Screen
@@ -170,7 +171,7 @@ return (
         ),
         }}
       >
-      {(props) =><NotificationPage hotelId={hotelId}/>}
+      {(props) =><NotificationPage hotelId={hotelId}  allStaffOwner={allStaffPlusOwner} />}
         </Drawer.Screen>
      </Drawer.Navigator>
      

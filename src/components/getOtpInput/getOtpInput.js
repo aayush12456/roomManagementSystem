@@ -178,6 +178,7 @@ return (
     <>
     <SafeAreaView style={{ flex: 1 }}>
     <LoginImage/>
+    {/* <Text>otp is {recieveOtpObj.otp}</Text> */}
     <View style={{ paddingHorizontal: 16 }}>
     <OtpInput numberOfDigits={5} onTextChange={(text) => setMyOtp(text)} />
       </View> 
