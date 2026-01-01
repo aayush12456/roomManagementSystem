@@ -54,7 +54,7 @@ console.log('staff hotel',hotelId)
     
     try {
     const tokenChunks = chunkArray(notifyTokenArray, 100);
-    
+    const deadTokens = [];
     for (const chunk of tokenChunks) {
     const messages = chunk.map(token => ({
     to: token,
@@ -78,8 +78,37 @@ console.log('staff hotel',hotelId)
     );
     
     console.log('✅ Push sent:', response.data);
+    const ticketIds = response.data.data
+    .filter(item => item.status === "ok")
+    .map(item => item.id);
+
+    if (ticketIds.length > 0) {
+      const receiptRes = await axios.post(
+        "https://exp.host/--/api/v2/push/getReceipts",
+        { ids: ticketIds }
+      );
+
+      const receipts = receiptRes.data.data;
+      Object.values(receipts).forEach((receipt, index) => {
+        if (
+          receipt.status === "error" &&
+          receipt.details?.error === "DeviceNotRegistered"
+        ) {
+          const dead = chunk[index];   // EXACT SAME TOKEN
+          deadTokens.push(dead);
+        }
+      });
     }
-    
+    }
+    console.log('dead token',deadTokens)
+    if (deadTokens.length > 0) {
+   const deadResponse= await axios.post(
+        `${BASE_URL}/hotel/deleteNotificationToken/${hotelId}`,
+        {deadToken: deadTokens }
+      );
+      socket.emit('deleteNotificationToken', deadResponse.data)
+      console.log("🗑 DEAD TOKENS REMOVED:", deadTokens);
+    }
 
     } catch (error) {
     console.log(

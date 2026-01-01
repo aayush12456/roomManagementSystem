@@ -17,12 +17,21 @@ import SettingsPage from '../../../Pages/settingsPage/settingsPage';
 import PerformancePage from '../../../Pages/performancePage/performancePage';
 import HotelGalleryPage from '../../../Pages/hotelGalleryPage/hotelGalleryPage';
 import NotificationPage from '../../../Pages/notificationPage/notificationPage';
+import io from "socket.io-client";
+import axios from "axios";
+const socket = io.connect("http://192.168.29.169:4000")
+// const socket = io.connect("https://roommanagementsystembackend-1.onrender.com")
 
-const Header=({profile,allStaffPlusOwner,hotelId,profileArrays,policeReport,totalRoom,hotelImgFirst,hotelName,notifyTokenArray})=>{
+const Header=({profile,allStaffPlusOwner,hotelId,profileArrays,policeReport,totalRoom,
+  hotelImgFirst,hotelName,notifyTokenArray,notifyToken})=>{
+
+    const BASE_URL = "http://192.168.29.169:4000";
+    // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
     const Drawer = createDrawerNavigator();
     const navigation = useNavigation();
     console.log('profile is',profile)
     // console.log('hotelid',hotelId)
+    console.log('notify tokens',notifyToken)
     console.log('polive',policeReport)
     const policeReportArray=policeReport
 
@@ -34,7 +43,14 @@ const Header=({profile,allStaffPlusOwner,hotelId,profileArrays,policeReport,tota
           console.error('Error removing login obj:', error);
         }
       };
-    const logoutHandler=()=>{
+    const logoutHandler=async()=>{
+      try {
+        const response = await axios.post(`${BASE_URL}/hotel/deleteNotificationToken/${hotelId}`,{notifyToken:notifyToken});
+        console.log('notify token delete',response?.data)
+        socket.emit('deleteNotificationToken', response?.data)
+    } catch (error) {
+        // console.error('Error sending activate', error);
+    }
      removeLoginData()
      navigation.navigate('LoginPage')
     }

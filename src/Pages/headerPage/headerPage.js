@@ -382,7 +382,7 @@ return (
     <>
     <Header profile={profileObj} allStaffPlusOwner={allStaffOwnerObj} hotelId={hotelId}
      profileArrays={finalProfileArray} policeReport={reportArray} totalRoom={totalRoom} 
-     hotelImgFirst={hotelImgFirst} hotelName={hotelName} notifyTokenArray={finalTokenArray} />
+     hotelImgFirst={hotelImgFirst} hotelName={hotelName} notifyTokenArray={finalTokenArray} notifyToken={expoPushToken} />
     </>
 )
 }

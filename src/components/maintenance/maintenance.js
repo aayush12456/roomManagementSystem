@@ -7,12 +7,12 @@ import moment from "moment";
 import { useState,useEffect } from "react";
 import axios from "axios";
 import io from "socket.io-client";
-// const socket = io.connect("http://192.168.29.169:4000");
-const socket = io.connect("https://roommanagementsystembackend-1.onrender.com");
+const socket = io.connect("http://192.168.29.169:4000");
+// const socket = io.connect("https://roommanagementsystembackend-1.onrender.com");
 const Maintenance=({roomDetails,floorName,profileName})=>{
     console.log('maintain',roomDetails)
-    // const BASE_URL = "http://192.168.29.169:4000";
-    const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
+    const BASE_URL = "http://192.168.29.169:4000";
+    // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
     const hotelDetailSelector = useSelector(
         (state) => state.getHotelDetails.getHotelDetailsObj.hotelObj
       );

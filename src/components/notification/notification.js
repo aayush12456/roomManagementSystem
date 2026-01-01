@@ -1,7 +1,7 @@
 import { Text } from "react-native-paper";
 import { View, ScrollView, Image } from "react-native";
 
-const Notification = ({ message }) => {
+const Notification = ({ message,hotelId }) => {
     const timeAgo = (createdAt) => {
         const now = new Date();
         const past = new Date(createdAt);
@@ -49,46 +49,56 @@ const Notification = ({ message }) => {
   return (
     <ScrollView>
       <View style={{ padding: 12 ,paddingTop:20}}>
-        {message?.map((item) => (
-          <View
-            key={item._id}
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              gap: 12,
-              marginBottom: 14,
-            }}
-          >
-            {/* Image */}
-            <Image
-              source={{ uri: item.imgUrl }}
-              resizeMode="cover"
+      {message?.map((item) =>
+          item.hotelId == hotelId ? (
+            <View
+              key={item._id}   // 👈 KEY HERE ONLY
               style={{
-                width: 40,
-                height: 40,
-                borderRadius: 20,
-                backgroundColor: "#eee",
+                flexDirection: "row",
+                alignItems: "center",
+                gap: 12,
+                marginBottom: 14,
               }}
-            />
-
-            {/* Text */}
-            <Text style={{ fontSize: 14, flex: 1 }}>
-              <Text style={{ fontWeight: "bold" }}>{item.name}</Text> has{" "}
-              {item.message} {" "}
-              {item.roomNo?<Text style={{ fontWeight: "bold" }}>{item.message=="deleted a room"?item.roomNo:`R-${item.roomNo}`}</Text>:null}
-              {item.floorName?<Text style={{ fontWeight: "bold" }}>{convertFloorName(item.floorName)}</Text>:null}
-              {item.personName?<Text style={{ fontWeight: "bold" }}>{item.personName}</Text>:null}
-            </Text>
-            <Text
+            >
+              <Image
+                source={{ uri: item.imgUrl }}
+                resizeMode="cover"
                 style={{
-                  fontSize: 12,
-                  color: "#888",
+                  width: 40,
+                  height: 40,
+                  borderRadius: 20,
+                  backgroundColor: "#eee",
                 }}
-              >
+              />
+
+              <Text style={{ fontSize: 14, flex: 1 }}>
+                <Text style={{ fontWeight: "bold" }}>{item.name}</Text> has{" "}
+                {item.message}{" "}
+                {item.roomNo ? (
+                  <Text style={{ fontWeight: "bold" }}>
+                    {item.message == "deleted a room"
+                      ? item.roomNo
+                      : `R-${item.roomNo}`}
+                  </Text>
+                ) : null}
+                {item.floorName ? (
+                  <Text style={{ fontWeight: "bold" }}>
+                    {convertFloorName(item.floorName)}
+                  </Text>
+                ) : null}
+                {item.personName ? (
+                  <Text style={{ fontWeight: "bold" }}>
+                    {item.personName}
+                  </Text>
+                ) : null}
+              </Text>
+
+              <Text style={{ fontSize: 12, color: "#888" }}>
                 {timeAgo(item.createdAt)}
               </Text>
-          </View>
-        ))}
+            </View>
+          ) : null
+        )}
       </View>
     </ScrollView>
   );

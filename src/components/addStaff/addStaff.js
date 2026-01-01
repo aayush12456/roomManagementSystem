@@ -11,7 +11,7 @@ import io from "socket.io-client";
 import axios from "axios";
 const socket = io.connect("http://192.168.29.169:4000")
 // const socket = io.connect("https://roommanagementsystembackend-1.onrender.com")
-const AddStaff=({profile,notifyTokenArray})=>{
+const AddStaff=({profile,notifyTokenArray, hotelId})=>{
   const BASE_URL = "http://192.168.29.169:4000";
   // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
   const hotelDetailSelector=useSelector((state)=>state.getHotelDetails.getHotelDetailsObj.hotelObj)
@@ -147,7 +147,7 @@ const AddStaff=({profile,notifyTokenArray})=>{
     
     try {
     const tokenChunks = chunkArray(notifyTokenArray, 100);
-    
+    const deadTokens = [];
     for (const chunk of tokenChunks) {
     const messages = chunk.map(token => ({
     to: token,
@@ -171,9 +171,37 @@ const AddStaff=({profile,notifyTokenArray})=>{
     );
     
     console.log('✅ Push sent:', response.data);
-    }
-    
+    const ticketIds = response.data.data
+      .filter(item => item.status === "ok")
+      .map(item => item.id);
 
+      if (ticketIds.length > 0) {
+const receiptRes = await axios.post(
+          "https://exp.host/--/api/v2/push/getReceipts",
+          { ids: ticketIds }
+        );
+
+        const receipts = receiptRes.data.data;
+        Object.values(receipts).forEach((receipt, index) => {
+          if (
+            receipt.status === "error" &&
+            receipt.details?.error === "DeviceNotRegistered"
+          ) {
+            const dead = chunk[index];   // EXACT SAME TOKEN
+            deadTokens.push(dead);
+          }
+        });
+      }
+    }
+    console.log('dead token',deadTokens)
+    if (deadTokens.length > 0) {
+   const deadResponse= await axios.post(
+        `${BASE_URL}/hotel/deleteNotificationToken/${hotelId}`,
+        {deadToken: deadTokens }
+      );
+      socket.emit('deleteNotificationToken', deadResponse.data)
+      console.log("🗑 DEAD TOKENS REMOVED:", deadTokens);
+    }
     } catch (error) {
     console.log(
     '❌ Push error:',

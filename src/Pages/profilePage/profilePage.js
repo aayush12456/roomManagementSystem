@@ -80,7 +80,7 @@ const ProfilePage=({profile,allStaffOwner,hotelIds,notifyTokenArray})=>{
         case "allStaff":
           return <AllStaff allStaff={allStaffArray} hotelsId={hotelIds} profile={profile}notifyTokenArray={notifyTokenArray}/>;
         case "addStaff":
-          return <AddStaff profile={profile}notifyTokenArray={notifyTokenArray}/>;
+          return <AddStaff profile={profile}notifyTokenArray={notifyTokenArray}  hotelId={hotelIds} />;
         case "addOwner":
           return <AddOwner  hotelsId={hotelIds}  profile={profile}notifyTokenArray={notifyTokenArray} />;
         default:

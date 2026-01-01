@@ -22,7 +22,7 @@ import ExistingAccountPage from './src/Pages/existingAccountPage/exisingAccountP
 import { BackHandler } from "react-native";
 import MaintenancePage from './src/Pages/maintenancePage/maintenancePage';
 import * as Notifications from "expo-notifications";
-// import * as Updates from "expo-updates";
+import * as Updates from "expo-updates";
 import { DevSettings } from "react-native";
 
 
@@ -139,9 +139,9 @@ export default function App() {
           if (__DEV__) {
             DevSettings.reload();     // dev build
           } 
-          // else {
-          //   Updates.reloadAsync();    // preview / production
-          // }
+          else {
+            Updates.reloadAsync();    // preview / production
+          }
         }
       });
   

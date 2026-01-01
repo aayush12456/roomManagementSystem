@@ -64,7 +64,7 @@ const NotificationPage = ({ hotelId, allStaffOwner }) => {
     );
   }, [messageNotifySelector, allStaffOwnerNotifyArray]);
 
-  return <Notification message={finalNotifyArray} />;
+  return <Notification message={finalNotifyArray} hotelId={hotelId} />;
 };
 
 export default NotificationPage;
