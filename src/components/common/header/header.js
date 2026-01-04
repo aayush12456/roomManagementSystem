@@ -19,6 +19,7 @@ import HotelGalleryPage from '../../../Pages/hotelGalleryPage/hotelGalleryPage';
 import NotificationPage from '../../../Pages/notificationPage/notificationPage';
 import io from "socket.io-client";
 import axios from "axios";
+import PaymentPage from '../../../Pages/paymentPage/paymentPage';
 const socket = io.connect("http://192.168.29.169:4000")
 // const socket = io.connect("https://roommanagementsystembackend-1.onrender.com")
 
@@ -188,6 +189,19 @@ return (
         }}
       >
       {(props) =><NotificationPage hotelId={hotelId}  allStaffOwner={allStaffPlusOwner} />}
+        </Drawer.Screen>
+
+        <Drawer.Screen
+        name='Payment'
+        // component={SettingsPage}
+        options={{
+          drawerIcon:()=>(
+            <Image  source={notifyIcon}
+            style={{ width: 20, height: 20 }}/>
+        ),
+        }}
+      >
+      {(props) =><PaymentPage hotelId={hotelId}  />}
         </Drawer.Screen>
      </Drawer.Navigator>
      
