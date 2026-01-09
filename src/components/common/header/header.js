@@ -11,6 +11,7 @@ import report from '../../../../assets/sidebarIcons/report.png'
 import setting from '../../../../assets/sidebarIcons/settingImg.png'
 import myProfile from '../../../../assets/sidebarIcons/profile.png'
 import hotelIcon from '../../../../assets/sidebarIcons/hotelIcon.png'
+import premiumIcon from '../../../../assets/sidebarIcons/premium.png'
 import notifyIcon from '../../../../assets/notification.png'
 import ProfilePage from '../../../Pages/profilePage/profilePage';
 import SettingsPage from '../../../Pages/settingsPage/settingsPage';
@@ -192,11 +193,11 @@ return (
         </Drawer.Screen>
 
         <Drawer.Screen
-        name='Payment'
+        name='Premium'
         // component={SettingsPage}
         options={{
           drawerIcon:()=>(
-            <Image  source={notifyIcon}
+            <Image  source={premiumIcon}
             style={{ width: 20, height: 20 }}/>
         ),
         }}
