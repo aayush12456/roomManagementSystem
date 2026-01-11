@@ -4,25 +4,33 @@ import { Card, Text, Button } from "react-native-paper";
 import axios from "axios";
 import { premiumDetails } from "../../utils/premiumData";
 import { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
+// plan_RziUw1NAukBSo5 ->1 Rs plan
+// plan_Rzu3d5Zlg3vI3A ->50 Rs plan
+// plan_S2Vj0VT1CEKM5a -> 299 Rs plan
+// plan_S2VjYWmEsj8Buc -> 699 Rs plan
 const Payment=({hotelId})=>{
-  const BASE_URL = "http://192.168.29.169:4000";
+const BASE_URL = "http://192.168.29.169:4000";
+const navigation=useNavigation()
 const [planType,setPlanType]=useState('')
-
-const planSelect=(type)=>{
+const [planAmount,setPlanAmount]=useState('')
+const planSelect=(type,amount)=>{
 setPlanType(type)
+setPlanAmount(amount)
 }
+
 let plan=""
   const subscribe = async () => {
     if(planType=="single"){
-      plan="plan_RziUw1NAukBSo5"
+      plan="plan_S2Vj0VT1CEKM5a"
     }
     else{
-      plan="plan_Rzu3d5Zlg3vI3A"
+      plan="plan_S2VjYWmEsj8Buc"
     }
     try {
       const res = await axios.post(
         `${BASE_URL}/hotel/create/${hotelId}`,
-        { planId:plan },
+        { planId:plan,amount:planAmount },
       );
 console.log('respose razor',res)
       const options = {
@@ -34,11 +42,18 @@ console.log('respose razor',res)
       };
 
       RazorpayCheckout.open(options)
-        .then(() => {
-          Alert.alert(
-            "Payment Success",
-            "Invoice & subscription will be updated automatically via webhook."
-          );
+        .then((data) => {
+          console.log('data pay',data)
+          // Alert.alert(
+          //   "Payment Success",
+          //   "Invoice & subscription will be updated automatically via webhook."
+          // );
+          navigation.navigate("PaymentSuccessPage", {
+            formData: {
+              obj: data,          // Razorpay response
+              amount: planAmount // Selected amount
+            }
+          });
         })
         .catch((err) => {
           Alert.alert("Payment failed", err.description);
@@ -60,7 +75,6 @@ return (
 
 {
   premiumDetails.map((premium)=>{
-    console.log('premiums',premium)
     return (
       <>
       <Card style={{ margin: 10, borderRadius: 10 }}>
@@ -80,7 +94,7 @@ return (
         }
       </ScrollView>
       <Pressable 
-        onPress={() =>planSelect(premium.monthly.type) }
+        onPress={() =>planSelect(premium.monthly.type,premium.monthly.amount) }
       >
         <View
           style={{

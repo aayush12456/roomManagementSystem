@@ -24,6 +24,7 @@ import MaintenancePage from './src/Pages/maintenancePage/maintenancePage';
 import * as Notifications from "expo-notifications";
 import * as Updates from "expo-updates";
 import { DevSettings } from "react-native";
+import PaymentSuccessPage from './src/Pages/paymentSuccessPage/paymentSuccessPage';
 
 
 
@@ -221,6 +222,11 @@ export default function App() {
              <Stack.Screen
               name="MaintenancePage"
               component={MaintenancePage}
+              options={{ headerShown: false }}
+            />
+              <Stack.Screen
+              name="PaymentSuccessPage"
+              component={PaymentSuccessPage}
               options={{ headerShown: false }}
             />
           </Stack.Navigator>

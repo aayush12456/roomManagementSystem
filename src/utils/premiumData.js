@@ -18,7 +18,7 @@ premiumData: [
     {id:'7',name:'Add Floor',img:addFloor},
     {id:'8',name:'Delete Floor',img:deleteFloor}
 ],
-monthly: { name: "Monthly Plan", plan: "₹299.00 / Month",type:'single' }
+monthly: { name: "Monthly Plan", plan: "₹299.00 / Month",type:'single',amount:'₹299' }
 },
 {
 premiumData: [
@@ -31,6 +31,6 @@ premiumData: [
     {id:'7',name:'Add Floor',img:addFloor},
     {id:'8',name:'Delete Floor',img:deleteFloor}
 ],
-monthly: { name: "6 Monthly Plan", plan: " ₹699.00 for 6 months",type:'Six' }
+monthly: { name: "6 Monthly Plan", plan: " ₹699.00 for 6 months",type:'Six',amount:'₹699' }
 }
     ];

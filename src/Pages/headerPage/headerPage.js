@@ -6,7 +6,6 @@ import { getHotelDetailsAsync } from "../../Redux/Slice/getHotelDetailSlice/getH
 import { useNavigation } from '@react-navigation/native';
 import io from "socket.io-client";
 import axios from "axios";
-
 import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
 import { Platform } from "react-native";
