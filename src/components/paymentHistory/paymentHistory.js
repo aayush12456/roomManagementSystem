@@ -13,7 +13,7 @@ return (
 <View style={{marginTop:25}}>
     <View>
         <Text style={{paddingLeft:16,fontSize:14}}>Your Monthly Payment</Text>
-        <Card  style={{marginLeft:12,marginRight:12,marginTop:12,overflow:'hidden' }}>
+       {paymentActive?.activeSubscription? <Card  style={{marginLeft:12,marginRight:12,marginTop:12,overflow:'hidden' }}>
         <LinearGradient
     colors={["#4A00E0", "#8E2DE2"]}   // blue → purple
     start={{ x: 0, y: 0 }}
@@ -35,9 +35,10 @@ return (
            <Text style={{paddingTop:12,color:'green'}}>{paymentActive?.activeSubscription?.status}</Text>
            </View>
         </Card.Content>
-        </Card>
+        </Card>:<Text>No active Subscription</Text>}
     </View>
-    <View style={{marginTop:12}}>
+
+    {paymentHistory.length>0?<View style={{marginTop:12}}>
     <View style={{flexDirection:"row",gap:4}}>
     <Text style={{paddingLeft:16,fontSize:14}}>Payment History </Text>
     <Image source={infoIcon} style={{width:15,height:15,marginTop:4}}/>
@@ -74,7 +75,7 @@ return (
         </ScrollView>
     </Card.Content>
     </Card>
-    </View>
+    </View>:null}
    
 </View>
     </>

@@ -16,6 +16,8 @@ import { switchProfileAsync, switchProfileData } from "../../Redux/Slice/switchP
 import { deleteSwitchProfileAsync } from "../../Redux/Slice/deleteSwitchProfileSlice/deleteSwitchProfileSlice";
 import AwesomeAlert from "react-native-awesome-alerts";
 import { deleteHotelAsync, resetHotelData } from '../../Redux/Slice/deleteHotelSlice/deleteHotelSlice';
+import { getPaymentHistoryAsync } from "../../Redux/Slice/getPaymentHistorySlice/getPaymentHistorySlice";
+import { getPaymentActiveAsync } from "../../Redux/Slice/getPaymentActiveSlice/getPaymentActiveSlice";
 
 // Bottom sheet content
 const BottomSheetContent = ({ existingAccountHandler }) => (
@@ -153,8 +155,11 @@ const Settings = ({profileArray, hotelId,phone,hotelImgFirst,hotelName,profile})
   console.log('profiles is',profile)
 const profileSelector=useSelector((state)=>state.switchProfileData.switchProfileObj)
 const deleteHotelSelector=useSelector((state)=>state.deleteHotel.deleteHotelObj)
+const paymentActiveSelector=useSelector((state)=>state.getPaymentActive.getPaymentActiveObj)
+const paymentHistorySelector=useSelector((state)=>state.getPaymentHistory.getPaymentHistoryObj)
 console.log('delete hotel select',deleteHotelSelector)
 console.log('profile select',profileSelector)
+console.log('pay active',paymentActiveSelector)
   const refRBSheet = useRef();
   const switchRBSheet=useRef()
   const dispatch=useDispatch()
@@ -257,9 +262,22 @@ useEffect(() => {
   }
 }, [deleteHotelSelector?.mssg]);
 
+
+useEffect(()=>{
+  if(hotelId){
+  dispatch(getPaymentHistoryAsync(hotelId))
+  }
+      },[hotelId])
+      useEffect(()=>{
+          if(hotelId){
+          dispatch(getPaymentActiveAsync(hotelId))
+          }
+              },[hotelId])
 const paymentHistoryHandler=()=>{
-  navigation.navigate("PaymentHistoryPage",{heading:'Payment History',hotelId:hotelId});
+  navigation.navigate("PaymentHistoryPage",{heading:'Payment History',
+  paymentHistory:paymentHistorySelector,paymentActive:paymentActiveSelector});
 }
+
   return (
     <>
       {/* Main Settings UI */}
@@ -303,7 +321,8 @@ const paymentHistoryHandler=()=>{
           </View>
         </Pressable>:null}
 
-        <Pressable onPress={paymentHistoryHandler}>
+       { !profile?.post && (paymentActiveSelector?.activeSubscription ||paymentHistorySelector?.subscriptionArray?.length>0
+       )?<Pressable onPress={paymentHistoryHandler}>
           <View
             style={{
               flexDirection: "row",
@@ -315,7 +334,7 @@ const paymentHistoryHandler=()=>{
             <Image source={transactionImg} style={{ width: 20, height: 20 }} />
             <Text style={{ fontSize: 15, marginTop: -2 }}>Payment History</Text>
           </View>
-        </Pressable>
+        </Pressable>:null}
 
         {!profile?.post?<Pressable onPress={deleteHotelHandler}>
         <View
