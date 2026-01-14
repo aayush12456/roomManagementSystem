@@ -25,6 +25,7 @@ import * as Notifications from "expo-notifications";
 import * as Updates from "expo-updates";
 import { DevSettings } from "react-native";
 import PaymentSuccessPage from './src/Pages/paymentSuccessPage/paymentSuccessPage';
+import PaymentHistoryPage from './src/Pages/paymentHistoryPage/paymentHistoryPage';
 
 
 
@@ -227,6 +228,11 @@ export default function App() {
               <Stack.Screen
               name="PaymentSuccessPage"
               component={PaymentSuccessPage}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="PaymentHistoryPage"
+              component={PaymentHistoryPage}
               options={{ headerShown: false }}
             />
           </Stack.Navigator>

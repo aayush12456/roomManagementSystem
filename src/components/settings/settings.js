@@ -6,6 +6,7 @@ import RBSheet from "react-native-raw-bottom-sheet";
 import account from "../../../assets/settingIcon/account.png";
 import deleteImg from "../../../assets/settingIcon/delete.png";
 import switchImg from "../../../assets/settingIcon/switch.png";
+import transactionImg from "../../../assets/settingIcon/transaction.png";
 import successImage from "../../../assets/AllIcons/successImg.gif"
 import * as SecureStore from 'expo-secure-store';
 import { Button,Card } from "react-native-paper";
@@ -256,7 +257,9 @@ useEffect(() => {
   }
 }, [deleteHotelSelector?.mssg]);
 
-
+const paymentHistoryHandler=()=>{
+  navigation.navigate("PaymentHistoryPage",{heading:'Payment History',hotelId:hotelId});
+}
   return (
     <>
       {/* Main Settings UI */}
@@ -299,6 +302,20 @@ useEffect(() => {
             <Text style={{ fontSize: 15, marginTop: -2 }}>Switch account</Text>
           </View>
         </Pressable>:null}
+
+        <Pressable onPress={paymentHistoryHandler}>
+          <View
+            style={{
+              flexDirection: "row",
+              gap: 5,
+              marginLeft: 26,
+              marginBottom: 30,
+            }}
+          >
+            <Image source={transactionImg} style={{ width: 20, height: 20 }} />
+            <Text style={{ fontSize: 15, marginTop: -2 }}>Payment History</Text>
+          </View>
+        </Pressable>
 
         {!profile?.post?<Pressable onPress={deleteHotelHandler}>
         <View
