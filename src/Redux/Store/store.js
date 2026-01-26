@@ -19,6 +19,7 @@ import updateHotelImgSlice from "../Slice/updateHotelImgSlice/updateHotelImgSlic
 import getMessageNotifySlice from "../Slice/getMessageNotifySlice/getMessageNotifySlice"
 import getPaymentHistorySlice from "../Slice/getPaymentHistorySlice/getPaymentHistorySlice"
 import getPaymentActiveSlice from "../Slice/getPaymentActiveSlice/getPaymentActiveSlice"
+import planScreenSlice from "../Slice/planScreenSlice/planScreenSlice"
 const store=configureStore({
     reducer:{
         hotelRegisterData:hotelRegisterSlice,
@@ -40,7 +41,8 @@ const store=configureStore({
         updateHotelImg:updateHotelImgSlice,
         getMessageNotify:getMessageNotifySlice,
         getPaymentHistory:getPaymentHistorySlice,
-        getPaymentActive:getPaymentActiveSlice
+        getPaymentActive:getPaymentActiveSlice,
+        planScreenData:planScreenSlice
     }
 })
 export default store

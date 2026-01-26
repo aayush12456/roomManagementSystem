@@ -10,6 +10,7 @@ import {useSelector,useDispatch} from 'react-redux'
 import io from "socket.io-client";
 import axios from "axios";
 import { passDataObjSliceAcions } from "../../Redux/Slice/passDataSliceObj/passDataSliceObj";
+import { planScreenActions } from "../../Redux/Slice/planScreenSlice/planScreenSlice";
 const socket = io.connect("http://192.168.29.169:4000")
 // const socket = io.connect("https://roommanagementsystembackend-1.onrender.com")
 const safeTimeToISOString = (timeStr) => {
@@ -58,8 +59,10 @@ const safeTimeToISOString = (timeStr) => {
 };
 
 
-const CustomerDetailModal=({showAlert,setShowAlert,selectedRoomId,customerArray,roomType,floor,roomNo,currentDates})=>{
+const CustomerDetailModal=({showAlert,setShowAlert,selectedRoomId,customerArray,roomType,floor,roomNo,
+  currentDates,planStatus,paymentActiveSelector})=>{
   // console.log('customer array',customerArray)
+  console.log('plan stat',planStatus)
   const BASE_URL = "http://192.168.29.169:4000";
   // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
   const hotelDetailSelector=useSelector((state)=>state.getHotelDetails.getHotelDetailsObj.hotelObj)
@@ -109,6 +112,10 @@ const CustomerDetailModal=({showAlert,setShowAlert,selectedRoomId,customerArray,
     
     // console.log('filter customer obj',filterCustomerObj)
       const deleteCustomerDetails=async(customerId)=>{
+        if (planStatus !== "free") {
+          dispatch(planScreenActions.planScreenVisibleToggle())
+          return
+        }
         const deleteObj={
         id:hotelDetailSelector?._id,
         customerId:customerId
@@ -186,6 +193,10 @@ extraCustomers: filterCustomerObj?.extraCustomers?.map(item => ({
         //   hour12: true,
         //   timeZone: "Asia/Kolkata"
         // })
+        if (planStatus !== "free"&& paymentActiveSelector.activeSubscription==null) {
+          dispatch(planScreenActions.planScreenVisibleToggle())
+          return
+        }
         const checkInTime = values.checkInTime
         ? new Date(values.checkInTime).toLocaleTimeString("en-IN", {
             hour: "2-digit",

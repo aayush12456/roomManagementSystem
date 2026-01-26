@@ -8,9 +8,11 @@ import {useSelector,useDispatch} from 'react-redux'
 import axios from 'axios'
 import io from "socket.io-client";
 import { passDataObjSliceAcions } from "../../Redux/Slice/passDataSliceObj/passDataSliceObj";
+import { planScreenActions } from "../../Redux/Slice/planScreenSlice/planScreenSlice";
 const socket = io.connect("http://192.168.29.169:4000")
 // const socket = io.connect("https://roommanagementsystembackend-1.onrender.com")
-const AdvanceBookModal=({floor,roomType,roomNo,advanceAlert,selectedRoomId,roomNum,customerArrayAdvance,todayDate,currentDates,setAdvanceAlert})=>{
+const AdvanceBookModal=({floor,roomType,roomNo,advanceAlert,selectedRoomId,roomNum,customerArrayAdvance
+  ,todayDate,currentDates,setAdvanceAlert,planStatus,paymentActiveSelector})=>{
   // console.log('customer array advance modal',customerArrayAdvance)
 const BASE_URL = "http://192.168.29.169:4000";  
 // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";  
@@ -38,6 +40,10 @@ useEffect(()=>{
     },[selectedRoomId,customerArrayAdvance,currentDates])
 
     const deleteCustomerDetailsAdvance=async(customerId)=>{
+      if (planStatus !== "free" && paymentActiveSelector.activeSubscription==null) {
+        dispatch(planScreenActions.planScreenVisibleToggle())
+        return
+      }
       const deleteObj={
       id:hotelDetailSelector?._id,
       customerId:customerId
@@ -85,6 +91,11 @@ return (
     enableReinitialize 
     validationSchema={advanceCustomerBookingSchema}
     onSubmit={async(values,{ resetForm }) => {
+      if (planStatus !== "free"&& paymentActiveSelector.activeSubscription==null) {
+        dispatch(planScreenActions.planScreenVisibleToggle())
+        return
+      }
+
         const advanceCustomerObj={
             id:hotelDetailSelector._id,
             roomId:selectedRoomId,

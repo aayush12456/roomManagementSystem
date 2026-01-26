@@ -2,20 +2,27 @@ import { Card, Text, Button } from "react-native-paper";
 import {View,Image,Pressable} from 'react-native'
 import { useNavigation } from "@react-navigation/native"
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
+import { useDispatch} from "react-redux";
 import io from "socket.io-client";
 import axios from "axios";
+import { planScreenActions } from "../../Redux/Slice/planScreenSlice/planScreenSlice";
 const socket = io.connect("http://192.168.29.169:4000")
 // const socket = io.connect("https://roommanagementsystembackend-1.onrender.com")
-const StaffCard=({staffObj,hotelId,profile,notifyTokenArray})=>{
+const StaffCard=({staffObj,hotelId,profile,notifyTokenArray,planStatus,paymentActiveSelector})=>{
 console.log('staff hotel',hotelId)
   const BASE_URL = "http://192.168.29.169:4000";
   // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
   const navigation=useNavigation()
+  const dispatch=useDispatch()
   const cardClickHandler=()=>{
     // console.log('hello')
     navigation.navigate('ProfileDetailsPage',{formData:staffObj,heading:'Staff Details',hotelId:hotelId})
   }
   const deleteStaffHandler=async(staffObj)=>{
+    if (planStatus !== "free" && paymentActiveSelector.activeSubscription==null) {
+      dispatch(planScreenActions.planScreenVisibleToggle())
+      return
+    }
     const staffObject={
       id:hotelId,
       staffId:staffObj?._id,
@@ -117,10 +124,11 @@ console.log('staff hotel',hotelId)
     );
     }
 };
+
 return (
     <>
     <Pressable>
-    <Card style={{ margin: 10, borderRadius: 10 }} onPress={cardClickHandler}>
+<Card style={{ margin: 10, borderRadius: 10 }} onPress={cardClickHandler}>
         <Card.Content>
            <View style={{flexDirection:'row',justifyContent:'space-between'}}>
            <Image

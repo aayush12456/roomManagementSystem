@@ -363,11 +363,13 @@ import { deleteFloorAsync } from "../../../Redux/Slice/deleteFloorSlice/deleteFl
 import MessageModal from "../messageModal/messageModal";
 import MaintenanceModal from "../maintenanceModal/maintenanceModal";
 import { getMessageNotifyAsync } from "../../../Redux/Slice/getMessageNotifySlice/getMessageNotifySlice";
+import { planScreenActions } from "../../../Redux/Slice/planScreenSlice/planScreenSlice";
 
 
 const socket = io.connect("http://192.168.29.169:4000");
 // const socket = io.connect("https://roommanagementsystembackend-1.onrender.com");
-const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDeleted,notifyTokenArray }) => {
+const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDeleted,notifyTokenArray,
+  planStatus,paymentActiveSelector }) => {
  console.log('profile in card',profile)
  console.log('room details',roomDetails)
  console.log('current date',currentDate)
@@ -402,8 +404,6 @@ const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDe
  const [floorLabel,setFloorLabel]=useState('')
  const [lastTap, setLastTap] = useState(null);
  const [disableDoubleTap, setDisableDoubleTap] = useState(false);
-
-
 
   const hotelDetailSelector = useSelector(
     (state) => state.getHotelDetails.getHotelDetailsObj.hotelObj
@@ -806,6 +806,7 @@ const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDe
         );
         }
     };
+
   return (
     <>
     <Pressable
@@ -998,6 +999,8 @@ const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDe
         selectedRoomId={selectedRoomId}
         customerArray={customerArray}
         currentDates={currentDate}
+        planStatus={planStatus}
+        paymentActiveSelector={paymentActiveSelector}
       />
 
       <AdvanceBookModal
@@ -1011,6 +1014,8 @@ const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDe
         customerArrayAdvance={customerArrayAdvance}
         todayDate={todayDate}
         currentDates={currentDate}
+        planStatus={planStatus}
+        paymentActiveSelector={paymentActiveSelector}
       />
 
       <AddRoomModal
@@ -1020,6 +1025,8 @@ const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDe
         floorSelect={selectFloor}
         profile={profile}
         notifyTokenArray={notifyTokenArray}
+        planStatus={planStatus}
+        paymentActiveSelector={paymentActiveSelector}
       />
       
       <MessageModal messageAlert={messageAlert} setMessageAlert={setMessageAlert} label={label} 
@@ -1044,6 +1051,10 @@ const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDe
         confirmButtonColor="#DD6B55"
         onCancelPressed={() => setAnotherShowAlert(false)}
         onConfirmPressed={async() => {
+          if (planStatus !== "free" && paymentActiveSelector.activeSubscription==null) {
+            dispatch(planScreenActions.planScreenVisibleToggle())
+            return
+          }
           setIsDeleting(true); // ✅ prevent re-trigger
           const deleteRoomObj = {
             id: hotelDetailSelector?._id,
@@ -1086,6 +1097,10 @@ const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDe
         confirmButtonColor="#DD6B55"
         onCancelPressed={() => setFloorAlert(false)}
         onConfirmPressed={() => {
+          if (planStatus !== "free" && paymentActiveSelector.activeSubscription==null) {
+            dispatch(planScreenActions.planScreenVisibleToggle())
+            return
+          }
           setFloorDeleting(true); // ✅ prevent re-trigger
           const deleteFloorObj = {
             id: hotelDetailSelector?._id,

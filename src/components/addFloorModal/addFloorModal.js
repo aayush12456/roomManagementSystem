@@ -8,6 +8,7 @@ import {useDispatch} from 'react-redux'
 import { addFloorAsync } from "../../Redux/Slice/addFloorSlice/addFloorSlice";
 import axios from "axios"
 import { getMessageNotifyAsync } from "../../Redux/Slice/getMessageNotifySlice/getMessageNotifySlice";
+import { planScreenActions } from "../../Redux/Slice/planScreenSlice/planScreenSlice";
 const screenWidth = Dimensions.get("window").width;
 
 // ✅ Validation Schema
@@ -30,7 +31,8 @@ const floorSchema = Yup.object().shape({
 });
 
 
-const AddFloorModal = ({ floorAlert, setFloorAlert,hotelId,notifyTokenArray,profile }) => {
+const AddFloorModal = ({ floorAlert, setFloorAlert,hotelId,notifyTokenArray,profile,
+  planStatus,paymentActiveSelector }) => {
   console.log('notify token in floor',notifyTokenArray)
   const dispatch=useDispatch()
   const chunkArray = (array, size) => {
@@ -91,6 +93,10 @@ const AddFloorModal = ({ floorAlert, setFloorAlert,hotelId,notifyTokenArray,prof
       }}
       validationSchema={floorSchema}
       onSubmit={async(values,{ resetForm }) => {
+        if (planStatus !== "free"&& paymentActiveSelector.activeSubscription==null) {
+          dispatch(planScreenActions.planScreenVisibleToggle())
+          return
+        }
         const floorName = values.floorName?.trim();
       
         if (!floorName) {

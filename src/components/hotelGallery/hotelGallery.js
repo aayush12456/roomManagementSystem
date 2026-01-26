@@ -4,6 +4,7 @@ import { Button } from "react-native-paper"
 import * as ImagePicker from 'expo-image-picker';
 import { useDispatch,useSelector } from "react-redux";
 import { updateHotelImgAsync } from "../../Redux/Slice/updateHotelImgSlice/updateHotelImgSlice";
+import PlanScreen from "../common/planScreen/planScreen";
 const HotelGallery=({hotelImg,hotelId,notifyTokenArray})=>{
     console.log('hotel img',hotelImg)
     const updateHotelImgSelector=useSelector((state)=>state?.updateHotelImg?.updateHotelImgObj?.updatedData)
@@ -69,7 +70,7 @@ const hotelImgs=updateHotelImgSelector?updateHotelImgSelector.hotelImg:hotelImg
   }
     },[updateHotelImgSelector?.hotelImg])
 
-  
+
       
 return (
     <>
@@ -137,8 +138,8 @@ Cancel
         </Button>
       </View>:null}
 
- 
-
+        
+      {/* <PlanScreen/> */}
     </>
 )
 }

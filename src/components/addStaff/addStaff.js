@@ -1,7 +1,7 @@
 import { View,Image,ScrollView,KeyboardAvoidingView, Platform,Text } from "react-native"
 import { TextInput,Button } from 'react-native-paper';
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
-import { useSelector } from "react-redux";
+import { useSelector,useDispatch } from "react-redux";
 import { useState } from "react";
 import {Picker} from '@react-native-picker/picker';
 import {  staffPostList } from "../../utils/signUpData";
@@ -9,11 +9,15 @@ import avatar from '../../../assets/AllIcons/avatar.png'
 import * as ImagePicker from 'expo-image-picker';
 import io from "socket.io-client";
 import axios from "axios";
+import { planScreenActions } from "../../Redux/Slice/planScreenSlice/planScreenSlice";
 const socket = io.connect("http://192.168.29.169:4000")
 // const socket = io.connect("https://roommanagementsystembackend-1.onrender.com")
-const AddStaff=({profile,notifyTokenArray, hotelId})=>{
+const AddStaff=({profile,notifyTokenArray, hotelId,planStatus,paymentActiveSelector})=>{
+  console.log('payment select',paymentActiveSelector)
+  console.log('plan status',planStatus)
   const BASE_URL = "http://192.168.29.169:4000";
   // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
+  const dispatch=useDispatch()
   const hotelDetailSelector=useSelector((state)=>state.getHotelDetails.getHotelDetailsObj.hotelObj)
   const [staffName,setStaffName]=useState('')
   const [staffPhoneNumber,setStaffPhoneNumber]=useState('')
@@ -21,6 +25,8 @@ const AddStaff=({profile,notifyTokenArray, hotelId})=>{
   const [staffPost,setStaffPost]=useState('')
   const [staffImage,setStaffImage]=useState('')
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
+
   
   const validate = () => {
     let newErrors = {};
@@ -66,7 +72,7 @@ const AddStaff=({profile,notifyTokenArray, hotelId})=>{
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
         aspect: [1, 1],
-        quality: 1,
+        quality: 1
       });
 
       if (!result.canceled && result.assets && result.assets.length > 0) {
@@ -81,6 +87,10 @@ const AddStaff=({profile,notifyTokenArray, hotelId})=>{
   };
 
   const addStaffHandler=async()=>{
+    if (planStatus !== "free" && paymentActiveSelector.activeSubscription==null) {
+      dispatch(planScreenActions.planScreenVisibleToggle())
+      return
+    }
     if (!validate()) return;
     const formData = new FormData()
     formData.append("staffName",staffName)
@@ -119,7 +129,8 @@ const AddStaff=({profile,notifyTokenArray, hotelId})=>{
         title: "Staff Details Added Successfully",
         autoClose: 10000,
       });
-      sendNotificationToAll()
+
+        sendNotificationToAll();
       socket.emit('addStaffOwnerObj', response?.data)
     } catch (error) {
       console.error("Error in Add/Update Staff", error.message);
@@ -131,7 +142,88 @@ const AddStaff=({profile,notifyTokenArray, hotelId})=>{
     setStaffPost('')
     setErrors({});
   }
+  // const addStaffHandler = async () => {
 
+  //   // 🔒 Subscription Check (Same)
+  //   if (planStatus !== "trial" && paymentActiveSelector.activeSubscription == null) {
+  //     dispatch(planScreenActions.planScreenVisibleToggle());
+  //     return;
+  //   }
+  
+  //   // ❌ Validation Check (Same)
+  //   if (!validate()) return;
+  
+  //   // ✅ FormData (Same)
+  //   const formData = new FormData();
+  //   formData.append("staffName", staffName);
+  //   formData.append("staffPhone", staffPhoneNumber);
+  //   formData.append("staffAddress", staffAddress);
+  //   formData.append("staffPost", staffPost);
+  //   formData.append("hotelId", hotelDetailSelector?._id);
+  
+  //   if (staffImage) {
+  //     const imageUri = staffImage;
+  //     const fileName = imageUri.split("/").pop();
+  //     const fileType = "image/jpeg";
+  
+  //     formData.append("staffImg", {
+  //       uri: imageUri,
+  //       type: fileType,
+  //       name: fileName,
+  //     });
+  //   }
+  
+  //   formData.append("personName", profile.name);
+  //   formData.append("imgUrl", profile.image);
+  //   formData.append("message", "added new staff");
+  
+  //   console.log("form", formData);
+  
+  //   try {
+  //     // ✅ MAIN API CALL (Same)
+  //     const response = await axios.post(
+  //       `${BASE_URL}/hotel/addStaff`,
+  //       formData,
+  //       {
+  //         headers: {
+  //           "Content-Type": "multipart/form-data",
+  //         },
+  //       }
+  //     );
+  
+  //     console.log("response in staff", response.data);
+  
+  //     // ✅ FAST USER FEEL: Toast instantly
+  //     Toast.show({
+  //       type: ALERT_TYPE.SUCCESS,
+  //       title: "Staff Details Added Successfully",
+  //       autoClose: 3000,
+  //     });
+  
+  //     // ✅ FAST USER FEEL: Form reset instantly
+  //     setStaffName("");
+  //     setStaffAddress("");
+  //     setStaffPhoneNumber("");
+  //     setStaffImage("");
+  //     setStaffPost("");
+  //     setErrors({});
+  
+  //     // ✅ Now heavy work same function ke andar chalega
+  //     setTimeout(async () => {
+  
+  //       // 🔔 Notification (Same)
+  //       await sendNotificationToAll();
+  
+  //       // 🔥 Socket Emit (Same)
+  //       socket.emit("addStaffOwnerObj", response?.data);
+  
+  //     }, 300); // small delay so UI becomes fast
+  
+  //   } catch (error) {
+  //     console.error("Error in Add/Update Staff", error.message);
+  //   }
+  // };
+  
   const chunkArray = (array, size) => {
     const chunks = [];
     for (let i = 0; i < array.length; i += size) {
@@ -209,9 +301,10 @@ const receiptRes = await axios.post(
     );
     }
 };
+
 return (
     <>
-        <KeyboardAvoidingView
+ <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       keyboardVerticalOffset={80} // adjust according to header height
@@ -327,6 +420,7 @@ keyboardShouldPersistTaps="handled"
     </View>
     </ScrollView>
     </KeyboardAvoidingView>
+
     </>
 )
 }

@@ -21,23 +21,30 @@ import NotificationPage from '../../../Pages/notificationPage/notificationPage';
 import io from "socket.io-client";
 import axios from "axios";
 import PaymentPage from '../../../Pages/paymentPage/paymentPage';
-import PaymentSuccessPage from '../../../Pages/paymentSuccessPage/paymentSuccessPage';
+import TrialCountDown from '../../trialCountDown/trialCountDown';
+import { useSelector } from 'react-redux';
+import { useState } from 'react';
+import PlanScreen from '../planScreen/planScreen';
 const socket = io.connect("http://192.168.29.169:4000")
 // const socket = io.connect("https://roommanagementsystembackend-1.onrender.com")
 
 const Header=({profile,allStaffPlusOwner,hotelId,profileArrays,policeReport,totalRoom,
-  hotelImgFirst,hotelName,notifyTokenArray,notifyToken})=>{
+  hotelImgFirst,hotelName,notifyTokenArray,notifyToken,setTimeEnd,planStatus})=>{
 
     const BASE_URL = "http://192.168.29.169:4000";
     // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
     const Drawer = createDrawerNavigator();
     const navigation = useNavigation();
+    const planSlice=useSelector((state)=>state.planScreenData.planScreenToggle)
     console.log('profile is',profile)
+    const paymentActiveSelector=useSelector((state)=>state.getPaymentActive.getPaymentActiveObj)
+    console.log('pay seelctor',paymentActiveSelector)
     // console.log('hotelid',hotelId)
     console.log('notify tokens',notifyToken)
     console.log('polive',policeReport)
     const policeReportArray=policeReport
-
+    const [isLast24Hours, setIsLast24Hours] = useState(false);
+    
     const removeLoginData = async () => {
         try {
           await SecureStore.deleteItemAsync('loginOtpObj');
@@ -57,12 +64,20 @@ const Header=({profile,allStaffPlusOwner,hotelId,profileArrays,policeReport,tota
      removeLoginData()
      navigation.navigate('LoginPage')
     }
+    console.log('is last',isLast24Hours)
 return (
     <>
-   <Drawer.Navigator
+  {planSlice===false? <Drawer.Navigator
   drawerContent={(props) => (
-    <DrawerContentScrollView {...props} contentContainerStyle={{ flex: 1 }}>
-      
+    <DrawerContentScrollView {...props} 
+    // contentContainerStyle={{ flex: 1 }}
+    scrollEnabled={isLast24Hours}
+showsVerticalScrollIndicator={isLast24Hours}
+
+    >
+      {/* <Text>Free Trial End</Text>
+      <Text>{countDownTime}</Text> */}
+      <TrialCountDown hotelId={hotelId}   onLast24HoursChange={setIsLast24Hours} setTimeEnd={setTimeEnd}/>
       {/* 👇 Profile Section Top Fixed */}
       <View style={{ alignItems: "center", paddingVertical: 20 }}>
         <Image
@@ -106,6 +121,7 @@ return (
         }}
         
       /> */}
+    
         <Drawer.Screen
         name='Room Preview'
         options={{
@@ -116,7 +132,9 @@ return (
         }}
         
       >
-           {(props) => <DashboardPage {...props} profile={profile} notifyTokenArray={notifyTokenArray}/>}
+           {(props) => <DashboardPage {...props} profile={profile} notifyTokenArray={notifyTokenArray}
+           planStatus={planStatus}
+           />}
         </Drawer.Screen>
 
          <Drawer.Screen
@@ -150,7 +168,7 @@ return (
         }}
       >
         {(props) => <ProfilePage {...props}  profile={profile} allStaffOwner={allStaffPlusOwner}
-         hotelIds={hotelId} notifyTokenArray={notifyTokenArray}/>}
+         hotelIds={hotelId} notifyTokenArray={notifyTokenArray} planStatus={planStatus} />}
         </Drawer.Screen>
 
         <Drawer.Screen
@@ -193,7 +211,7 @@ return (
       {(props) =><NotificationPage hotelId={hotelId}  allStaffOwner={allStaffPlusOwner} />}
         </Drawer.Screen>
 
-        <Drawer.Screen
+       {!profile.post && planStatus !== "free" && paymentActiveSelector.activeSubscription==null? <Drawer.Screen
         name='Premium'
         // component={SettingsPage}
         options={{
@@ -204,8 +222,11 @@ return (
         }}
       >
       {(props) =><PaymentPage hotelId={hotelId}  />}
-        </Drawer.Screen>
+        </Drawer.Screen>:null}
      </Drawer.Navigator>
+    :
+    <PlanScreen hotelId={hotelId} profile={profile}/> 
+    }
      
     </>
 )

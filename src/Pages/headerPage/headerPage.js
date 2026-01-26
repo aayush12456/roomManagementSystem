@@ -10,6 +10,7 @@ import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
 import { Platform } from "react-native";
 import { deleteSwitchProfileData } from "../../Redux/Slice/deleteSwitchProfileSlice/deleteSwitchProfileSlice";
+import FreeTrialModal from "../../components/common/freeTrialModal/freeTrialModal";
 const socket = io.connect("http://192.168.29.169:4000")
 // const socket = io.connect("https://roommanagementsystembackend-1.onrender.com")
 const HeaderPage=()=>{
@@ -29,7 +30,7 @@ const HeaderPage=()=>{
     const [finalProfileArray,setFinalProfileArray]=useState([])
     const [expoPushToken, setExpoPushToken] = useState(null);
     const [notifyTokenObj,setNotifyTokenObj]=useState({})
-
+    const [timeEnd,setTimeEnd]=useState({})
 
     const dispatch=useDispatch()
     const navigation = useNavigation();
@@ -157,7 +158,7 @@ navigation.navigate('LoginPage')
           console.log('all staff',allStaffOwnerObj)
           
           const hotelId=finalHotelDetailSelector?._id
-          // console.log('hotelid',hotelId)
+          console.log('hotelid',hotelId)
           const profileArray=finalHotelDetailSelector?.profileArray
 
           useEffect(()=>{
@@ -376,12 +377,108 @@ navigation.navigate('LoginPage')
         const finalTokenArray=tokenArray?.filter((token)=>token!==expoPushToken)
         console.log('final token array',finalTokenArray)
         // // console.log('filter token array',filteredTokenArray)
+
+//         const loadSubscription = async()=>{
+//           const res = await axios.get(`${BASE_URL}/hotel/free-trial/${hotelId}`);
+//           setSub(res.data);
+    
+//           const end = new Date(res.data.endDate);   // 🔥 yeh missing tha
+//           const now = new Date();
+        
+//           const diff = end - now;
+//           setRemainingMs(diff > 0 ? diff : 0);
+//          };
+
+//          const ONE_DAY = 24 * 60 * 60 * 1000; // 24 hours
+
+//          useEffect(() => {
+//           if (!sub?.endDate) return;
+        
+//           const end = new Date(sub.endDate);
+        
+//           const timer = setInterval(() => {
+//             const now = new Date();
+//             const diff = end - now;
+        
+//             // ⛔ before 1 day → don't show countdown
+//             if (diff > ONE_DAY) {
+//               setRemainingMs(0);
+//               return;
+//             }
+        
+//             // ⏳ last 1 hour → start reverse timer
+//             setRemainingMs(diff > 0 ? diff : 0);
+        
+//           }, 1000);
+        
+//           return () => clearInterval(timer);
+//         }, [sub?.endDate]);
+        
+        
+
+//         useEffect(() => {
+//           if(hotelId){
+//             axios.post(`${BASE_URL}/hotel/app-open/${hotelId}`);
+//           }
+//           loadSubscription();
+//         }, [hotelId]);
+        
+//         const formatTime = (ms) => {
+//           const totalSeconds = Math.floor(ms / 1000);
+//           const days = Math.floor(totalSeconds / (3600 * 24));
+//           const hours = Math.floor((totalSeconds % (3600 * 24)) / 3600);
+//           const minutes = Math.floor((totalSeconds % 3600) / 60);
+//           const seconds = totalSeconds % 60;
+        
+//           return `${days}d ${hours}h ${minutes}m ${seconds}s`;
+//         };
+// const countDownTime=formatTime(remainingMs)    
+const [showTrialModal, setShowTrialModal] = useState(false);
+
+// 🔥 App load hote hi modal open
+
+useEffect(() => {
+  if (timeEnd?.status === "ended") {
+    setShowTrialModal(false); // ❌ never open
+    return;
+  }
+
+  const timer = setTimeout(() => {
+    setShowTrialModal(true); // ✅ open only if NOT expired
+  }, 2000);
+
+  return () => clearTimeout(timer);
+}, [timeEnd?.status]);
+console.log('time nds',timeEnd)
+const formatISTDate = (dateString) => {
+  if (!dateString) return "";
+
+  const date = new Date(dateString);
+
+  return date.toLocaleString("en-IN", {
+    timeZone: "Asia/Kolkata",
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+};
+const endDate=formatISTDate(timeEnd.endDate)
+const planStatus=timeEnd.plan
 return (
   
     <>
     <Header profile={profileObj} allStaffPlusOwner={allStaffOwnerObj} hotelId={hotelId}
      profileArrays={finalProfileArray} policeReport={reportArray} totalRoom={totalRoom} 
-     hotelImgFirst={hotelImgFirst} hotelName={hotelName} notifyTokenArray={finalTokenArray} notifyToken={expoPushToken} />
+     hotelImgFirst={hotelImgFirst} hotelName={hotelName} notifyTokenArray={finalTokenArray} notifyToken={expoPushToken}
+     setTimeEnd={setTimeEnd} planStatus={planStatus}
+     />
+     <FreeTrialModal
+  visible={showTrialModal}
+  onClose={() => setShowTrialModal(false)}
+  hotelId={hotelId}
+  endDate={endDate}
+/>
+
     </>
 )
 }

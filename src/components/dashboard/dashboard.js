@@ -14,10 +14,11 @@ import {useSelector,useDispatch} from 'react-redux'
 import BookedModal from "../bookedModal/bookedModal";
 import AddFloorModal from "../addFloorModal/addFloorModal";
 import { getHotelDetailsAsync } from "../../Redux/Slice/getHotelDetailSlice/getHotelDetailSlice";
+import { getPaymentActiveAsync } from "../../Redux/Slice/getPaymentActiveSlice/getPaymentActiveSlice";
 
 const socket = io.connect("http://192.168.29.169:4000")
 // const socket = io.connect("https://roommanagementsystembackend-1.onrender.com")
-const Dashboard=({hotelDetails,profile,notifyTokenArray})=>{
+const Dashboard=({hotelDetails,profile,notifyTokenArray,planStatus})=>{
   const BASE_URL = "http://192.168.29.169:4000";
   // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
   console.log('hotel details is',hotelDetails)
@@ -42,6 +43,13 @@ console.log('das scroll',isDashboardScrollEnabled)
     // console.log('hotel id dashboard',hotelDetailSelector?._id)
     
   const deleteFloorSelector=useSelector((state)=>state.deleteFloorData.deleteFloorObj)
+
+  useEffect(()=>{
+    if(hotelDetailSelector?._id){
+    dispatch(getPaymentActiveAsync(hotelDetailSelector?._id))
+    }
+        },[hotelDetailSelector?._id])
+        const paymentActiveSelector=useSelector((state)=>state.getPaymentActive.getPaymentActiveObj)
 
   // const filterRoom =
   // room && typeof room === "object"
@@ -314,7 +322,8 @@ return (
                           <View style={{marginTop:12,marginLeft:8,marginRight:8}} key={floorIndex}>
                             <RoomDetailCard roomTitle={floorKey} roomDetails={floorRooms} 
                              currentDate={currentDate} profile={profile} 
-                             onFloorDeleted={handleFloorDeleted} notifyTokenArray={notifyTokenArray}  />
+                             onFloorDeleted={handleFloorDeleted} notifyTokenArray={notifyTokenArray} 
+                             planStatus={planStatus} paymentActiveSelector={paymentActiveSelector} />
                           </View>
                         )
                       }):null
@@ -361,7 +370,7 @@ return (
                      showBookedAlert={showBookedAlert} setShowBookedAlert={setShowBookedAlert} todayDate={todayDate} currentDate={currentDate}/> 
                       
                       <AddFloorModal floorAlert={floorAlert} setFloorAlert={setFloorAlert} hotelId={hotelDetails?._id}
-                      notifyTokenArray={notifyTokenArray} profile={profile} 
+                      notifyTokenArray={notifyTokenArray} profile={profile} planStatus={planStatus} paymentActiveSelector={paymentActiveSelector}
                       />
                     </SafeAreaView>  
 

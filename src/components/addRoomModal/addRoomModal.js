@@ -8,7 +8,9 @@ import { roomAdd } from "../../schemas";
 import { addRoomAsync } from "../../Redux/Slice/addRoomSlice/addRoomSlice";
 import axios from "axios"
 import { getMessageNotifyAsync } from "../../Redux/Slice/getMessageNotifySlice/getMessageNotifySlice";
-const AddRoomModal=({roomAlert,setRoomAlert,hotelId,floorSelect,profile,notifyTokenArray})=>{
+import { planScreenActions } from "../../Redux/Slice/planScreenSlice/planScreenSlice";
+const AddRoomModal=({roomAlert,setRoomAlert,hotelId,floorSelect,profile,notifyTokenArray,planStatus
+,paymentActiveSelector})=>{
   console.log('token in room',notifyTokenArray)
     const screenWidth = Dimensions.get("window").width;
     console.log('profile in room',profile)
@@ -74,6 +76,10 @@ return (
      }}
      validationSchema={roomAdd}
      onSubmit={async(values, { resetForm }) => {
+      if (planStatus !== "free" && paymentActiveSelector.activeSubscription==null) {
+        dispatch(planScreenActions.planScreenVisibleToggle())
+        return
+      }
       console.log("Room Added:", values);
       const roomObj={
         hotelId:hotelId,

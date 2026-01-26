@@ -1,14 +1,17 @@
 import MyProfile from "../../components/myProfile/myProfile"
 import { BottomNavigation} from "react-native-paper"
 import { View,Dimensions } from "react-native"
-import { useState,useMemo } from "react"
+import { useState,useMemo,useEffect } from "react"
 import Hierarchy from "../../components/Hierarchy/hierarchy"
 import AddStaff from "../../components/addStaff/addStaff"
 import AllStaff from "../../components/allStaff/allStaff"
 import AddOwner from "../../components/addOwner/addOwner"
-const ProfilePage=({profile,allStaffOwner,hotelIds,notifyTokenArray})=>{
+import { useDispatch,useSelector } from "react-redux"
+import { getPaymentActiveAsync } from "../../Redux/Slice/getPaymentActiveSlice/getPaymentActiveSlice"
+const ProfilePage=({profile,allStaffOwner,hotelIds,notifyTokenArray,planStatus})=>{
   console.log('staff profile',allStaffOwner)
   console.log('id is',hotelIds)
+  const dispatch=useDispatch()
     console.log('pofile page',profile)
     const allStaffArray = allStaffOwner?.staff ? Object.values(allStaffOwner.staff) : [];
     console.log('staff array',allStaffArray)
@@ -71,6 +74,15 @@ const ProfilePage=({profile,allStaffOwner,hotelIds,notifyTokenArray})=>{
     //     allStaff:AllStaffRoute,
     //     addOwner:AddOwnerRoute
     //   });
+    useEffect(()=>{
+      if(hotelIds){
+      dispatch(getPaymentActiveAsync(hotelIds))
+      }
+          },[hotelIds])
+
+const paymentActiveSelector=useSelector((state)=>state.getPaymentActive.getPaymentActiveObj)
+console.log('pay active in funal',paymentActiveSelector)
+
     const renderScene = ({ route }) => {
       switch (route.key) {
         case "myProfile":
@@ -78,11 +90,14 @@ const ProfilePage=({profile,allStaffOwner,hotelIds,notifyTokenArray})=>{
         case "hierarchy":
           return <Hierarchy allStaff={allStaffArray} allOwner={allOwnerArray} />;
         case "allStaff":
-          return <AllStaff allStaff={allStaffArray} hotelsId={hotelIds} profile={profile}notifyTokenArray={notifyTokenArray}/>;
+          return <AllStaff allStaff={allStaffArray} hotelsId={hotelIds} profile={profile}notifyTokenArray={notifyTokenArray}
+          planStatus={planStatus} paymentActiveSelector={paymentActiveSelector}/>;
         case "addStaff":
-          return <AddStaff profile={profile}notifyTokenArray={notifyTokenArray}  hotelId={hotelIds} />;
+          return <AddStaff profile={profile}notifyTokenArray={notifyTokenArray}hotelId={hotelIds} planStatus={planStatus}
+          paymentActiveSelector={paymentActiveSelector}/>;
         case "addOwner":
-          return <AddOwner  hotelsId={hotelIds}  profile={profile}notifyTokenArray={notifyTokenArray} />;
+          return <AddOwner  hotelsId={hotelIds}  profile={profile}notifyTokenArray={notifyTokenArray} 
+          planStatus={planStatus} paymentActiveSelector={paymentActiveSelector} />;
         default:
           return null;
       }

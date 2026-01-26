@@ -6,11 +6,14 @@ import avatar from '../../../assets/AllIcons/avatar.png'
 import io from "socket.io-client";
 import axios from "axios";
 import * as ImagePicker from 'expo-image-picker';
+import { useDispatch } from "react-redux";
+import { planScreenActions } from "../../Redux/Slice/planScreenSlice/planScreenSlice";
 const socket = io.connect("http://192.168.29.169:4000")
 // const socket = io.connect("https://roommanagementsystembackend-1.onrender.com")
-const AddOwner=({hotelsId,profile,notifyTokenArray})=>{
+const AddOwner=({hotelsId,profile,notifyTokenArray,planStatus,paymentActiveSelector})=>{
     const BASE_URL = "http://192.168.29.169:4000";
     // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
+    const dispatch=useDispatch()
     const [ownerName,setOwnerName]=useState('')
     const [ownerPhoneNumber,setOwnerPhoneNumber]=useState('')
     const [ownerAddress,setOwnerAddress]=useState('')
@@ -72,6 +75,10 @@ const AddOwner=({hotelsId,profile,notifyTokenArray})=>{
       };
 
       const addOwnerHandler=async()=>{
+        if (planStatus !== "free" && paymentActiveSelector.activeSubscription==null) {
+          dispatch(planScreenActions.planScreenVisibleToggle())
+          return
+        }
         if (!validate()) return;
         const formData = new FormData()
         formData.append("ownerName",ownerName)
@@ -172,7 +179,7 @@ const AddOwner=({hotelsId,profile,notifyTokenArray})=>{
     };
 return (
     <>
-     <KeyboardAvoidingView
+<KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       keyboardVerticalOffset={80} // adjust according to header height
