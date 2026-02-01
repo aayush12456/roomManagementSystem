@@ -4,7 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useDispatch } from "react-redux";
 // import { Video } from "expo-av";
 import YoutubePlayer from "react-native-youtube-iframe";
-
+import { useNavigation } from "@react-navigation/native";
 
 import hotelImg from '../../../../assets/premiumIcon/hotelService.png'
 import RazorpayCheckout from "react-native-razorpay";
@@ -14,9 +14,23 @@ import { planScreenActions } from "../../../Redux/Slice/planScreenSlice/planScre
 const PlanScreen=({hotelId,profile})=>{
 console.log('profile is',profile)
 const dispatch=useDispatch()
+const navigation=useNavigation()
 const [selectedPlan, setSelectedPlan] = useState(699);
 const [planType,setPlanType]=useState('')
 const BASE_URL = "http://192.168.29.169:4000"; 
+
+//test key
+// plan_RziUw1NAukBSo5 ->1 Rs plan
+// plan_Rzu3d5Zlg3vI3A ->50 Rs plan
+// plan_S2Vj0VT1CEKM5a -> 299 Rs plan
+// plan_S2VjYWmEsj8Buc -> 699 Rs plan
+
+//live key
+// plan_S9OCXHRMG6W5ng --> 1 Rs plan
+// plan_S9mmQLUPh0YRcc --> 20 Rs plan
+// plan_S9mz77K7uN4Mhm -->299 Rs plan monthly
+// plan_S9mzyclsUgcKX8 -->699 Rs plan 6 months
+
 let plan=""
   const subscribe = async (planType) => {
     if(planType=="single"){
@@ -32,30 +46,38 @@ let plan=""
       );
 console.log('respose razor',res)
       const options = {
-        key: "rzp_test_RzIR2c4u7D5T00", // Test or Live key
+        key: "rzp_test_RzIR2c4u7D5T00", // Test  key
+        // key: "rzp_live_S9NrL4vhEbFG4M",            //Live key
         subscription_id: res.data.subscription.id ,  
         name: "Hotel App",
         description: "Weekly subscription",
         prefill: { email: "aayushtapadia28@example.com" }
       };
 
-      RazorpayCheckout.open(options)
+ RazorpayCheckout.open(options)
         .then((data) => {
           console.log('data pay',data)
-          Alert.alert(
-            "Payment Success",
-            "Invoice & subscription will be updated automatically via webhook."
-          );
-        //   navigation.navigate("PaymentSuccessPage", {
-        //     formData: {
-        //       obj: data,          // Razorpay response
-        //       amount: planAmount // Selected amount
-        //     }
-        //   });
+          dispatch(planScreenActions.planScreenVisibleToggle())
+          // Alert.alert(
+          //   "Payment Success",
+          //   "Invoice & subscription will be updated automatically via webhook."
+          // );
+          navigation.navigate("PaymentSuccessPage", {
+            formData: {
+              obj: data,          // Razorpay response
+              amount: selectedPlan // Selected amount
+            }
+          });
         })
         .catch((err) => {
-          Alert.alert("Payment failed", err.description);
+          // Alert.alert("Payment failed", err.description);
+          if (err.code === 2) {
+            console.log("⚠️ Payment Cancelled by User");
+            return; // No Alert
+          }
+          
         });
+    
     } catch (err) {
       console.log(err);
       Alert.alert("Error creating subscription");

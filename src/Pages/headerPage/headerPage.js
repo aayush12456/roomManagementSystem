@@ -8,14 +8,19 @@ import io from "socket.io-client";
 import axios from "axios";
 import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
-import { Platform } from "react-native";
+import { Platform,View,Text,Image } from "react-native";
 import { deleteSwitchProfileData } from "../../Redux/Slice/deleteSwitchProfileSlice/deleteSwitchProfileSlice";
 import FreeTrialModal from "../../components/common/freeTrialModal/freeTrialModal";
+import money from '../../../assets/premiumIcon/Money.gif'
+import { BlurView } from "expo-blur";
+
 const socket = io.connect("http://192.168.29.169:4000")
 // const socket = io.connect("https://roommanagementsystembackend-1.onrender.com")
-const HeaderPage=()=>{
+const HeaderPage=({route})=>{
   const BASE_URL = "http://192.168.29.169:4000";
   // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
+  const { paymentData} = route.params || {};
+  console.log("Payment Data 👉", paymentData);
   Notifications.setNotificationHandler({
     handleNotification: async () => ({
       shouldShowAlert: true,
@@ -31,6 +36,7 @@ const HeaderPage=()=>{
     const [expoPushToken, setExpoPushToken] = useState(null);
     const [notifyTokenObj,setNotifyTokenObj]=useState({})
     const [timeEnd,setTimeEnd]=useState({})
+    const [showPaymentSuccess, setShowPaymentSuccess] = useState(false);
 
     const dispatch=useDispatch()
     const navigation = useNavigation();
@@ -464,6 +470,20 @@ const formatISTDate = (dateString) => {
 };
 const endDate=formatISTDate(timeEnd.endDate)
 const planStatus=timeEnd.plan
+
+
+useEffect(() => {
+  if (paymentData?.razorpay_payment_id) {
+    setShowPaymentSuccess(true);
+
+    const timer = setTimeout(() => {
+      setShowPaymentSuccess(false);
+    }, 3000); // ⏱️ 3 seconds
+
+    return () => clearTimeout(timer);
+  }
+}, [paymentData?.razorpay_payment_id]);
+
 return (
   
     <>
@@ -472,12 +492,74 @@ return (
      hotelImgFirst={hotelImgFirst} hotelName={hotelName} notifyTokenArray={finalTokenArray} notifyToken={expoPushToken}
      setTimeEnd={setTimeEnd} planStatus={planStatus}
      />
+     
      <FreeTrialModal
   visible={showTrialModal}
   onClose={() => setShowTrialModal(false)}
   hotelId={hotelId}
   endDate={endDate}
 />
+
+{showPaymentSuccess && (
+  <View
+    style={{
+      position: "absolute",
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      zIndex: 999,
+    }}
+  >
+    {/* 🔥 BLUR BACKGROUND */}
+    <BlurView
+      intensity={50}          // blur strength (30–80 best)
+      tint="dark"             // "light" | "dark" | "default"
+      style={{
+        position: "absolute",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+      }}
+    />
+
+    {/* 🔥 CENTER BOX */}
+    <View
+      style={{
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <View
+        style={{
+          backgroundColor: "#fff",
+          width: "85%",
+          borderRadius: 20,
+          padding: 25,
+          alignItems: "center",
+          elevation: 10,
+        }}
+      >
+        <Image source={money} style={{ width: 90, height: 90 }} />
+
+        <Text
+          style={{
+            marginTop: 15,
+            fontSize: 17,
+            fontWeight: "700",
+            color: "#0DB57E",
+            textAlign: "center",
+          }}
+        >
+          Subscription Activated Successfully
+        </Text>
+      </View>
+    </View>
+  </View>
+)}
+
 
     </>
 )

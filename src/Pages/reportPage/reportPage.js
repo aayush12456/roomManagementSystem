@@ -5,7 +5,7 @@ import io from "socket.io-client";
 import axios from 'axios'
 const socket = io.connect("http://192.168.29.169:4000")
 // const socket = io.connect("https://roommanagementsystembackend-1.onrender.com")
-const ReportPage=()=>{
+const ReportPage=({planStatus})=>{
     const BASE_URL = "http://192.168.29.169:4000";
     // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
     const dispatch=useDispatch()
@@ -50,7 +50,7 @@ const ReportPage=()=>{
           }
         });
         return () => {
-          socket.off("getReportDetails");
+          socket.off("getCustomerDetails");
           socket.off("updateCustomerDetails");
           socket.off("updatePersonalCustomerDetails");
         };
@@ -60,7 +60,7 @@ const ReportPage=()=>{
       const PersonalReportArray=reportObj?.getCustomerDetailsArray
 return (
     <>
-    <Report totalReportArray={reportArray} personalReportArray={PersonalReportArray} />
+    <Report totalReportArray={reportArray} personalReportArray={PersonalReportArray} planStatus={planStatus} />
     </>
 )
 }

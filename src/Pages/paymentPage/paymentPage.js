@@ -1,8 +1,8 @@
 import Payment from "../../components/payment/payment"
-const PaymentPage=({hotelId})=>{
+const PaymentPage=({hotelId,profile})=>{
 return (
     <>
-    <Payment hotelId={hotelId}/>
+    <Payment hotelId={hotelId} profile={profile}/>
     </>
 )
 }

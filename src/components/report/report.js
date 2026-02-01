@@ -5,7 +5,7 @@ import { useState,useEffect } from "react"
 import PoliceReport from "../policeReport/policeReport"
 import { useSelector } from "react-redux"
 import PersonalReport from '../personalReport/personalReport';
-const Report=({totalReportArray,personalReportArray})=>{
+const Report=({totalReportArray,personalReportArray,planStatus})=>{
   console.log('total report array',totalReportArray)
   console.log('personal report',personalReportArray)
     const finalDate=new Date()
@@ -18,6 +18,9 @@ const Report=({totalReportArray,personalReportArray})=>{
     console.log('date selector',dateSelector)
 
     const hotelDetailSelector = useSelector((state) => state.getHotelDetails.getHotelDetailsObj.hotelObj);
+
+    const paymentActiveSelector=useSelector((state)=>state.getPaymentActive.getPaymentActiveObj)
+// console.log('pay active in funal',paymentActiveSelector)
 
     const parseDate = (dateStr) => {
       const [day, month, year] = dateStr?.split('/').map(Number);
@@ -83,7 +86,8 @@ const Report=({totalReportArray,personalReportArray})=>{
   const PoliceReportRoute = () => (
     <View style={{ flex: 1 }}>
       <PoliceReport policeReport={filterReportArray} dateSelector={dateSelector} 
-      isSmallScreen={isSmallScreen} hotelDetailSelector={hotelDetailSelector} />
+      isSmallScreen={isSmallScreen} hotelDetailSelector={hotelDetailSelector} planStatus={planStatus}
+      paymentActiveSelector={paymentActiveSelector}/>
     </View>
   );
   
@@ -91,7 +95,8 @@ const Report=({totalReportArray,personalReportArray})=>{
   
     <View style={{ flex: 1 }}>
 <PersonalReport isSmallScreen={isSmallScreen} personalReport={filterPersonalReportArray} 
-hotelDetailSelector={hotelDetailSelector} dateSelector={dateSelector} />
+hotelDetailSelector={hotelDetailSelector} dateSelector={dateSelector}
+ planStatus={planStatus}   paymentActiveSelector={paymentActiveSelector} />
   </View>
   );
   const renderScene = BottomNavigation.SceneMap({

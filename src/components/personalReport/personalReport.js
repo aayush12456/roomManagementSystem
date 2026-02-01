@@ -13,10 +13,12 @@ import { Picker } from '@react-native-picker/picker';
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { passReportObjSliceActions } from "../../Redux/Slice/passReportObjSlice/passReportObjSlice";
 import HeaderReportCard from "../common/headerReportCard/headerReportCard";
+import { planScreenActions } from "../../Redux/Slice/planScreenSlice/planScreenSlice";
 
 const socket = io.connect("http://192.168.29.169:4000");
 // const socket = io.connect("https://roommanagementsystembackend-1.onrender.com");
-const PersonalReport=({personalReport,isSmallScreen,hotelDetailSelector,dateSelector})=>{
+const PersonalReport=({personalReport,isSmallScreen,hotelDetailSelector,dateSelector,planStatus
+, paymentActiveSelector})=>{
     console.log('hotel detail',hotelDetailSelector)
     console.log('personal report',personalReport)
     const BASE_URL = "http://192.168.29.169:4000";
@@ -69,6 +71,10 @@ const PersonalReport=({personalReport,isSmallScreen,hotelDetailSelector,dateSele
         setOpenRowId(prev => (prev === id ? null : id)); // toggle
       };
       const deletePersonalCustomerReport = async (id) => {
+        if (planStatus !== "free" && paymentActiveSelector.activeSubscription==null) {
+          dispatch(planScreenActions.planScreenVisibleToggle())
+          return
+        }
         const deleteObj = {
           id: hotelDetailSelector?._id,
           customerId: id

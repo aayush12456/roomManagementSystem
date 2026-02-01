@@ -5,7 +5,6 @@ import money from '../../../assets/premiumIcon/Money.gif'
 import { useNavigation } from "@react-navigation/native";
 const PaymentSuccess=({amount,objData})=>{
     const navigation = useNavigation();
-    const [showActivatedBox, setShowActivatedBox] = useState(false); 
     // useEffect(() => {
     //     const timer = setTimeout(() => {
     //       navigation.replace("HeaderPage");
@@ -14,18 +13,16 @@ const PaymentSuccess=({amount,objData})=>{
     //     return () => clearTimeout(timer);
     //   }, []);
     useEffect(() => {
-        // 7 sec → show activation box
-        const t1 = setTimeout(() => {
-          setShowActivatedBox(true);
+      
+        const t2 = setTimeout(() => {
+          // navigation.replace("HeaderPage");
+          navigation.replace("HeaderPage", {
+            paymentData: objData,
+          });
+          
         }, 4000);
     
-        // 11 sec → navigate (4 + 4)
-        const t2 = setTimeout(() => {
-          navigation.replace("HeaderPage");
-        }, 8000);
-    
         return () => {
-          clearTimeout(t1);
           clearTimeout(t2);
         };
       }, []);
@@ -49,7 +46,7 @@ const PaymentSuccess=({amount,objData})=>{
     
 return (
     <>
-     {showActivatedBox===false?<View
+     {<View
       style={{
         flex: 1,
         backgroundColor: "#0DB57E",
@@ -128,46 +125,8 @@ return (
       >
         Secured by Razorpay
       </Text>
-    </View>:null}
-    {showActivatedBox===true && (
-        <View
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: "rgba(0,0,0,0.2)",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <View
-            style={{
-              backgroundColor: "#fff",
-              width: "85%",
-              borderRadius: 20,
-              padding: 25,
-              alignItems: "center",
-              elevation: 10,
-            }}
-          >
-            <Image source={money} style={{ width: 90, height: 90 }} />
+    </View>}
 
-            <Text
-              style={{
-                marginTop: 15,
-                fontSize: 17,
-                fontWeight: "700",
-                color: "#0DB57E",
-                textAlign: 'center',
-              }}
-            >
-              Subscription Activated Successfully
-            </Text>
-          </View>
-        </View>
-      )}
 
     </>
 )

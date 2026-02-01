@@ -112,7 +112,7 @@ const CustomerDetailModal=({showAlert,setShowAlert,selectedRoomId,customerArray,
     
     // console.log('filter customer obj',filterCustomerObj)
       const deleteCustomerDetails=async(customerId)=>{
-        if (planStatus !== "free") {
+        if (planStatus !== "free"&& paymentActiveSelector.activeSubscription==null) {
           dispatch(planScreenActions.planScreenVisibleToggle())
           return
         }

@@ -1,5 +1,5 @@
 import {View,Image, ScrollView,Dimensions} from 'react-native'
-import { Card, Text, Button } from "react-native-paper";
+import { Card, Text } from "react-native-paper";
 import infoIcon from '../../../assets/settingIcon/info.png'
 import { LinearGradient } from "expo-linear-gradient";
 
@@ -27,7 +27,7 @@ return (
   />
         <Card.Content style={{marginTop:12}}>
            <View style={{flexDirection:"row",justifyContent:'space-between'}}>
-            <Text style={{fontWeight:700}}>6 Monthly Plan</Text>
+            <Text style={{fontWeight:700}}>{paymentActive?.activeSubscription?.amount=='₹299'?'Monthly Plan':'6 Monthly Plan'}</Text>
             <Text style={{fontWeight:700}}>{paymentActive?.activeSubscription?.amount}</Text>
            </View>
            <View style={{flexDirection:'row',justifyContent:'space-between'}}>
@@ -35,10 +35,10 @@ return (
            <Text style={{paddingTop:12,color:'green'}}>{paymentActive?.activeSubscription?.status}</Text>
            </View>
         </Card.Content>
-        </Card>:<Text>No active Subscription</Text>}
+        </Card>:<Text style={{paddingLeft:15,paddingTop:10,fontWeight:700}}>No active Subscription</Text>}
     </View>
 
-    {paymentHistory.length>0?<View style={{marginTop:12}}>
+    {paymentHistory.length>0?<View style={{marginTop:20}}>
     <View style={{flexDirection:"row",gap:4}}>
     <Text style={{paddingLeft:16,fontSize:14}}>Payment History </Text>
     <Image source={infoIcon} style={{width:15,height:15,marginTop:4}}/>

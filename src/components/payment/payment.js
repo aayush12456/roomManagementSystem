@@ -5,11 +5,23 @@ import axios from "axios";
 import { premiumDetails } from "../../utils/premiumData";
 import { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
+
+//test key
 // plan_RziUw1NAukBSo5 ->1 Rs plan
 // plan_Rzu3d5Zlg3vI3A ->50 Rs plan
 // plan_S2Vj0VT1CEKM5a -> 299 Rs plan
 // plan_S2VjYWmEsj8Buc -> 699 Rs plan
-const Payment=({hotelId})=>{
+//plan_SAq2J4tJf4cKLh -->50 Rs plan monthly
+//plan_SAsLiBomqZqf5r -->100 Rs plan 6 month
+
+//live key
+// plan_S9OCXHRMG6W5ng --> 1 Rs plan
+// plan_S9mmQLUPh0YRcc --> 20 Rs plan
+// plan_S9mz77K7uN4Mhm -->299 Rs plan monthly
+// plan_S9mzyclsUgcKX8 -->699 Rs plan 6 months
+
+const Payment=({hotelId,profile})=>{
+  console.log('pto',profile)
 const BASE_URL = "http://192.168.29.169:4000";
 const navigation=useNavigation()
 const [planType,setPlanType]=useState('')
@@ -21,8 +33,23 @@ setPlanAmount(amount)
 
 let plan=""
   const subscribe = async () => {
+    //live
+    // if(planType=="single"){
+    //   plan="plan_S9mz77K7uN4Mhm"
+    // }
+    // else if(planType=="sevenDays"){
+    //   plan="plan_S9OCXHRMG6W5ng"
+    // }
+    // else{
+    //   plan="plan_S9mzyclsUgcKX8"
+    // }
+
+
     if(planType=="single"){
       plan="plan_S2Vj0VT1CEKM5a"
+    }
+    else if(planType=="sevenDays"){
+      plan="plan_RziUw1NAukBSo5"
     }
     else{
       plan="plan_S2VjYWmEsj8Buc"
@@ -34,11 +61,12 @@ let plan=""
       );
 console.log('respose razor',res)
       const options = {
-        key: "rzp_test_RzIR2c4u7D5T00", // Test or Live key
+        key: "rzp_test_RzIR2c4u7D5T00", // Test  key
+        // key: "rzp_live_S9NrL4vhEbFG4M",            //Live key
         subscription_id: res.data.subscription.id ,  
         name: "Hotel App",
-        description: "Weekly subscription",
-        prefill: { email: "aayushtapadia28@example.com" }
+        description: "Monthly subscription",
+        // prefill: { email: "aayushtapadia28@example.com" }
       };
 
       RazorpayCheckout.open(options)
@@ -56,7 +84,12 @@ console.log('respose razor',res)
           });
         })
         .catch((err) => {
-          Alert.alert("Payment failed", err.description);
+          // Alert.alert("Payment failed", err.description);
+          if (err.code === 2) {
+            console.log("⚠️ Payment Cancelled by User");
+            return; // No Alert
+          }
+          
         });
     } catch (err) {
       console.log(err);
@@ -75,6 +108,12 @@ return (
 
 {
   premiumDetails.map((premium)=>{
+    if (
+      premium.monthly.type === "sevenDays" &&
+      profile.phone !== "9479918217"
+    ) {
+      return null;
+    }
     return (
       <>
       <Card style={{ margin: 10, borderRadius: 10 }}>
@@ -171,7 +210,14 @@ return (
         style={{ borderRadius:20, backgroundColor: "#2979FF" }}
         onPress={() => subscribe(planType)}
       >
-   {planType==="single"?"Pay ₹299":"Pay ₹699"}
+   {/* {planType==="single"?"Pay ₹299":"Pay ₹699"} */}
+   {planType === "single"
+      ? "Pay ₹299"
+      : planType === "sevenDays"
+      ? "Pay ₹1"
+      : planType === "Six"
+      ? "Pay ₹699"
+      : "Pay"}
       </Button>
     </View>
   )

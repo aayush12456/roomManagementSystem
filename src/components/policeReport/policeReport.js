@@ -14,10 +14,12 @@ import * as Sharing from 'expo-sharing';
 import { Picker } from '@react-native-picker/picker';
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { passReportObjSliceActions } from "../../Redux/Slice/passReportObjSlice/passReportObjSlice";
+import { planScreenActions } from "../../Redux/Slice/planScreenSlice/planScreenSlice";
 
 const socket = io.connect("http://192.168.29.169:4000");
 // const socket = io.connect("https://roommanagementsystembackend-1.onrender.com");
-const PoliceReport = ({ policeReport, dateSelector, isSmallScreen ,hotelDetailSelector }) => {
+const PoliceReport = ({ policeReport, dateSelector, isSmallScreen ,hotelDetailSelector,
+  planStatus,paymentActiveSelector }) => {
   const BASE_URL = "http://192.168.29.169:4000";
   // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
   const dispatch = useDispatch();
@@ -38,10 +40,15 @@ const PoliceReport = ({ policeReport, dateSelector, isSmallScreen ,hotelDetailSe
   console.log('today s',todayDate)
   const staffArray = Object.values(hotelDetailSelector.staff || {});
 console.log('staff arry',staffArray)
-  useEffect(() => {
-    const postObj = staffArray?.find((staff) => staff?.post === "Hotel Supervisor");
-    setStaffObj(postObj || {});
-  }, [staffArray]);
+
+useEffect(() => {
+  const postObj = staffArray?.find((staff) => staff?.post === "Hotel Supervisor");
+  setStaffObj(postObj || {});
+}, []);
+  // useEffect(() => {
+  //   const postObj = staffArray?.find((staff) => staff?.post === "Hotel Supervisor");
+  //   setStaffObj(postObj || {});
+  // }, [staffArray]);
 
   // useEffect(() => {
   //   if (dateSelector?.type) {
@@ -57,6 +64,10 @@ console.log('staff arry',staffArray)
   
 
   const deleteCustomerReport = async (id) => {
+    if (planStatus !== "free" && paymentActiveSelector.activeSubscription==null) {
+      dispatch(planScreenActions.planScreenVisibleToggle())
+      return
+    }
     const deleteObj = {
       id: hotelDetailSelector?._id,
       customerId: id

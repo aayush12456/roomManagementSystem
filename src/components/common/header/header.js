@@ -150,14 +150,15 @@ showsVerticalScrollIndicator={isLast24Hours}
         </Drawer.Screen>
          <Drawer.Screen
         name='Reports'
-        component={ReportPage}
         options={{
           drawerIcon:()=>(
             <Image  source={report}
             style={{ width: 20, height: 20 }}/>
         ),
         }}
-      />
+      >
+         {(props) => <ReportPage {...props}  planStatus={planStatus}/>}
+        </Drawer.Screen>
       <Drawer.Screen
         name='Profile'
         options={{
@@ -221,7 +222,7 @@ showsVerticalScrollIndicator={isLast24Hours}
         ),
         }}
       >
-      {(props) =><PaymentPage hotelId={hotelId}  />}
+      {(props) =><PaymentPage hotelId={hotelId} profile={profile}   />}
         </Drawer.Screen>:null}
      </Drawer.Navigator>
     :
