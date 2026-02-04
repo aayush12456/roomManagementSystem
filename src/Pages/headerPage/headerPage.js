@@ -1,5 +1,5 @@
 import Header from "../../components/common/header/header"
-import { useEffect,useState } from "react"
+import { useEffect,useState,useRef } from "react"
 import { useDispatch,useSelector } from "react-redux";
 import * as SecureStore from 'expo-secure-store';
 import { getHotelDetailsAsync } from "../../Redux/Slice/getHotelDetailSlice/getHotelDetailSlice";
@@ -8,11 +8,12 @@ import io from "socket.io-client";
 import axios from "axios";
 import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
-import { Platform,View,Text,Image } from "react-native";
+import { Platform,View,Text,Image,Animated } from "react-native";
 import { deleteSwitchProfileData } from "../../Redux/Slice/deleteSwitchProfileSlice/deleteSwitchProfileSlice";
 import FreeTrialModal from "../../components/common/freeTrialModal/freeTrialModal";
 import money from '../../../assets/premiumIcon/Money.gif'
 import { BlurView } from "expo-blur";
+
 
 const socket = io.connect("http://192.168.29.169:4000")
 // const socket = io.connect("https://roommanagementsystembackend-1.onrender.com")
@@ -21,6 +22,12 @@ const HeaderPage=({route})=>{
   // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
   const { paymentData} = route.params || {};
   console.log("Payment Data 👉", paymentData);
+  const profileData = route?.params?.profileData;
+  console.log("profile Data header 👉", profileData);
+
+  const slideAnim = useRef(new Animated.Value(-100)).current;
+
+
   Notifications.setNotificationHandler({
     handleNotification: async () => ({
       shouldShowAlert: true,
@@ -37,6 +44,7 @@ const HeaderPage=({route})=>{
     const [notifyTokenObj,setNotifyTokenObj]=useState({})
     const [timeEnd,setTimeEnd]=useState({})
     const [showPaymentSuccess, setShowPaymentSuccess] = useState(false);
+    const [switchVisible, setSwitchVisible] = useState(false);
 
     const dispatch=useDispatch()
     const navigation = useNavigation();
@@ -49,6 +57,7 @@ const HeaderPage=({route})=>{
     console.log('delete switch profile',deleteSwitchProfileArray)
     console.log('hotel update',updateHotelDetailSelector)
     console.log('hotel details',hotelDetailSelector)
+
     const oldNumber=useSelector((state)=>state?.updateMyProfiles?.updateMyProfileObj?.oldPhone)
     const newNumber=useSelector((state)=>state?.updateMyProfiles?.updateMyProfileObj?.newPhone)
 
@@ -484,6 +493,41 @@ useEffect(() => {
   }
 }, [paymentData?.razorpay_payment_id]);
 
+useEffect(() => {
+  if (profileData?.mssg === "fetch data") {
+
+    // ✅ 1 sec delay ke baad show
+    const delayTimer = setTimeout(() => {
+      setSwitchVisible(true);
+
+      // 🔥 Slide Down Animation
+      Animated.timing(slideAnim, {
+        toValue: 0,
+        duration: 500,
+        useNativeDriver: true,
+      }).start();
+
+      // ✅ Show hone ke 3 sec baad hide
+      const hideTimer = setTimeout(() => {
+        Animated.timing(slideAnim, {
+          toValue: -120,
+          duration: 500,
+          useNativeDriver: true,
+        }).start(() => {
+          setSwitchVisible(false);
+        });
+      }, 3000);
+
+      return () => clearTimeout(hideTimer);
+
+    }, 2000); // ⏳ 3 seconds delay
+
+    return () => clearTimeout(delayTimer);
+  }
+}, [profileData?.mssg]);
+
+
+
 return (
   
     <>
@@ -560,6 +604,64 @@ return (
   </View>
 )}
 
+{switchVisible && (
+  <Animated.View
+    style={{
+      position: "absolute",
+      top: 60,
+      left: 0,
+      right: 0,
+      zIndex: 9999,
+      transform: [{ translateY: slideAnim }],
+    }}
+  >
+    <View
+      style={{
+        flexDirection: "row",
+        alignItems: "center",
+
+        backgroundColor: "#fff",
+        paddingVertical: 6,
+        paddingHorizontal: 12,
+        borderRadius: 20,
+        opacity:0.9,
+        shadowColor: "#000",
+        shadowOpacity: 0.15,
+        shadowOffset: { width: 0, height: 3 },
+        shadowRadius: 6,
+        elevation: 6,
+
+        width: "95%",
+        alignSelf: "center",
+      }}
+    >
+      {/* Profile Image */}
+      <Image
+        source={{ uri: profileData?.image }}
+        style={{
+          width: 45,
+          height: 45,
+          borderRadius: 100,
+          marginRight: 15,
+        }}
+      />
+
+      {/* Text */}
+      <Text
+        style={{
+          fontSize: 14,
+          fontWeight: "800",
+          color: "#000",
+        }}
+      >
+        Switched to{" "}
+        <Text style={{ fontWeight: "800" }}>
+          {profileData?.name}
+        </Text>
+      </Text>
+    </View>
+  </Animated.View>
+)}
 
     </>
 )

@@ -5,6 +5,7 @@ import { View } from 'react-native';
 import { useDispatch,useSelector } from 'react-redux';
 import { getPaymentActiveAsync } from '../../Redux/Slice/getPaymentActiveSlice/getPaymentActiveSlice';
 const TrialCountDown=({hotelId,onLast24HoursChange,setTimeEnd})=>{
+  console.log('hotel id tril',hotelId)
   const BASE_URL = "http://192.168.29.169:4000";
     const dispatch=useDispatch()
     const [sub,setSub] = useState(null);
@@ -93,6 +94,13 @@ useEffect(() => {
 //     year: "numeric",
 //   });
 // };
+
+// ✅ Hotel change होते ही पुराने countdown reset कर दो
+useEffect(() => {
+  setSubTimerMs(0);
+}, [hotelId]);
+
+
 useEffect(()=>{
   if(hotelId){
   dispatch(getPaymentActiveAsync(hotelId))
@@ -125,44 +133,107 @@ useEffect(()=>{
         return new Date(year, months[month], day);
       };
       
-      useEffect(() => {
-        if (!paymentActiveSelector?.activeSubscription?.endDate) return;
+  //     useEffect(() => {
+  //       if (!paymentActiveSelector?.activeSubscription?.endDate) return;
+        
+  // // ✅ Countdown sirf उसी hotel ke liye चले
+  // if (paymentActiveSelector?.activeSubscription?.hotelId !== hotelId) {
+  //   setSubTimerMs(0);
+  //   return;
+  // }
       
-        const rawEndDate =
-          paymentActiveSelector.activeSubscription.endDate;
+  //       const rawEndDate =
+  //         paymentActiveSelector.activeSubscription.endDate;
       
-        // ✅ Parse Date Properly
-        const end = parseCustomDate(rawEndDate);
+  //       // ✅ Parse Date Properly
+  //       const end = parseCustomDate(rawEndDate);
       
-        console.log("📌 End Date String:", rawEndDate);
-        console.log("✅ Parsed Date Object:", end);
+  //       console.log("📌 End Date String:", rawEndDate);
+  //       console.log("✅ Parsed Date Object:", end);
       
-        if (!end || isNaN(end.getTime())) {
-          console.log("❌ Invalid Date Format");
-          return;
-        }
+  //       if (!end || isNaN(end.getTime())) {
+  //         console.log("❌ Invalid Date Format");
+  //         return;
+  //       }
       
-        // ✅ Countdown Timer
-        const timer = setInterval(() => {
-          const now = new Date();
-          const diff = end - now;
+  //       // ✅ Countdown Timer
+  //       const timer = setInterval(() => {
+  //         const now = new Date();
+  //         const diff = end - now;
       
-          if (diff <= 0) {
-            setSubTimerMs(0);
-            console.log("❌ Subscription Expired");
-            clearInterval(timer);
-            return;
-          }
-          if (diff > ONE_DAY) {
-            return;
-          }
-          // const finalTimer=formatTime(diff)
-          setSubTimerMs(diff);
-          console.log("⏳ Subscription Countdown:", formatTime(diff));
-        }, 1000);
+  //         if (diff <= 0) {
+  //           setSubTimerMs(0);
+  //           console.log("❌ Subscription Expired");
+  //           clearInterval(timer);
+  //           return;
+  //         }
+  //         if (diff > ONE_DAY) {
+  //           return;
+  //         }
+  //         // const finalTimer=formatTime(diff)
+  //         setSubTimerMs(diff);
+  //         console.log("⏳ Subscription Countdown:", formatTime(diff));
+  //       }, 1000);
       
-        return () => clearInterval(timer);
-      }, [paymentActiveSelector?.activeSubscription?.endDate]);
+  //       return () => clearInterval(timer);
+  //     }, [paymentActiveSelector?.activeSubscription?.endDate,paymentActiveSelector?.activeSubscription?.hotelId]);
+
+  useEffect(() => {
+    if (!paymentActiveSelector?.activeSubscription?.endDate) return;
+  
+    // ✅ Countdown sirf उसी hotel ke liye चले
+    if (paymentActiveSelector?.activeSubscription?.hotelId !== hotelId) {
+      setSubTimerMs(0);
+      return;
+    }
+  
+    const rawEndDate =
+      paymentActiveSelector.activeSubscription.endDate;
+  
+    const end = parseCustomDate(rawEndDate);
+  
+    console.log("📌 End Date String:", rawEndDate);
+    console.log("✅ Parsed Date Object:", end);
+  
+    if (!end || isNaN(end.getTime())) {
+      console.log("❌ Invalid Date Format");
+      setSubTimerMs(0);
+      return;
+    }
+  
+    const timer = setInterval(() => {
+      const now = new Date();
+      const diff = end - now;
+  
+      // 🔴 Expired
+      if (diff <= 0) {
+        setSubTimerMs(0);
+        console.log("❌ Subscription Expired");
+        clearInterval(timer);
+        return;
+      }
+  
+      // ⛔ Last 24 hours से ज्यादा बाकी है तो मत दिखाओ
+      if (diff > ONE_DAY) {
+        setSubTimerMs(0);
+        return;
+      }
+  
+      // ✅ Only last 24 hours me countdown चले
+      setSubTimerMs(diff);
+      console.log("⏳ Subscription Countdown:", formatTime(diff));
+  
+    }, 1000);
+  
+    return () => clearInterval(timer);
+  
+  }, [
+    paymentActiveSelector?.activeSubscription?.endDate,
+    paymentActiveSelector?.activeSubscription?.hotelId,
+    hotelId
+  ]);
+  
+  
       
       // console.log('final times',subTimerMs)
       const anotherIsLast24Hours=subTimerMs > 0 && subTimerMs <= ONE_DAY;
@@ -174,11 +245,25 @@ useEffect(()=>{
       }, [anotherIsLast24Hours]);
 return (
   <>
-  {/* {isLast24Hours?<View style={{marginTop:-12}}>
-  <Text style={{textAlign:'center'}}>Free Trial Ending Soon Only</Text>
-      <Text style={{textAlign:'center',paddingTop:5}} >{formatTime(remainingMs)}</Text>
-  </View>:null} */}
- {isLast24Hours || anotherIsLast24Hours ?<View
+
+ {/* {isLast24Hours || anotherIsLast24Hours?<View
+  style={{
+    marginTop: -12,
+    marginHorizontal: 12,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    borderRadius: 12,
+    backgroundColor: "#5F2EEA",
+    borderWidth: 1,
+    borderColor: "#4C9AFF",
+    shadowColor: "#4C9AFF",
+    shadowOpacity: 0.6,
+    shadowRadius: 8,
+    elevation: 8
+  }}
+> */}
+ {(remainingMs > 0 && remainingMs <= ONE_DAY) ||
+ (subTimerMs > 0 && subTimerMs <= ONE_DAY)?<View
   style={{
     marginTop: -12,
     marginHorizontal: 12,

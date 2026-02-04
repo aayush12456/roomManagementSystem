@@ -195,11 +195,14 @@ const profileClickHandler=(profile)=>{
 const profileObj={
   phone:profile?.phone,
   hotelId:profile?.hotelId,
-  hotelName:profile?.hotelName
+  hotelName:profile?.hotelName,
+  profileName:profile?.name,
+  profileImage:profile?.image,
 }
 console.log('profile obj',profileObj)
 dispatch(switchProfileAsync(profileObj))
 }
+
 const deleteSwitchProfileHandler=(profile)=>{
   console.log('profile',profile)
   const deleteProfileObj={
@@ -232,7 +235,15 @@ useEffect(() => {
     dispatch(switchProfileData())
     navigation.reset({
       index: 0,
-      routes: [{ name: 'HeaderPage' }], // or your home screen
+      // routes: [{ name: 'HeaderPage' }], // or your home screen
+      routes: [
+        {
+          name: "HeaderPage",
+          params: {
+            profileData: profileSelector, // ✅ yaha bhej diya,
+          },
+        },
+      ],
     });
   }
 }, [profileSelector]);
@@ -495,6 +506,8 @@ const paymentHistoryHandler=()=>{
         </View>
       </View>
     </Modal>
+
+    
     </>
   );
 };
