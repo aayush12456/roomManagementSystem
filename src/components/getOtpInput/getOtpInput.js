@@ -1,6 +1,6 @@
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { OtpInput } from "react-native-otp-entry";
-import { View,Text,Image } from 'react-native';
+import { View,Text,Image,ActivityIndicator } from 'react-native';
 import { Button } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import LoginImage from '../common/loginImage/loginImage';
@@ -16,6 +16,7 @@ const GetOtpInput=({hotelObj,data})=>{
   const navigation = useNavigation();
   const [modalMsg,setModalMsg]=useState('')
   const [showModal,setShowModal]=useState('')
+  const [loading, setLoading] = useState(false);
   
   const compareOtpSelector=useSelector((state)=>state.compareOtpData.compareOtpObj)
   console.log('compare otp selector',compareOtpSelector)
@@ -133,8 +134,11 @@ const GetOtpInput=({hotelObj,data})=>{
         getLoginDataToSecureStore(); // ✅ function called on screen mount
       }, []);
       const verifyOtpHandler=()=>{
+        if (loading) return; 
+        setLoading(true)
        if(recieveOtpObj.otp!==myOtp){
         setOtpError('Otp is not valid')
+        setLoading(false)
         return
        }
       //  const finalOtpObj={
@@ -196,11 +200,17 @@ return (
                          marginLeft: 12,
                          marginTop:12,
                          marginRight: 20,
+                         width:`${loading?100:""}`
                       }}
                       buttonColor="rgba(234, 88, 12, 1)"
                       onPress={verifyOtpHandler}
                     >
-           VERiFY OTP
+           {/* VERiFY OTP */}
+           {
+                    loading?
+                    <ActivityIndicator color="#fff" />
+                    :'VERiFY OTP'
+                   }
                     </Button>
        </View>
        <View style={{marginTop:11}}>

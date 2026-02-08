@@ -1,7 +1,8 @@
-import { View,Pressable,Modal,Dimensions, ScrollView,  KeyboardAvoidingView,Platform,Text } from "react-native";
+import { View,Pressable,Modal,Dimensions, ScrollView,  KeyboardAvoidingView,Platform,Text,ActivityIndicator } from "react-native";
 import { Button,TextInput } from "react-native-paper";
 import { Formik } from 'formik';
 import { useDispatch } from "react-redux";
+import { useState } from "react";
 import { bedType, roomType } from "../../utils/signUpData";
 import {Picker} from '@react-native-picker/picker';
 import { roomAdd } from "../../schemas";
@@ -15,6 +16,7 @@ const AddRoomModal=({roomAlert,setRoomAlert,hotelId,floorSelect,profile,notifyTo
     const screenWidth = Dimensions.get("window").width;
     console.log('profile in room',profile)
     const dispatch=useDispatch()
+    const [loading, setLoading] = useState(false);
 
     const chunkArray = (array, size) => {
       const chunks = [];
@@ -80,6 +82,8 @@ return (
         dispatch(planScreenActions.planScreenVisibleToggle())
         return
       }
+      if (loading) return; 
+      setLoading(true); 
       console.log("Room Added:", values);
       const roomObj={
         hotelId:hotelId,
@@ -104,10 +108,13 @@ return (
         setRoomAlert(false); 
       } catch (error) {
     console.log("❌ Room add error:", error);
+  }
+  finally {
+    setLoading(false);   // ✅ STOP LOADER (always runs)
   } // ✅ modal close
     }}
       >
-        {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue })=>(
+        {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue,resetForm })=>(
          <>
  <Modal visible={roomAlert} transparent animationType="fade"   avoidKeyboard={true} >
 
@@ -238,7 +245,11 @@ return (
                       buttonColor="rgba(234, 88, 12, 1)"
                       onPress={handleSubmit}
                     >
-     Submit
+                   {
+                    loading?
+                    <ActivityIndicator color="#fff" />
+                    :'Submit'
+                   }
                     </Button>
           </View>
 
@@ -257,8 +268,9 @@ return (
                       }}
                       buttonColor="rgba(234, 88, 12, 1)"
                       onPress={() => {
+                        resetForm();
                         setRoomAlert(false)
-                      
+                  
                       }}
                     >
 Close

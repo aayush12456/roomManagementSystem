@@ -4,7 +4,7 @@ import { Text,TextInput,Button } from "react-native-paper"
 import { Formik } from 'formik';
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import { customerDetailsSchema } from "../../schemas";
-import { View,Pressable,Modal,Dimensions, ScrollView,Image } from "react-native";
+import { View,Pressable,Modal,Dimensions, ScrollView,Image,ActivityIndicator } from "react-native";
 import SignatureScreen from "react-native-signature-canvas";
 import {useSelector,useDispatch} from 'react-redux'
 import io from "socket.io-client";
@@ -82,6 +82,7 @@ const CustomerDetailModal=({showAlert,setShowAlert,selectedRoomId,customerArray,
     const [showTextField,setShowTextField]=useState(false)
     const [scrollEnabled, setScrollEnabled] = useState(true);
     const [showSignaturePad, setShowSignaturePad] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const formikRef = useRef(null);
     const ref = useRef();
@@ -197,6 +198,8 @@ extraCustomers: filterCustomerObj?.extraCustomers?.map(item => ({
           dispatch(planScreenActions.planScreenVisibleToggle())
           return
         }
+        if (loading) return; 
+        setLoading(true); 
         const checkInTime = values.checkInTime
         ? new Date(values.checkInTime).toLocaleTimeString("en-IN", {
             hour: "2-digit",
@@ -286,6 +289,9 @@ extraCustomers: filterCustomerObj?.extraCustomers?.map(item => ({
         }
       } catch (error) {
         console.error("Error in Add/Update Customer", error);
+      }
+      finally {
+        setLoading(false);   // ✅ STOP LOADER (always runs)
       }
 
 // console.log('customer detailss',customerDetailsObj)
@@ -1073,7 +1079,11 @@ extraCustomers: filterCustomerObj?.extraCustomers?.map(item => ({
                       }}
                       buttonColor="rgba(234, 88, 12, 1)"
                     >
-           Submit
+       {
+                    loading?
+                    <ActivityIndicator color="#fff" />
+                    :'Submit'
+                   }
                     </Button>
           </View>:
           <View style={{ width: '50%', overflow: 'hidden' }}>

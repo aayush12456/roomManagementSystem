@@ -1,4 +1,4 @@
-import { View,Image,ScrollView,KeyboardAvoidingView, Platform,Text } from "react-native"
+import { View,Image,ScrollView,KeyboardAvoidingView, Platform,Text,ActivityIndicator } from "react-native"
 import { TextInput,Button } from 'react-native-paper';
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import { useState } from "react";
@@ -19,6 +19,7 @@ const AddOwner=({hotelsId,profile,notifyTokenArray,planStatus,paymentActiveSelec
     const [ownerAddress,setOwnerAddress]=useState('')
     const [ownerImage,setOwnerImage]=useState('')
     const [errors, setErrors] = useState({});
+    const [loading, setLoading] = useState(false);
 
     const validate = () => {
       let newErrors = {};
@@ -80,6 +81,7 @@ const AddOwner=({hotelsId,profile,notifyTokenArray,planStatus,paymentActiveSelec
           return
         }
         if (!validate()) return;
+        setLoading(true); 
         const formData = new FormData()
         formData.append("ownerName",ownerName)
         formData.append("ownerPhone",ownerPhoneNumber)
@@ -120,6 +122,9 @@ const AddOwner=({hotelsId,profile,notifyTokenArray,planStatus,paymentActiveSelec
           socket.emit('addOwnerObj', response?.data)
         } catch (error) {
           console.error("Error in Add/Update Staff", error.message);
+        }
+        finally {
+          setLoading(false);   // ✅ STOP LOADER (always runs)
         }
         setOwnerName('')
         setOwnerAddress('')
@@ -243,23 +248,32 @@ keyboardShouldPersistTaps="handled"
   )}
             </View>
         <View style={{ width: '100%', overflow: 'hidden' }}>
-         <Button
-                      mode="contained"
-                      style={{
-                        height: 50, // Set the desired height
-                        borderRadius:11,
-                        color: '#FFFFFF',
-                         fontSize: 16, 
-                         justifyContent:'center',
-                         marginTop: 20,
-                         marginLeft: 12,
-                         marginRight: 20,
-                      }}
-                      buttonColor="rgba(234, 88, 12, 1)"
-                      onPress={addOwnerHandler}
-                    >
-           SUBMIT
-                    </Button>
+        <Button
+  mode="contained"
+  disabled={loading}
+  style={{
+    height: 50,
+    borderRadius: 11,
+    justifyContent: 'center',
+    marginTop: 20,
+    marginLeft: 12,
+    fontSize: 16,
+    marginRight: 20,
+    backgroundColor: "rgba(234, 88, 12, 1)", // force color
+    // opacity:loading ? 0.8 : 1, // disabled feel
+  }}
+  contentStyle={{ height: 50 }}
+  onPress={addOwnerHandler}
+>
+  {loading ? (
+    <View style={{ flexDirection: "row", alignItems: "center",gap:4 }}>
+<ActivityIndicator size="small" color="#ffffff" style={{marginLeft:-12}} />
+      <Text style={{ color: "#ffffff",textAlign:'center',fontWeight:'600' }}>Submitting...</Text>
+    </View>
+  ) : (
+    "SUBMIT"
+  )}
+</Button>
       </View>
 
     </View>

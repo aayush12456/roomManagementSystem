@@ -1,4 +1,4 @@
-import { Image,View,Pressable } from "react-native"
+import { Image,View,Pressable,ActivityIndicator } from "react-native"
 import { useState,useEffect } from "react"
 import { Button } from "react-native-paper"
 import * as ImagePicker from 'expo-image-picker';
@@ -12,6 +12,7 @@ const HotelGallery=({hotelImg,hotelId,notifyTokenArray})=>{
     const dispatch=useDispatch()
     const [hotelShow,setHotelShow]=useState(false)
     const [selectHotelImage,setSelectHotelImage]=useState("")
+    const [loading, setLoading] = useState(false);
 const hotelImgs=updateHotelImgSelector?updateHotelImgSelector.hotelImg:hotelImg
     const imgClickHandler=()=>{
      setHotelShow(true)
@@ -48,6 +49,7 @@ const hotelImgs=updateHotelImgSelector?updateHotelImgSelector.hotelImg:hotelImg
     console.log('hotel slect',selectHotelImage)
 
     const imgSubmitHandler=()=>{
+      setLoading(true);
       const formData = new FormData()
       formData.append("id",hotelId)
       if (selectHotelImage) {
@@ -66,6 +68,7 @@ const hotelImgs=updateHotelImgSelector?updateHotelImgSelector.hotelImg:hotelImg
     }
     useEffect(()=>{
   if(updateHotelImgSelector?.hotelImg!=""){
+    setLoading(false)
     setSelectHotelImage("")
   }
     },[updateHotelImgSelector?.hotelImg])
@@ -126,7 +129,10 @@ change
           style={{ borderRadius: 25, height: 50, paddingTop: 4, fontSize: 16}}
           onPress={()=>imgSubmitHandler()}
         >
-Submit
+{/* Submit */}
+{
+  loading? <ActivityIndicator color="#fff" />:'Submit'
+}
         </Button>
         <Button
           mode="contained"

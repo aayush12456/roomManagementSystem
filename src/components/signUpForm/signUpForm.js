@@ -2,7 +2,7 @@ import * as React from 'react';
 import { useState,useEffect } from 'react';
 import { TextInput,Button } from 'react-native-paper';
 import { Image } from 'expo-image';
-import { View, ScrollView,Text,KeyboardAvoidingView, Platform, Keyboard,Modal, Dimensions} from 'react-native';
+import { View, ScrollView,Text,KeyboardAvoidingView, Platform, Keyboard,Modal, Dimensions,ActivityIndicator} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import SignUpImage from '../../../assets/AllIcons/signupImage.jpeg'
 import hotel from '../../../assets/AllIcons/hotel.png'
@@ -46,6 +46,7 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
   const [formErrors,setFormErrors]=useState({})
   const [floorData, setFloorData] = useState({});
   const [floorObj, setFloorObj] = useState({});
+  const [loading, setLoading] = useState(false);
 
   const floorNames = ['Ground Floor'];
   const toWords = new ToWords({
@@ -641,6 +642,7 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
     }
   
     setFormErrors({});
+    setLoading(true); 
   
     // -------------------------------------
     // 📦 BUILDING FORMDATA
@@ -732,6 +734,9 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
     } catch (error) {
       console.log("❌ Error submitting form:", error.response?.data || error.message);
       alert("Something went wrong");
+    }
+    finally {
+      setLoading(false);   // ✅ STOP LOADER (always runs)
     }
   };
   
@@ -1483,7 +1488,15 @@ return (
                       buttonColor="rgba(234, 88, 12, 1)"
                       onPress={registerFormSubmitHandler}
                     >
-           SUBMIT
+           {/* SUBMIT */}
+           {loading ? (
+    <View style={{ flexDirection: "row", alignItems: "center",gap:4 }}>
+<ActivityIndicator size="small" color="#ffffff" style={{marginLeft:-12}} />
+      <Text style={{ color: "#ffffff",textAlign:'center',fontWeight:'600' }}>Submitting...</Text>
+    </View>
+  ) : (
+    "SUBMIT"
+  )}
                     </Button>
       </View>:null}
         </View>

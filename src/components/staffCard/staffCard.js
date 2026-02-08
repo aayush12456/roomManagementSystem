@@ -1,5 +1,6 @@
 import { Card, Text, Button } from "react-native-paper";
-import {View,Image,Pressable} from 'react-native'
+import {View,Image,Pressable,ActivityIndicator} from 'react-native'
+import { useState } from "react";
 import { useNavigation } from "@react-navigation/native"
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import { useDispatch} from "react-redux";
@@ -14,38 +15,81 @@ console.log('staff hotel',hotelId)
   // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
   const navigation=useNavigation()
   const dispatch=useDispatch()
+  const [deletingId, setDeletingId] = useState(null);
+
   const cardClickHandler=()=>{
     // console.log('hello')
     navigation.navigate('ProfileDetailsPage',{formData:staffObj,heading:'Staff Details',hotelId:hotelId})
   }
-  const deleteStaffHandler=async(staffObj)=>{
-    if (planStatus !== "free" && paymentActiveSelector.activeSubscription==null) {
-      dispatch(planScreenActions.planScreenVisibleToggle())
-      return
+  // const deleteStaffHandler=async(staffObj)=>{
+  //   if (planStatus !== "free" && paymentActiveSelector.activeSubscription==null) {
+  //     dispatch(planScreenActions.planScreenVisibleToggle())
+  //     return
+  //   }
+  //   const staffObject={
+  //     id:hotelId,
+  //     staffId:staffObj?._id,
+  //     personName:profile?.name,
+  //     imgUrl:profile?.image,
+  //     message:'delete a staff'
+  //   }
+  //   console.log('staff',staffObject)
+  //   try {
+  //     const response = await axios.post(`${BASE_URL}/hotel/deleteStaffOwner/${staffObject.id}`,staffObject);
+  //     console.log('response in delete obj is',response?.data)
+  //     Toast.show({
+  //       type: ALERT_TYPE.SUCCESS,
+  //       title: "staff Details Deleted Successfully",
+  //       autoClose: 10000, // 10 sec me band hoga
+  //     });
+  //     sendNotificationToAll()
+  //     socket.emit('deleteStaffOwnerObj', response?.data)
+  // } catch (error) {
+  //     // console.error('Error sending activate', error);
+  // }
+  // }
+
+  const deleteStaffHandler = async (staffObj) => {
+
+    if (planStatus !== "free" && paymentActiveSelector.activeSubscription == null) {
+      dispatch(planScreenActions.planScreenVisibleToggle());
+      return;
     }
-    const staffObject={
-      id:hotelId,
-      staffId:staffObj?._id,
-      personName:profile?.name,
-      imgUrl:profile?.image,
-      message:'delete a staff'
-    }
-    console.log('staff',staffObject)
+  
+    setDeletingId(staffObj._id); // START LOADER
+  
+    const staffObject = {
+      id: hotelId,
+      staffId: staffObj?._id,
+      personName: profile?.name,
+      imgUrl: profile?.image,
+      message: "delete a staff",
+    };
+  
     try {
-      const response = await axios.post(`${BASE_URL}/hotel/deleteStaffOwner/${staffObject.id}`,staffObject);
-      console.log('response in delete obj is',response?.data)
+      const response = await axios.post(
+        `${BASE_URL}/hotel/deleteStaffOwner/${staffObject.id}`,
+        staffObject
+      );
+  
       Toast.show({
         type: ALERT_TYPE.SUCCESS,
         title: "staff Details Deleted Successfully",
-        autoClose: 10000, // 10 sec me band hoga
+        autoClose: 3000,
       });
-      sendNotificationToAll()
-      socket.emit('deleteStaffOwnerObj', response?.data)
-  } catch (error) {
-      // console.error('Error sending activate', error);
-  }
-  }
-
+  
+      setTimeout(async() => {
+       await sendNotificationToAll();
+        socket.emit("deleteStaffOwnerObj", response?.data);
+      }, 200);
+  
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setDeletingId(null); // STOP LOADER
+    }
+  };
+  
   const chunkArray = (array, size) => {
     const chunks = [];
     for (let i = 0; i < array.length; i += size) {
@@ -140,14 +184,31 @@ return (
           }}
         />
         <Text style={{ fontWeight: "500",paddingTop:20}}>{staffObj?.name}</Text>
-        <Button
+        {/* <Button
           mode="contained"
           buttonColor="#28a745"
           style={{ borderRadius: 25, height: 50, paddingTop: 4, fontSize: 16,marginTop:6 }}
           onPress={()=>deleteStaffHandler(staffObj)}
         >
 Delete
-        </Button>
+        </Button> */}
+        <Button
+  mode="contained"
+  buttonColor="#28a745"
+  style={{ borderRadius: 25, height: 50, marginTop: 6 ,paddingTop: 4, fontSize: 16, }}
+  onPress={() => {
+    if (deletingId === staffObj._id) return; // prevent double click
+    deleteStaffHandler(staffObj);
+  }}
+
+>
+  {deletingId === staffObj._id ? (
+    <ActivityIndicator color="#fff" />
+  ) : (
+    "Delete"
+  )}
+</Button>
+
            </View>
         </Card.Content>
         </Card>

@@ -1,5 +1,6 @@
-import { View, Modal, Dimensions, ScrollView } from "react-native";
+import { View, Modal, Dimensions, ScrollView,ActivityIndicator } from "react-native";
 import { Text, Button, TextInput } from "react-native-paper";
+import { useState } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import { Picker } from "@react-native-picker/picker";
@@ -35,6 +36,7 @@ const AddFloorModal = ({ floorAlert, setFloorAlert,hotelId,notifyTokenArray,prof
   planStatus,paymentActiveSelector }) => {
   console.log('notify token in floor',notifyTokenArray)
   const dispatch=useDispatch()
+  const [loading, setLoading] = useState(false);
   const chunkArray = (array, size) => {
     const chunks = [];
     for (let i = 0; i < array.length; i += size) {
@@ -97,6 +99,8 @@ const AddFloorModal = ({ floorAlert, setFloorAlert,hotelId,notifyTokenArray,prof
           dispatch(planScreenActions.planScreenVisibleToggle())
           return
         }
+        if (loading) return; 
+        setLoading(true); 
         const floorName = values.floorName?.trim();
       
         if (!floorName) {
@@ -153,6 +157,9 @@ const AddFloorModal = ({ floorAlert, setFloorAlert,hotelId,notifyTokenArray,prof
         } catch (error) {
           console.log("❌ Add floor error:", error);
         }
+        finally {
+          setLoading(false);   // ✅ STOP LOADER (always runs)
+        } 
       }}
       
     >
@@ -369,7 +376,11 @@ const AddFloorModal = ({ floorAlert, setFloorAlert,hotelId,notifyTokenArray,prof
                       justifyContent: "center",
                     }}
                   >
-                    Submit
+                    {
+                    loading?
+                    <ActivityIndicator color="#fff" />
+                    :'Submit'
+                   }
                   </Button>
                 </View>
               </View>
