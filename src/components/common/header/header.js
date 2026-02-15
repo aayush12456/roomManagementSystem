@@ -12,6 +12,7 @@ import setting from '../../../../assets/sidebarIcons/settingImg.png'
 import myProfile from '../../../../assets/sidebarIcons/profile.png'
 import hotelIcon from '../../../../assets/sidebarIcons/hotelIcon.png'
 import premiumIcon from '../../../../assets/sidebarIcons/premium.png'
+import departureIcon from '../../../../assets/sidebarIcons/departure.png'
 import notifyIcon from '../../../../assets/notification.png'
 import ProfilePage from '../../../Pages/profilePage/profilePage';
 import SettingsPage from '../../../Pages/settingsPage/settingsPage';
@@ -25,6 +26,7 @@ import TrialCountDown from '../../trialCountDown/trialCountDown';
 import { useSelector } from 'react-redux';
 import { useState } from 'react';
 import PlanScreen from '../planScreen/planScreen';
+import DeparturePage from '../../../Pages/departurePage/departurePage';
 const socket = io.connect("http://192.168.29.169:4000")
 // const socket = io.connect("https://roommanagementsystembackend-1.onrender.com")
 
@@ -55,7 +57,7 @@ const Header=({profile,allStaffPlusOwner,hotelId,profileArrays,policeReport,tota
       };
     const logoutHandler=async()=>{
       try {
-        const response = await axios.post(`${BASE_URL}/hotel/deleteNotificationToken/${hotelId}`,{notifyToken:notifyToken});
+        const response = await axios?.post(`${BASE_URL}/hotel/deleteNotificationToken/${hotelId}`,{notifyToken:notifyToken});
         console.log('notify token delete',response?.data)
         socket.emit('deleteNotificationToken', response?.data)
     } catch (error) {
@@ -186,7 +188,7 @@ showsVerticalScrollIndicator={isLast24Hours}
        phone={profile?.phone}  hotelImgFirst={hotelImgFirst} hotelName={hotelName} profile={profile}/>}
         </Drawer.Screen>
 
-        {!profile.post?<Drawer.Screen
+        {!profile?.post?<Drawer.Screen
         name='Hotel Gallery'
         // component={SettingsPage}
         options={{
@@ -212,7 +214,20 @@ showsVerticalScrollIndicator={isLast24Hours}
       {(props) =><NotificationPage hotelId={hotelId}  allStaffOwner={allStaffPlusOwner} />}
         </Drawer.Screen>
 
-       {!profile.post && planStatus !== "free" && paymentActiveSelector.activeSubscription==null? <Drawer.Screen
+         <Drawer.Screen
+        name='Departure List'
+        // component={SettingsPage}
+        options={{
+          drawerIcon:()=>(
+            <Image  source={departureIcon}
+            style={{ width: 20, height: 20 }}/>
+        ),
+        }}
+      >
+      {(props) =><DeparturePage hotelId={hotelId} />}
+        </Drawer.Screen>
+
+       {!profile?.post && planStatus !== "free" && paymentActiveSelector.activeSubscription==null? <Drawer.Screen
         name='Premium'
         // component={SettingsPage}
         options={{

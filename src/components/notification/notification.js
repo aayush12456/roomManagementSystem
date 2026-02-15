@@ -2,6 +2,7 @@ import { Text } from "react-native-paper";
 import { View, ScrollView, Image } from "react-native";
 
 const Notification = ({ message,hotelId }) => {
+  console.log('messagr is',message)
     const timeAgo = (createdAt) => {
         const now = new Date();
         const past = new Date(createdAt);
@@ -48,6 +49,8 @@ const Notification = ({ message,hotelId }) => {
       
   return (
     <ScrollView>
+     {message?.length===0? 
+     <Text style={{ textAlign: "center", paddingTop: 20,fontWeight: "600",fontSize:15 }}>No notifications at the moment.</Text>:null}
       <View style={{ padding: 12 ,paddingTop:20}}>
       {message?.map((item) =>
           item.hotelId == hotelId ? (

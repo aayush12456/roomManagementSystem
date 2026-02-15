@@ -117,9 +117,12 @@ const CustomerDetailModal=({showAlert,setShowAlert,selectedRoomId,customerArray,
           dispatch(planScreenActions.planScreenVisibleToggle())
           return
         }
+        if (loading) return; 
+        setLoading(true); 
+
         const deleteObj={
         id:hotelDetailSelector?._id,
-        customerId:customerId
+        customerId:customerId,
         }
         try {
           const response = await axios.post(`${BASE_URL}/hotel/deleteCustomerDetails/${deleteObj.id}`,deleteObj);
@@ -132,6 +135,9 @@ const CustomerDetailModal=({showAlert,setShowAlert,selectedRoomId,customerArray,
           socket.emit('deleteCustomerDetails', response?.data)
       } catch (error) {
           // console.error('Error sending activate', error);
+      }
+      finally {
+        setLoading(false);   // ✅ STOP LOADER (always runs)
       }
       setShowAlert(false)
       }
@@ -1123,7 +1129,11 @@ extraCustomers: filterCustomerObj?.extraCustomers?.map(item => ({
                       buttonColor="rgba(234, 88, 12, 1)"
                       onPress={()=>deleteCustomerDetails(filterCustomerObj?._id)}
                     >
-           Delete
+ {
+                    loading?
+                    <ActivityIndicator color="#fff" />
+                    :'Delete'
+                   }
                     </Button>
           </View>:null
           }

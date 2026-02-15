@@ -48,7 +48,7 @@ const NotificationPage = ({ hotelId, allStaffOwner }) => {
   }, [hotelId, dispatch]);
 
   // 🔥 ALWAYS merge + remove duplicates
-  const finalNotifyArray = useMemo(() => {
+  const preFinalNotifyArray = useMemo(() => {
     const merged = [
       ...messageNotifySelector,
       ...allStaffOwnerNotifyArray,
@@ -63,6 +63,7 @@ const NotificationPage = ({ hotelId, allStaffOwner }) => {
       (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
     );
   }, [messageNotifySelector, allStaffOwnerNotifyArray]);
+  const finalNotifyArray=preFinalNotifyArray?.filter((item)=>item.hotelId==hotelId)
 
   return <Notification message={finalNotifyArray} hotelId={hotelId} />;
 };

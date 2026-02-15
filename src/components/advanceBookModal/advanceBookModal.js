@@ -1,4 +1,4 @@
-import { View,Pressable,Modal,Dimensions, ScrollView,  KeyboardAvoidingView,Platform } from "react-native";
+import { View,Pressable,Modal,Dimensions, ScrollView,  KeyboardAvoidingView,Platform ,ActivityIndicator} from "react-native";
 import { Text,TextInput,Button } from "react-native-paper"
 import { Formik } from 'formik';
 import { useState,useRef ,useEffect } from "react";
@@ -24,6 +24,7 @@ const dispatch=useDispatch()
 const [matchRoomResponseAdvance,setMatchRoomResponseAdvance]=useState(false)
 const [showTextFieldAdvance,setShowTextFieldAdvance]=useState(false)
 const [filterCustomerObjAdvance,setFilterCustomerObjAdvance]=useState({})
+const [loading, setLoading] = useState(false);
 useEffect(()=>{
   if(selectedRoomId){
   const matchRoom=customerArrayAdvance?.some((item)=>item.roomId==selectedRoomId &&item.selectedDate === currentDates)
@@ -39,14 +40,19 @@ useEffect(()=>{
     }
     },[selectedRoomId,customerArrayAdvance,currentDates])
 
-    const deleteCustomerDetailsAdvance=async(customerId)=>{
+    const deleteCustomerDetailsAdvance=async(customerId,customerName,checkInDate,customerPhoneNumber)=>{
       if (planStatus !== "free" && paymentActiveSelector.activeSubscription==null) {
         dispatch(planScreenActions.planScreenVisibleToggle())
         return
       }
+      if (loading) return; 
+      setLoading(true); 
       const deleteObj={
       id:hotelDetailSelector?._id,
-      customerId:customerId
+      customerId:customerId,
+      customerName:customerName,
+      checkInDate:checkInDate,
+      customerPhoneNumber:customerPhoneNumber
       }
       try {
         const response = await axios.post(`${BASE_URL}/hotel/deleteCustomerDetailsAdvance/${deleteObj.id}`,deleteObj);
@@ -59,6 +65,9 @@ useEffect(()=>{
         socket.emit('deleteCustomerDetailsAdvance', response?.data?.getAdvanceCustomerDetailsArray)
     } catch (error) {
         // console.error('Error sending activate', error);
+    }
+    finally {
+      setLoading(false);   // ✅ STOP LOADER (always runs)
     }
     if(todayDate===filterCustomerObjAdvance.selectedDate){
     // setShowAlert(true)
@@ -95,7 +104,8 @@ return (
         dispatch(planScreenActions.planScreenVisibleToggle())
         return
       }
-
+      if (loading) return; 
+      setLoading(true); 
         const advanceCustomerObj={
             id:hotelDetailSelector._id,
             roomId:selectedRoomId,
@@ -142,6 +152,10 @@ return (
      }catch(error){
       console.error('error in app/update',error)
      }
+     finally {
+      setLoading(false);   // ✅ STOP LOADER (always runs)
+    }
+
         setAdvanceAlert(false)
         setShowTextFieldAdvance(false); 
         resetForm()
@@ -343,7 +357,11 @@ return (
                           }}
                           buttonColor="rgba(234, 88, 12, 1)"
                         >
-                          Submit
+                        {
+                    loading?
+                    <ActivityIndicator color="#fff" />
+                    :'Submit'
+                   }
                         </Button>
                       </View>
                       <View style={{ width: "50%" }}>
@@ -408,7 +426,8 @@ return (
                    marginTop: 20,
                 }}
                 buttonColor="rgba(234, 88, 12, 1)"
-                onPress={()=>deleteCustomerDetailsAdvance(filterCustomerObjAdvance?._id)}
+                onPress={()=>deleteCustomerDetailsAdvance
+                (filterCustomerObjAdvance?._id)}
               >
      Customer Booking
               </Button>
@@ -472,9 +491,14 @@ return (
                          marginRight: 20,
                       }}
                       buttonColor="rgba(234, 88, 12, 1)"
-                      onPress={()=>deleteCustomerDetailsAdvance(filterCustomerObjAdvance?._id)}
+                      onPress={()=>deleteCustomerDetailsAdvance(filterCustomerObjAdvance?._id,filterCustomerObjAdvance?.customerName,
+                        filterCustomerObjAdvance?.selectedDate,filterCustomerObjAdvance?.customerPhoneNumber)}
                     >
-           Delete
+          {
+                    loading?
+                    <ActivityIndicator color="#fff" />
+                    :'Delete'
+                   }
                     </Button>
           </View>
       </View>}
