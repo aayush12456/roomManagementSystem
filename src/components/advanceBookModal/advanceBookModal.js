@@ -131,7 +131,7 @@ return (
         // console.log("response in update obj is", response?.data);
         Toast.show({
           type: ALERT_TYPE.SUCCESS,
-          title: "AdvanceCustomer Details Updated Successfully",
+          title: "Advance Customer Details Updated Successfully",
           autoClose: 10000,
         });
         socket.emit("updateCustomerDetailsAdvance", response?.data?.getAdvanceCustomerDetailsArray);
@@ -183,10 +183,10 @@ return (
     }}
     >
         {/* <Text>hello world</Text> */}
-        { matchRoomResponseAdvance===false?<Text style={{textAlign:'center'}}>Enter Advance Customer Details</Text>
+        { matchRoomResponseAdvance===false?<Text style={{textAlign:'center',fontSize:16,fontWeight:'bold'}}>Enter Advance Customer Details</Text>
        :showTextFieldAdvance === false ?
-       <Text style={{textAlign:'center'}}>Advance Customer Details Preview</Text>
-       :<Text style={{textAlign:'center'}}>Update Advance Customer Details </Text>    
+       <Text style={{textAlign:'center',fontSize:16,fontWeight:'bold'}}>Advance Customer Details Preview</Text>
+       :<Text style={{textAlign:'center',fontSize:16,fontWeight:'bold'}}>Update Advance Customer Details </Text>    
     }
         {(matchRoomResponseAdvance === false || showTextFieldAdvance === true  )?
         <View style={{ flex: 1 }}>
@@ -355,12 +355,12 @@ return (
                             marginLeft: 12,
                             marginRight: 20,
                           }}
-                          buttonColor="rgba(234, 88, 12, 1)"
+                          buttonColor="#007BFF"
                         >
                         {
                     loading?
                     <ActivityIndicator color="#fff" />
-                    :'Submit'
+                    :'Book'
                    }
                         </Button>
                       </View>
@@ -374,13 +374,13 @@ return (
                             marginLeft: 12,
                             marginRight: 20,
                           }}
-                          buttonColor="rgba(234, 88, 12, 1)"
+                          buttonColor="#6C757D"
                           onPress={() => {
                             setAdvanceAlert(false);
                             formikRef.current?.resetForm();
                           }}
                         >
-                          Close
+                          Cancel
                         </Button>
                       </View>
                     </View>
@@ -392,13 +392,15 @@ return (
         <Text>Room Type : </Text>
        <Text>{roomType}</Text>
       </View>
-      <View style={{flexDirection:"row",gap:6,paddingTop:10}}>
+      <View style={{flexDirection:"row",gap:6,paddingTop:10,width: "100%",
+    alignItems: "flex-start"}}>
         <Text>Customer Name : </Text>
-       <Text>{filterCustomerObjAdvance.customerName}</Text>
+       <Text style={{ flex: 1,flexShrink: 1}}>{filterCustomerObjAdvance.customerName}</Text>
       </View>
-      <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
+      <View style={{flexDirection:"row",gap:6,paddingTop:15,width: "100%",
+    alignItems: "flex-start"}}>
         <Text>Customer Address : </Text>
-       <Text>{filterCustomerObjAdvance.customerAddress}</Text>
+       <Text style={{ flex: 1,flexShrink: 1}}>{filterCustomerObjAdvance.customerAddress}</Text>
       </View>
       <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
         <Text>Customer Phone Number : </Text>
@@ -425,11 +427,11 @@ return (
                    justifyContent:'center',
                    marginTop: 20,
                 }}
-                buttonColor="rgba(234, 88, 12, 1)"
+                buttonColor="#007BFF"
                 onPress={()=>deleteCustomerDetailsAdvance
                 (filterCustomerObjAdvance?._id)}
               >
-     Customer Booking
+ Check In
               </Button>
     </View>
     <View style={{ width: '50%', overflow: 'hidden' }}>
@@ -445,13 +447,13 @@ return (
                          marginLeft: 12,
                          marginRight: 20,
                       }}
-                      buttonColor="rgba(234, 88, 12, 1)"
+                      buttonColor="#6C757D"
                       onPress={() => {
                         setAdvanceAlert(false)
                         formikRef.current?.resetForm(); // Form reset
                       }}
                     >
-     Close
+     Cancel
                     </Button>
           </View>
      </View> 
@@ -490,14 +492,14 @@ return (
                          marginLeft: 12,
                          marginRight: 20,
                       }}
-                      buttonColor="rgba(234, 88, 12, 1)"
+                      buttonColor="#DC3545"
                       onPress={()=>deleteCustomerDetailsAdvance(filterCustomerObjAdvance?._id,filterCustomerObjAdvance?.customerName,
                         filterCustomerObjAdvance?.selectedDate,filterCustomerObjAdvance?.customerPhoneNumber)}
                     >
           {
                     loading?
                     <ActivityIndicator color="#fff" />
-                    :'Delete'
+                    :'Cancel'
                    }
                     </Button>
           </View>
@@ -516,7 +518,7 @@ return (
                          marginLeft: 12,
                          marginRight: 20,
                       }}
-                      buttonColor="rgba(234, 88, 12, 1)"
+                      buttonColor="#6C757D"
                       onPress={() => {
                         setAdvanceAlert(false)
                         formikRef.current?.resetForm(); // Form reset

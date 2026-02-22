@@ -241,11 +241,11 @@ keyboardShouldPersistTaps="handled"
         <View style={{ padding: 20, marginTop: "auto" }}>
         <Button
           mode="contained"
-          buttonColor="#28a745"
+          buttonColor="#007BFF"
           style={{ borderRadius: 25, height: 50, paddingTop: 4, fontSize: 16 }}
           onPress={()=>updateDataHandler(editStaff?._id)}
         >
-Update
+Save Changes
         </Button>
       </View>
 </ScrollView>

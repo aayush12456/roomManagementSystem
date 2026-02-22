@@ -7,6 +7,7 @@ import account from "../../../assets/settingIcon/account.png";
 import deleteImg from "../../../assets/settingIcon/delete.png";
 import switchImg from "../../../assets/settingIcon/switch.png";
 import transactionImg from "../../../assets/settingIcon/transaction.png";
+import nextImg from "../../../assets/settingIcon/next.png";
 import successImage from "../../../assets/AllIcons/successImg.gif"
 import * as SecureStore from 'expo-secure-store';
 import { Button,Card } from "react-native-paper";
@@ -292,7 +293,7 @@ const paymentHistoryHandler=()=>{
   return (
     <>
       {/* Main Settings UI */}
-      <View style={{ width: "100%", backgroundColor: "white" }}>
+      {/* <View style={{ width: "100%", backgroundColor: "white" }}>
         <Text
           style={{
             paddingLeft: 32,
@@ -360,7 +361,86 @@ const paymentHistoryHandler=()=>{
             <Text style={{ fontSize: 15,paddingTop:3 }}>Delete Hotel</Text>
           </View>
         </Pressable>:null}
-      </View>
+      </View> */}
+<View style={{ width: "100%", backgroundColor: "white" }}>
+<Text style={{paddingLeft: 32,paddingTop: 16,fontSize: 15,fontWeight: "600",color:'#6B7280'}}> ACCOUNT</Text>
+<View style={{height: 1,backgroundColor: "#E5E7EB",marginTop: 8,marginHorizontal: 32,}}/>
+<Pressable onPress={addAccountHandler}>
+<View style={{flexDirection:'row',justifyContent:"space-between",marginTop:20,marginBottom:30,marginLeft:26}}>
+<View style={{flexDirection: "row", gap: 5,}} >
+<Image source={account} style={{ width: 20, height: 20 }} />
+<Text style={{ fontSize: 15, marginTop: -2 }}>Add account</Text>
+</View>
+<View>
+<Image source={nextImg} style={{ width: 20, height: 20,marginRight:20 }} />
+</View>
+  </View>        
+  </Pressable>
+  <View style={{height: 1,backgroundColor: "#E5E7EB",marginTop: -12,marginHorizontal: 32,}}/>
+{profileArray?.length>0?  <Pressable onPress={switchAccountHandler}>
+<View style={{flexDirection:'row',justifyContent:"space-between",marginTop:20,marginBottom:30,marginLeft:26}}>
+<View style={{flexDirection: "row",gap: 5,}}>
+<Image source={switchImg} style={{ width: 20, height: 20 }} />
+<Text style={{ fontSize: 15, marginTop: -2 }}>Switch account</Text>
+</View>
+<View>
+<Image source={nextImg} style={{ width: 20, height: 20,marginRight:20 }} />
+</View>
+  </View>
+  </Pressable>:null}
+</View>
+
+
+{!profile?.post && (paymentActiveSelector?.activeSubscription ||paymentHistorySelector?.subscriptionArray?.length>0
+       )?<View style={{ width: "100%", backgroundColor: "white",marginTop:20 }}>
+<Text style={{paddingLeft: 32,paddingTop: 16,fontSize: 15,fontWeight: "600",color:'#6B7280'}}>BILLING</Text>
+<View style={{height: 1,backgroundColor: "#E5E7EB",marginTop: 8,marginHorizontal: 32,}}/>
+{ !profile?.post && (paymentActiveSelector?.activeSubscription ||paymentHistorySelector?.subscriptionArray?.length>0
+       )?<Pressable onPress={paymentHistoryHandler}>
+        <View style={{flexDirection:'row',justifyContent:"space-between",marginTop:20,marginBottom:30,marginLeft:26}}>
+          <View
+            style={{
+              flexDirection: "row",
+              gap: 5,
+            }}
+          >
+            <Image source={transactionImg} style={{ width: 20, height: 20 }} />
+            <Text style={{ fontSize: 15, marginTop: -2 }}>Payment History</Text>
+          </View>
+          <View>
+<Image source={nextImg} style={{ width: 20, height: 20,marginRight:20 }} />
+</View>
+          </View>
+        </Pressable>:null}
+        
+
+</View>:null}
+
+
+   {!profile?.post?<View style={{ width: "100%", backgroundColor: "white",marginTop:20 }}>
+<Text style={{paddingLeft: 32,paddingTop: 16,fontSize: 15,fontWeight: "600",color:'#6B7280'}}>Danger Zone</Text>
+<View style={{height: 1,backgroundColor: "#E5E7EB",marginTop: 8,marginHorizontal: 32,}}/>
+{!profile?.post?<Pressable onPress={deleteHotelHandler}>
+<View style={{flexDirection:'row',justifyContent:"space-between",marginTop:20,marginBottom:30,marginLeft:26}}>
+        <View
+            style={{
+              flexDirection: "row",
+              gap: 5,
+            }}
+          >
+            <Image source={{uri:hotelImgFirst}} style={{ width: 35, height: 35,borderRadius:20,marginLeft:-7 }} />
+            <Text style={{ fontSize: 15,paddingTop:3 }}>Delete Hotel</Text>
+          </View>
+          <View>
+<Image source={nextImg} style={{ width: 20, height: 20,marginRight:20 }} />
+</View>   
+          </View>
+        </Pressable>:null}
+        
+
+</View>:null}
+
+
 
       {/* Semi-transparent overlay */}
       {isOpen && (

@@ -20,6 +20,7 @@ const Maintenance=({roomDetails,floorName,profileName})=>{
       const [maintainObj,setMaintainObj]=useState({})
       const [mainCleanObj,setMainCleanObj]=useState({})
       const [finalMainCleanObj,setFinalMainCleanObj]=useState({})
+      const [customerObj, setCustomerObj] = useState({});
     const selectMaintenanceHandler=(roomType,roomId,shortLabel)=>{
       const stringToday = moment().format("DD/MM/YYYY"); 
      const selectData={
@@ -72,6 +73,32 @@ setFinalMainCleanObj(obj)
     },[maintainObj?.roomId,maintainCleanRoomArray])
 
     console.log('final main obj',finalMainCleanObj)
+
+    useEffect(() => {
+      const fetchRoomDetails = async () => {
+        try {
+          if (hotelDetailSelector._id) {
+            const response = await axios.get(
+              `${BASE_URL}/hotel/getCustomerDetails/${hotelDetailSelector?._id}`
+            );
+            setCustomerObj(response?.data || {});
+          }
+        } catch (error) {}
+      };
+  
+      fetchRoomDetails();
+  
+      socket.on("getCustomerDetails", (newUser) => {
+        setCustomerObj(newUser);
+      });
+      return () => {
+        socket.off("getCustomerDetails");
+        socket.off("getCustomerDetailsAdvance");
+      };
+    }, [hotelDetailSelector._id]);
+  
+    const customerArray = customerObj?.getCustomerDetailsArray || [];
+    console.log('customr',customerArray)
 return (
     <>
     <ScrollView>
@@ -164,7 +191,7 @@ return (
     </ScrollView>
    
         <MaintenanceModal maintainAlert={maintainAlert} setMaintainAlert={setMaintainAlert} maintainObj={maintainObj}
-        finalMainCleanObj={finalMainCleanObj}
+        finalMainCleanObj={finalMainCleanObj} customerArray={customerArray}
         />
     </>
 )

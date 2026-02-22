@@ -7,6 +7,7 @@ const MessageModal=({messageAlert,setMessageAlert,label,messageObj,currentDate,t
     const screenWidth = Dimensions.get("window").width;
     console.log('message obj',messageObj)
     console.log('advance message obj',advanceMessageObj)
+    console.log('current date in message modal',currentDate)
 return (
 <>
 <Modal visible={messageAlert || floorMessageAlert} transparent animationType="fade"   avoidKeyboard={true} >

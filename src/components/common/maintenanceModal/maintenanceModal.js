@@ -1,4 +1,4 @@
-import { View, Modal, Dimensions, ScrollView,Pressable } from "react-native";
+import { View, Modal, Dimensions, ScrollView,Pressable, Alert } from "react-native";
 import { Image } from 'expo-image';
 import { Text,Button } from "react-native-paper";
 import { useEffect,useState } from "react";
@@ -10,10 +10,11 @@ const socket = io.connect("http://192.168.29.169:4000");
 // const socket = io.connect("https://roommanagementsystembackend-1.onrender.com");
 import { useNavigation } from "@react-navigation/native"
 const screenWidth = Dimensions.get("window").width;
-const MaintenanceModal=({ maintainAlert,setMaintainAlert,maintainObj,finalMainCleanObj})=>{
+const MaintenanceModal=({ maintainAlert,setMaintainAlert,maintainObj,finalMainCleanObj,customerArray})=>{
   const navigation=useNavigation()
     console.log('maintain obj',maintainObj)
     console.log('final main',finalMainCleanObj)
+    console.log('customer modal',customerArray)
     const BASE_URL = "http://192.168.29.169:4000";
     // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
     const maintainCleanHandler=async(type)=>{
@@ -22,6 +23,14 @@ const MaintenanceModal=({ maintainAlert,setMaintainAlert,maintainObj,finalMainCl
         type:type
       }
       console.log('final main',finalMaintainObj)
+      if(type==="Maintenance Room" && isRoomChecked){
+        Alert.alert(
+          "Maintenance Not Allowed",
+          "Room is already booked"
+        );
+        setMaintainAlert(false)
+        return
+      }
       try {
         const response = await axios.post(`${BASE_URL}/hotel/addMaintenanceCleanRoom/${finalMaintainObj.id}`,finalMaintainObj);
         console.log('response in delete obj is',response?.data)
@@ -49,6 +58,19 @@ try {
 setMaintainAlert(false)
 navigation.goBack();
   }
+
+  const isRoomBooked = customerArray?.some(
+    (item) =>
+      item.roomId === finalMainCleanObj?.roomId ||
+      item.roomId === maintainObj?.roomId
+  );
+  console.log('is boks',isRoomBooked)
+
+  const isRoomChecked = customerArray?.some(
+    (item) =>
+      item.roomId === maintainObj?.roomId
+  );
+  console.log('is checked',isRoomChecked)
 return (
     <>
    <Modal visible={maintainAlert} transparent animationType="fade"   avoidKeyboard={true}>
@@ -97,6 +119,7 @@ return (
   {` is going to be cleaned by `}
   <Text style={{ fontWeight: 'bold' }}>{finalMainCleanObj?.mainCleanerName}</Text>
   {` wait for sometime`}
+  {isRoomBooked ? ` and room is booked` : ``}
 </Text>
 
 </View>:null}
@@ -129,12 +152,12 @@ return (
       justifyContent:'center',
       width: '70%',   // 👈 now center properly
     }}
-    buttonColor="rgba(234, 88, 12, 1)"
+    buttonColor="#16A34A"
     onPress={() => {
       deleteMainCleanDetails(finalMainCleanObj._id,maintainObj.id)
     }}
   >
-    Delete
+  Complete
   </Button>
 </View>:null}
 <View style={{ width: '50%', alignItems: 'center', marginTop: 20 }}>
@@ -146,7 +169,7 @@ return (
       justifyContent:'center',
       width: '70%',   // 👈 now center properly
     }}
-    buttonColor="rgba(234, 88, 12, 1)"
+    buttonColor="#6C757D"
     onPress={() => {
   setMaintainAlert(false)
     }}

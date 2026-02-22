@@ -166,7 +166,7 @@ console.log('grouped data',groupedData)
                 justifyContent: "center",
                 marginTop: 20,
               }}
-              buttonColor="rgba(234, 88, 12, 1)"
+              buttonColor="#6C757D"
               onPress={() => setShowBookedAlert(false)}
             >
               Close

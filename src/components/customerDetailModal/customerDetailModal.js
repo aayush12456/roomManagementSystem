@@ -333,10 +333,10 @@ extraCustomers: filterCustomerObj?.extraCustomers?.map(item => ({
       }}
     >
       {/* 🔹 Scroll starts from Customer Name */}
-     { matchRoomResponse===false?<Text style={{textAlign:'center'}}>Enter Customer Details</Text>
+     { matchRoomResponse===false?<Text style={{textAlign:'center',fontSize:16,fontWeight:'bold'}}>Enter Customer Details</Text>
        :showTextField === false ?
-       <Text style={{textAlign:'center'}}>Customer Details Preview</Text>
-       :<Text style={{textAlign:'center'}}>Update Customer Details </Text>    
+       <Text style={{textAlign:'center',fontSize:16,fontWeight:'bold'}}>Customer Details Preview</Text>
+       :<Text style={{textAlign:'center',fontSize:16,fontWeight:'bold'}}>Update Customer Details </Text>    
     }
       {(matchRoomResponse === false || showTextField === true  )?
       <ScrollView
@@ -937,8 +937,8 @@ extraCustomers: filterCustomerObj?.extraCustomers?.map(item => ({
       :
       <ScrollView 
       contentContainerStyle={{
-        padding: 20,
-        alignItems: "center",
+        padding:10,
+        // alignItems: "center",
       }}
       >
      <View>
@@ -946,41 +946,49 @@ extraCustomers: filterCustomerObj?.extraCustomers?.map(item => ({
         <Text>Room Type : </Text>
        <Text>{roomType}</Text>
       </View>
-      <View style={{flexDirection:"row",gap:6,paddingTop:10}}>
+      <View style={{flexDirection:"row",gap:6,paddingTop:10,width: "100%",
+    alignItems: "flex-start"}}>
         <Text>Customer Name : </Text>
-       <Text>{filterCustomerObj.customerName}</Text>
+       <Text style={{ flex: 1,flexShrink: 1}}>{filterCustomerObj.customerName}</Text>
       </View>
-      <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
+      <View style={{flexDirection:"row",gap:6,paddingTop:15,width: "100%",
+    alignItems: "flex-start"}}>
         <Text>Customer Address : </Text>
-       <Text>{filterCustomerObj.customerAddress}</Text>
+       <Text style={{ flex: 1,flexShrink: 1}}>{filterCustomerObj.customerAddress}</Text>
       </View>
       <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
         <Text>Customer Phone Number : </Text>
        <Text>{filterCustomerObj.customerPhoneNumber}</Text>
       </View>
-      <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
+      <View style={{flexDirection:"row",gap:6,paddingTop:15,width: "100%",
+    alignItems: "flex-start"}}>
         <Text>Relation : </Text>
-       <Text>{filterCustomerObj.relation}</Text>
+       <Text style={{ flex: 1,flexShrink: 1}}>{filterCustomerObj.relation}</Text>
       </View>
-      <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
+      <View style={{flexDirection:"row",gap:6,paddingTop:15,width: "100%",
+    alignItems: "flex-start"}}>
         <Text>Customer Id Proof : </Text>
-       <Text>{filterCustomerObj.customerIdProof}</Text>
+       <Text style={{ flex: 1,flexShrink: 1}}>{filterCustomerObj.customerIdProof}</Text>
       </View>
-      <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
+      <View style={{flexDirection:"row",gap:6,paddingTop:15,width: "100%",
+    alignItems: "flex-start"}}>
         <Text>customer Aadhar Number : </Text>
-       <Text>{filterCustomerObj.customerAadharNumber}</Text>
+       <Text style={{flex: 1,flexShrink: 1}} >{filterCustomerObj.customerAadharNumber}</Text>
       </View>
-      <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
+      <View style={{flexDirection:"row",gap:6,paddingTop:15,width: "100%",
+    alignItems: "flex-start"}}>
         <Text>Customer City : </Text>
-       <Text>{filterCustomerObj.customerCity}</Text>
+       <Text style={{flex: 1,flexShrink: 1}}>{filterCustomerObj.customerCity}</Text>
       </View>
-       <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
+       <View style={{flexDirection:"row",gap:6,paddingTop:15,width: "100%",
+    alignItems: "flex-start"}}>
         <Text>Customer Occupation: </Text>
-       <Text>{filterCustomerObj.customerOccupation}</Text>
+       <Text style={{flex: 1,flexShrink: 1}}>{filterCustomerObj.customerOccupation}</Text>
       </View>
-      <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
+      <View style={{flexDirection:"row",gap:6,paddingTop:15,width: "100%",
+    alignItems: "flex-start"}}>
         <Text>Customer Destination: </Text>
-       <Text>{filterCustomerObj.customerDestination}</Text>
+       <Text style={{flex: 1,flexShrink: 1}}>{filterCustomerObj.customerDestination}</Text>
       </View>
       <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
         <Text>Total Customer : </Text>
@@ -992,21 +1000,25 @@ extraCustomers: filterCustomerObj?.extraCustomers?.map(item => ({
           <>
           <View style={{marginTop:18}}>
             <Text>{customer?.extraCustomerLabel} </Text>
-            <View style={{flexDirection:"row",gap:6,paddingTop:6}}>
+            <View style={{flexDirection:"row",gap:6,paddingTop:6,width: "100%",
+    alignItems: "flex-start"}}>
             <Text>Customer Name : </Text>
-       <Text>{customer?.customerName}</Text>
+       <Text style={{flex: 1,flexShrink: 1}} >{customer?.customerName}</Text>
             </View>
-            <View style={{flexDirection:"row",gap:6,paddingTop:3}}>
+            <View style={{flexDirection:"row",gap:6,paddingTop:3,width: "100%",
+    alignItems: "flex-start"}}>
             <Text>Customer Address : </Text>
-       <Text>{customer?.customerAddress}</Text>
+       <Text style={{flex: 1,flexShrink: 1}} >{customer?.customerAddress}</Text>
             </View>
             <View style={{flexDirection:"row",gap:6,paddingTop:3}}>
             <Text>Customer Phone Number : </Text>
        <Text>{customer?.customerPhoneNumber}</Text>
             </View>
-            <View style={{flexDirection:"row",gap:6,paddingTop:3}}>
+            <View style={{flexDirection:"row",gap:6,paddingTop:3, width: "100%",
+    alignItems: "flex-start"}}>
             <Text>Customer Aadhar Number : </Text>
-       <Text>{customer?.customerAadharNumber}</Text>
+       
+       <Text style={{flex: 1,flexShrink: 1}}>{customer?.customerAadharNumber}</Text>
             </View>
           </View>
           </>
@@ -1083,12 +1095,12 @@ extraCustomers: filterCustomerObj?.extraCustomers?.map(item => ({
                          marginLeft: 12,
                          marginRight: 20,
                       }}
-                      buttonColor="rgba(234, 88, 12, 1)"
+                      buttonColor="#007BFF"
                     >
        {
                     loading?
                     <ActivityIndicator color="#fff" />
-                    :'Submit'
+                    :'Check In'
                    }
                     </Button>
           </View>:
@@ -1126,13 +1138,13 @@ extraCustomers: filterCustomerObj?.extraCustomers?.map(item => ({
                          marginLeft: 12,
                          marginRight: 20,
                       }}
-                      buttonColor="rgba(234, 88, 12, 1)"
+                      buttonColor="#DC3545"
                       onPress={()=>deleteCustomerDetails(filterCustomerObj?._id)}
                     >
  {
                     loading?
                     <ActivityIndicator color="#fff" />
-                    :'Delete'
+                    :'Checkout'
                    }
                     </Button>
           </View>:null
@@ -1150,14 +1162,14 @@ extraCustomers: filterCustomerObj?.extraCustomers?.map(item => ({
                          marginLeft: 12,
                          marginRight: 20,
                       }}
-                      buttonColor="rgba(234, 88, 12, 1)"
+                      buttonColor="#6C757D"
                       onPress={() => {
                         setShowAlert(false)
                         dispatch(passDataObjSliceAcions.passDataObj({}))
                         formikRef.current?.resetForm(); // Form reset
                       }}
                     >
-     Close
+     Cancel
                     </Button>
           </View>:null}
         </View>
@@ -1175,13 +1187,13 @@ extraCustomers: filterCustomerObj?.extraCustomers?.map(item => ({
                          marginLeft: 12,
                          marginRight: 20,
                       }}
-                      buttonColor="rgba(234, 88, 12, 1)"
+                      buttonColor="#6C757D"
                       onPress={() => {
                         setShowAlert(false)
                         formikRef.current?.resetForm(); // Form reset
                       }}
                     >
-     Close
+     Cancel
                     </Button>
           </View>:null}
         </View>

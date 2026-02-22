@@ -26,6 +26,7 @@ import * as Updates from "expo-updates";
 import { DevSettings } from "react-native";
 import PaymentSuccessPage from './src/Pages/paymentSuccessPage/paymentSuccessPage';
 import PaymentHistoryPage from './src/Pages/paymentHistoryPage/paymentHistoryPage';
+// import InternetChecker from './src/components/common/internetChecker/internetChecker';
 
 
 
@@ -156,6 +157,7 @@ export default function App() {
     <Provider store={store}>
       <AlertNotificationRoot theme='dark'>
       <NavigationContainer>
+      {/* <InternetChecker /> */}
         {loading ? (
           // ✅ Loader yaha render hoga
           <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>

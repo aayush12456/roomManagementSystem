@@ -135,7 +135,7 @@ return (
         width: screenWidth * 0.9,
       }}
     >
-        <Text style={{textAlign:'center'}}>Add Room</Text>
+        <Text style={{textAlign:'center',fontSize:16,fontWeight:'bold'}}>Add Room</Text>
         <ScrollView
                 contentContainerStyle={{
                   paddingHorizontal: 20,
@@ -242,13 +242,13 @@ return (
                          marginLeft: 12,
                          marginRight: 20,
                       }}
-                      buttonColor="rgba(234, 88, 12, 1)"
+                      buttonColor="#007BFF"
                       onPress={handleSubmit}
                     >
                    {
                     loading?
                     <ActivityIndicator color="#fff" />
-                    :'Submit'
+                    :'Save'
                    }
                     </Button>
           </View>
@@ -266,14 +266,14 @@ return (
                          marginLeft: 12,
                          marginRight: 20,
                       }}
-                      buttonColor="rgba(234, 88, 12, 1)"
+                      buttonColor="#6C757D"
                       onPress={() => {
                         resetForm();
                         setRoomAlert(false)
                   
                       }}
                     >
-Close
+Cancel
                     </Button>
           </View>
       </View>

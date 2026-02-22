@@ -204,6 +204,7 @@ const AddFloorModal = ({ floorAlert, setFloorAlert,hotelId,notifyTokenArray,prof
     paddingVertical: 10,
   }}
               >
+                        <Text style={{textAlign:'center',fontSize:16,fontWeight:'bold'}}>Add Floor</Text>
                 <ScrollView
                   contentContainerStyle={{
                     padding: 20,
@@ -349,6 +350,26 @@ const AddFloorModal = ({ floorAlert, setFloorAlert,hotelId,notifyTokenArray,prof
                     marginTop: 20,
                   }}
                 >
+                  
+                  <Button
+                    mode="contained"
+                    buttonColor="#007BFF"
+                    onPress={handleSubmit}
+                    style={{
+                      borderRadius: 10,
+                      color: '#FFFFFF',
+                      width: "40%",
+                      height: 45,
+                      justifyContent: "center",
+                      
+                    }}
+                  >
+                    {
+                    loading?
+                    <ActivityIndicator color="#fff" />
+                    :'Add Floor'
+                   }
+                  </Button>
                   <Button
                     mode="outlined"
                     onPress={() => {
@@ -362,25 +383,7 @@ const AddFloorModal = ({ floorAlert, setFloorAlert,hotelId,notifyTokenArray,prof
                       justifyContent: "center",
                     }}
                   >
-                    Close
-                  </Button>
-
-                  <Button
-                    mode="contained"
-                    buttonColor="rgba(234, 88, 12, 1)"
-                    onPress={handleSubmit}
-                    style={{
-                      borderRadius: 10,
-                      width: "40%",
-                      height: 45,
-                      justifyContent: "center",
-                    }}
-                  >
-                    {
-                    loading?
-                    <ActivityIndicator color="#fff" />
-                    :'Submit'
-                   }
+                    Cancel
                   </Button>
                 </View>
               </View>

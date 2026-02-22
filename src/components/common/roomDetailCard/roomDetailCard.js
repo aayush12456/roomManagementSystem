@@ -462,7 +462,6 @@ const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDe
   const handleDoubleTap = (roomTitle) => {
     if (disableDoubleTap===true) return;  
     const now = Date.now();
-  
     if (lastTap && (now - lastTap) < 300) {
       deleteFloorHandler(roomTitle);   // run on double tap only
     } else {
@@ -558,6 +557,7 @@ const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDe
   };
   
   const roomClickHandler = (id, type, num) => {
+    console.log('room id',id)
     setSelectedRoomId(id);
 
     const today = moment(todayDate, "DD/MM/YYYY");
@@ -1035,7 +1035,7 @@ const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDe
       setFloorMessageAlert={setFloorMessageAlert} floorLabel={floorLabel} setFloorLabel={setFloorLabel}/>
 
       <MaintenanceModal  maintainAlert={maintainAlert} setMaintainAlert={setMaintainAlert}
-    finalMainCleanObj={finalMainCleanObj} maintainObj={anotherMainCleanObj}
+    finalMainCleanObj={finalMainCleanObj} maintainObj={anotherMainCleanObj} customerArray={customerArray}
     />
 
       <AwesomeAlert

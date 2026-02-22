@@ -356,7 +356,7 @@ return (
                       {/* <View style={{flexDirection:'row',justifyContent:'center'}}>
                       <Image source={plus} style={{width:20,height:20,tintColor: 'white'}}/>
                       </View> */}
-                      <Text style={{textAlign:'center',paddingTop:6,paddingBottom:6,color:"white"}}>Add Floor</Text>
+                      <Text style={{textAlign:'center',paddingTop:6,paddingBottom:6,color:"white"}}>Add New Floor</Text>
                     </View>
                       </View>
                     

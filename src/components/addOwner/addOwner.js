@@ -76,10 +76,10 @@ const AddOwner=({hotelsId,profile,notifyTokenArray,planStatus,paymentActiveSelec
       };
 
       const addOwnerHandler=async()=>{
-        if (planStatus !== "free" && paymentActiveSelector.activeSubscription==null) {
-          dispatch(planScreenActions.planScreenVisibleToggle())
-          return
-        }
+        // if (planStatus !== "free" && paymentActiveSelector.activeSubscription==null) {
+        //   dispatch(planScreenActions.planScreenVisibleToggle())
+        //   return
+        // }
         if (!validate()) return;
         setLoading(true); 
         const formData = new FormData()
@@ -259,7 +259,7 @@ keyboardShouldPersistTaps="handled"
     marginLeft: 12,
     fontSize: 16,
     marginRight: 20,
-    backgroundColor: "rgba(234, 88, 12, 1)", // force color
+    backgroundColor: "#007BFF", // force color
     // opacity:loading ? 0.8 : 1, // disabled feel
   }}
   contentStyle={{ height: 50 }}
@@ -268,10 +268,10 @@ keyboardShouldPersistTaps="handled"
   {loading ? (
     <View style={{ flexDirection: "row", alignItems: "center",gap:4 }}>
 <ActivityIndicator size="small" color="#ffffff" style={{marginLeft:-12}} />
-      <Text style={{ color: "#ffffff",textAlign:'center',fontWeight:'600' }}>Submitting...</Text>
+      <Text style={{ color: "#ffffff",textAlign:'center',fontWeight:'600' }}>Adding...</Text>
     </View>
   ) : (
-    "SUBMIT"
+    "Add Owner"
   )}
 </Button>
       </View>

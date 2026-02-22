@@ -194,7 +194,7 @@ Delete
         </Button> */}
         <Button
   mode="contained"
-  buttonColor="#28a745"
+  buttonColor="#DC3545"
   style={{ borderRadius: 25, height: 50, marginTop: 6 ,paddingTop: 4, fontSize: 16, }}
   onPress={() => {
     if (deletingId === staffObj._id) return; // prevent double click

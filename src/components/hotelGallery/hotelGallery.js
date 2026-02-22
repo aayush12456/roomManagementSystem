@@ -100,11 +100,11 @@ return (
 >
 <Button
           mode="contained"
-          buttonColor="#28a745"
+          buttonColor="#6C757D"
           style={{ borderRadius: 25, height: 50, paddingTop: 4, fontSize: 16}}
           onPress={pickHotelImage}
         >
-change
+Change Photo
         </Button>
 </View>:null}
 
@@ -125,18 +125,18 @@ change
       justifyContent:'space-between',marginLeft:15,marginRight:15,marginTop:-40}}>
       <Button
           mode="contained"
-          buttonColor="#28a745"
+          buttonColor="#007BFF"
           style={{ borderRadius: 25, height: 50, paddingTop: 4, fontSize: 16}}
           onPress={()=>imgSubmitHandler()}
         >
 {/* Submit */}
 {
-  loading? <ActivityIndicator color="#fff" />:'Submit'
+  loading? <ActivityIndicator color="#fff" />:'Save'
 }
         </Button>
         <Button
           mode="contained"
-          buttonColor="#28a745"
+          buttonColor="#6C757D"
           style={{ borderRadius: 25, height: 50, paddingTop: 4, fontSize: 16}}
           onPress={()=>setSelectHotelImage("")}
         >

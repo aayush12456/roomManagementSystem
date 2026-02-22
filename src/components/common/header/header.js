@@ -72,10 +72,10 @@ return (
   {planSlice===false? <Drawer.Navigator
   drawerContent={(props) => (
     <DrawerContentScrollView {...props} 
-    // contentContainerStyle={{ flex: 1 }}
-    scrollEnabled={isLast24Hours}
-showsVerticalScrollIndicator={isLast24Hours}
-
+    // scrollEnabled={isLast24Hours}
+// showsVerticalScrollIndicator={isLast24Hours}
+contentContainerStyle={{ flexGrow: 1 }}
+showsVerticalScrollIndicator={true}
     >
       {/* <Text>Free Trial End</Text>
       <Text>{countDownTime}</Text> */}
