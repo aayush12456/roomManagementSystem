@@ -18,7 +18,7 @@ const navigation=useNavigation()
 const [selectedPlan, setSelectedPlan] = useState(699);
 const [planType,setPlanType]=useState('')
 const BASE_URL = "http://192.168.29.169:4000"; 
-
+// const BASE_URL = "https://roommanagementsystembackend-1.onrender.com"; 
 //test key
 // plan_RziUw1NAukBSo5 ->1 Rs plan
 // plan_Rzu3d5Zlg3vI3A ->50 Rs plan
@@ -33,6 +33,14 @@ const BASE_URL = "http://192.168.29.169:4000";
 
 let plan=""
   const subscribe = async (planType) => {
+//live
+// if(planType=="single"){
+//   plan="plan_S9mz77K7uN4Mhm"
+// }
+// else{
+//   plan="plan_S9mzyclsUgcKX8"
+// }
+
     if(planType=="single"){
       plan="plan_S2Vj0VT1CEKM5a"
     }

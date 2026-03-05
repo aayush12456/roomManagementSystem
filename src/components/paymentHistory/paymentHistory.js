@@ -47,10 +47,9 @@ return (
     <Card.Content >
         <ScrollView>
         {
-        paymentHistory?.map((pay)=>{
+        paymentHistory?.map((pay,index)=>{
             return (
-                <>
-                <View>
+                <View key={index}>
                   <View style={{flexDirection:"row",justifyContent:"space-between",marginTop:10}}>
                     <Text style={{fontWeight:700}}>
                         {pay?.startDate}
@@ -68,7 +67,6 @@ return (
           }}
         />
                 </View>
-                </>
             )
         })
        }

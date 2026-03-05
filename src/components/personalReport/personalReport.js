@@ -506,11 +506,12 @@ style={{
 
     <View style={{marginTop:14}}>
     <Button
-              mode="contained"
+                  mode="outlined"
+                  textColor='#0069D9'
               style={{
                 borderRadius: 11,
+                borderColor:'#0069D9'
               }}
-              buttonColor="rgba(234, 88, 12, 1)"
               onPress={rangeDateHandler}
             >
    Go
@@ -524,11 +525,11 @@ style={{
           <Button
             mode="contained"
             style={{ borderRadius: 11 }}
-            buttonColor="rgba(234, 88, 12, 1)"
+            buttonColor="#007BFF"
             onPress={generatePersonalAndDownloadPDF}
             disabled={personalReport?.length === 0 || !dateSelector.type}
           >
-            Download Pdf
+            Export Pdf
           </Button>
         </View>
 
@@ -644,10 +645,10 @@ style={{
                       <Text style={{minWidth: 120,textAlign: "center", paddingHorizontal: 8 }}>{item.totalPayment}</Text>
                      <Text style={{minWidth: 120,  textAlign: "center", paddingHorizontal: 8 }}>{item.paymentPaid}</Text>
                      <Text style={{ minWidth: 120, textAlign: "center", paddingHorizontal: 8 }}>{item.paymentDue}</Text>
-                     <Button mode="contained" style={{ borderRadius: 11, marginLeft: 20,height:40 }} buttonColor="rgba(234, 88, 12, 1)" onPress={() => morePersonalDetailsHandler(item._id)}>
-                     Details
+                     <Button mode="contained" style={{ borderRadius: 11, marginLeft: 20,height:40,border:'#007BFF' }}  textColor="#007BFF" onPress={() => morePersonalDetailsHandler(item._id)}>
+                  View Details
                       </Button>
-                      <Button mode="contained" style={{ borderRadius: 11, marginLeft: 20 }} buttonColor="rgba(234, 88, 12, 1)" onPress={() => deletePersonalCustomerReport(item._id)}>
+                      <Button mode="contained" style={{ borderRadius: 11, marginLeft: 20 }}  buttonColor="#DC3545" onPress={() => deletePersonalCustomerReport(item._id)}>
                         Delete
                       </Button>
                     </View>

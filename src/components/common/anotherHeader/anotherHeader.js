@@ -25,6 +25,9 @@ const AnotherHeader=({edit})=>{
             else if(edit?.params?.heading==="Payment History"){
               navigation.goBack();
               }
+              else if(edit?.params?.heading==="Privacy Policy"){
+                navigation.goBack();
+                }
             else if(edit?.params?.heading===edit?.params?.title){
               navigation.goBack();
               }

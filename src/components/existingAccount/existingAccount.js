@@ -1,6 +1,7 @@
-import { Text,TextInput,Button } from "react-native-paper"
+import { Text,TextInput,Button, Icon } from "react-native-paper"
 import {Image,View,ScrollView} from 'react-native'
 import success from '../../../assets/AllIcons/success.png'
+import appIcon from '../../../assets/icon.png'
 import Modal from 'react-native-modal';
 import * as SecureStore from 'expo-secure-store';
 import { useState,useEffect } from "react"
@@ -71,8 +72,8 @@ const ExistingAccount=()=>{
 return (
     <>
     <View style={{marginTop:40}}>
-    <View style={{flexDirection:"row",justifyContent:"center"}}>
-    <Image source={success} style={{width:50,height:50}}/>
+    <View style={{flexDirection:"row",justifyContent:"center",marginBottom:10}}>
+    <Image source={appIcon} style={{width:50,height:50}}/>
     </View> 
     <View style={{ paddingHorizontal: 16 }}>
         <TextInput
@@ -97,7 +98,7 @@ return (
                          marginLeft: 12,
                          marginRight: 20,
                       }}
-                      buttonColor="rgba(234, 88, 12, 1)"
+                      buttonColor="#007BFF"
                       onPress={loginHandler}
                     >
            SEND OTP

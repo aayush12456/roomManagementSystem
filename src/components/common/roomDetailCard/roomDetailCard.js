@@ -469,44 +469,7 @@ const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDe
     }
   };
 
-  // const anotherClickHandler = (id, roomType, shortLabel) => {
-  //   if (isDeleting) return; // ✅ stop re-trigger during deletion
-  //   console.log("🔴 Double tap → anotherRoomClickHandler called for:", id, shortLabel);
-
-  //   const today = moment(todayDate, "DD/MM/YYYY");
-  //   const current = moment(currentDate, "DD/MM/YYYY");
-
-  //   const validBookings = customerArray?.filter((item) => {
-  //     const checkOut = moment(item.checkOutDate, "DD/MM/YYYY");
-  //     return !(current.isAfter(checkOut) && item.roomId === id);
-  //   });
-
-  //   const isRoomBooked = validBookings.some((item) => {
-  //     const checkIn = moment(item.checkInDate, "DD/MM/YYYY");
-  //     const checkOut = moment(item.checkOutDate, "DD/MM/YYYY");
-  //     return (
-  //       item.roomId === id &&
-  //       today.isSameOrAfter(checkIn) &&
-  //       today.isSameOrBefore(checkOut)
-  //     );
-  //   });
-
-  //   const hasAdvanceBooking = customerArrayAdvance?.some(
-  //     (item) => item.roomId === id && item.selectedDate === currentDate
-  //   );
-  //     console.log('book',isRoomBooked,hasAdvanceBooking)
-  //      if(isRoomBooked || hasAdvanceBooking  ){
-  //       setMessageAlert(true)
-  //       setLabel(shortLabel);
-  //       setSelectedRoomId(id);
-  //      }
-  //      else{
-  //       setLabel(shortLabel);
-  //       setAnotherShowAlert(true);
-  //       setRoomIds(id);
-  //      }
-  // };
-
+ 
   const anotherClickHandler = (id, roomType, shortLabel) => {
     if (isDeleting) return;
   
@@ -691,12 +654,7 @@ const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDe
     else{
       setFloorAlert(true)
     }
-    // setFloorAlert(true)
-// const deleteFloorObj={
-// id:hotelDetailSelector?._id,
-// floorName:roomTitle
-// }
-// console.log('delete obj',deleteFloorObj)
+
   }
   useEffect(()=>{
     if(selectedRoomId){
@@ -815,11 +773,6 @@ const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDe
       pointerEvents="box-none" 
     >
     <Card style={{ borderRadius: 6, marginVertical: 5, padding: 10,height:211 }}
-    //  onLayout={(event) => {
-    //   const { height } = event.nativeEvent.layout;
-    //   console.log('height is',height)
-    //   setCardHeight(height)
-    // }}
     >
      
      <Pressable
@@ -1066,14 +1019,7 @@ const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDe
             roomNumber:label
           };
           console.log("Room deleted!", deleteRoomObj);
-          // setAnotherShowAlert(false);
-          // setTimeout(() => {
-          //   dispatch(deleteRoomAsync(deleteRoomObj));
-          //   setIsDeleting(false); // reset guard after done
-          // }, 500); // slight delay ensures clean close
-          // sendNotificationToAll()
-        
-
+      
           setAnotherShowAlert(false);
           setTimeout(async() => {
            await dispatch(deleteRoomAsync(deleteRoomObj)).unwrap();

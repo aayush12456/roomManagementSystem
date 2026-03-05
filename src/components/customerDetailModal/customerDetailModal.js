@@ -129,9 +129,26 @@ const CustomerDetailModal=({showAlert,setShowAlert,selectedRoomId,customerArray,
           // console.log('response in delete obj is',response?.data)
           Toast.show({
             type: ALERT_TYPE.SUCCESS,
-            title: "Customer Details Deleted Successfully",
-            autoClose: 10000, // 10 sec me band hoga
+            title: "Guest checkout",
+            textBody: `Room ${roomNo} available`,
+            autoClose:10000,
+            containerStyle: {
+              borderRadius: 16,
+              marginHorizontal: 20,
+              paddingVertical: 12,
+              backgroundColor: "#16A34A", // soft success green
+            },
+            titleStyle: {
+              fontSize: 15,
+              fontWeight: "600",
+              color: "#fff",
+            },
+            textBodyStyle: {
+              fontSize: 13,
+              color: "#E5E7EB",
+            },
           });
+          
           socket.emit('deleteCustomerDetails', response?.data)
       } catch (error) {
           // console.error('Error sending activate', error);
@@ -188,18 +205,6 @@ extraCustomers: filterCustomerObj?.extraCustomers?.map(item => ({
       enableReinitialize 
       validationSchema={customerDetailsSchema}
       onSubmit={async(values,{ resetForm }) => {
-        // const checkInTime=new Date(values.checkInTime).toLocaleTimeString("en-IN", {
-        //   hour: "2-digit",
-        //   minute: "2-digit",
-        //   hour12: true,
-        //   timeZone: "Asia/Kolkata"
-        // })
-        // const personalCheckOutTime=new Date(values.personalCheckOutTime).toLocaleTimeString("en-IN", {
-        //   hour: "2-digit",
-        //   minute: "2-digit",
-        //   hour12: true,
-        //   timeZone: "Asia/Kolkata"
-        // })
         if (planStatus !== "free"&& paymentActiveSelector.activeSubscription==null) {
           dispatch(planScreenActions.planScreenVisibleToggle())
           return
@@ -273,8 +278,24 @@ extraCustomers: filterCustomerObj?.extraCustomers?.map(item => ({
           // console.log("response in update obj is", response?.data);
           Toast.show({
             type: ALERT_TYPE.SUCCESS,
-            title: "Customer Details Updated Successfully",
-            autoClose: 10000,
+            title: "Guest Details Updated",
+            textBody: `Room ${roomNo} `,
+            autoClose:10000,
+            containerStyle: {
+              borderRadius: 16,
+              marginHorizontal: 20,
+              paddingVertical: 12,
+              backgroundColor: "#16A34A", // soft success green
+            },
+            titleStyle: {
+              fontSize: 15,
+              fontWeight: "600",
+              color: "#fff",
+            },
+            textBodyStyle: {
+              fontSize: 13,
+              color: "#E5E7EB",
+            },
           });
           // socket.emit("updateCustomerDetails", response?.data?.getCustomerDetailsArray);
           socket.emit("updateCustomerDetails", response?.data);
@@ -287,8 +308,24 @@ extraCustomers: filterCustomerObj?.extraCustomers?.map(item => ({
           // console.log("response in add obj is", response?.data);
           Toast.show({
             type: ALERT_TYPE.SUCCESS,
-            title: "Customer Details Added Successfully",
-            autoClose: 10000,
+            title: "Guest Checked In",
+            textBody: `Room ${roomNo} assigned`,
+            autoClose:10000,
+            containerStyle: {
+              borderRadius: 16,
+              marginHorizontal: 20,
+              paddingVertical: 12,
+              backgroundColor: "#16A34A", // soft success green
+            },
+            titleStyle: {
+              fontSize: 15,
+              fontWeight: "600",
+              color: "#fff",
+            },
+            textBodyStyle: {
+              fontSize: 13,
+              color: "#E5E7EB",
+            },
           });
           socket.emit("addCustomerDetails", response?.data);
           // socket.emit("addReportDetails", response?.data?.reportArray);
@@ -474,12 +511,6 @@ extraCustomers: filterCustomerObj?.extraCustomers?.map(item => ({
             const count = parseInt(text || "0");
         
             if (count > 1) {
-              // const newArr = Array.from({ length: count - 1 }, () => ({
-              //   customerName: "",
-              //   customerAddress: "",
-              //   customerPhoneNumber: "",
-              //   customerAadharNumber: "",
-              // }));
               const existing = values.extraCustomers || [];
 
     const newArr = Array.from({ length: count - 1 }, (_, i) => ({
@@ -856,38 +887,7 @@ extraCustomers: filterCustomerObj?.extraCustomers?.map(item => ({
   </View>
 ) : null}
     
-  {/* <View style={{ height: 250, width: screenWidth * 0.9, borderWidth: 2, borderColor: "#ccc" }}>
-  <SignatureScreen
-  ref={ref}
-  onOK={(sig) => setFieldValue("customerSignature", sig)} 
-  onClear={() => setFieldValue("customerSignature", "")}
-  onBegin={() => setScrollEnabled(false)}
-  onEnd={() => {
-    setScrollEnabled(true);
-    ref.current.readSignature();   // ✅ ye call karega onOK aur Formik me signature save ho jaayega
-  }}
-  autoClear={false}
-  descriptionText="Apna Signature yaha karein"
-  webStyle={`
-    .m-signature-pad--footer {display: none; margin: 0px;}
-    body,html {width: 100%; height: 100%; margin: 0; padding: 0;}
-    .m-signature-pad {box-shadow: none; border: none; border-radius: 0;}
-  `}
-/>
-
-    <View style={{ flexDirection: "row", justifyContent: "center" }}>
-      <Button
-        mode="outlined"
-        onPress={() => ref.current.clearSignature()}
-        style={{ marginBottom: 10, width: 90, marginTop: 9 }}
-      >
-        Clear
-      </Button>
-    </View>
-  </View>
-  {touched.customerSignature && errors.customerSignature && (
-      <Text style={{ color: "red" }}>{errors.customerSignature}</Text>
-    )} */}
+ 
 {showSignaturePad && (
   <View
     style={{

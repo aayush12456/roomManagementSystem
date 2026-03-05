@@ -351,7 +351,7 @@ return (
                     </View>:null} */}
                     {!profile?.post? <Pressable onPress={addFloorHandler} >
                       <View style={{flexDirection:"row",justifyContent:"center"}}>
-                      <View style={{width:'90%', marginTop:15,backgroundColor:'orange', 
+                      <View style={{width:'90%', marginTop:15,backgroundColor:'#007BFF', 
                     padding:12, position: "relative",bottom:0,borderRadius:30}}>
                       {/* <View style={{flexDirection:'row',justifyContent:'center'}}>
                       <Image source={plus} style={{width:20,height:20,tintColor: 'white'}}/>

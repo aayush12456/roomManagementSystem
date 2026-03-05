@@ -2,6 +2,7 @@ import { createDrawerNavigator,DrawerContentScrollView,DrawerItemList } from '@r
 import DashboardPage from '../../../Pages/dashboardPage/dashboardPage';
 import ReportPage from '../../../Pages/reportPage/reportPage';
 import { Image,View ,Text} from 'react-native';
+import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import { Button } from 'react-native-paper';
 import * as SecureStore from 'expo-secure-store';
 import { useNavigation } from '@react-navigation/native';
@@ -24,7 +25,7 @@ import axios from "axios";
 import PaymentPage from '../../../Pages/paymentPage/paymentPage';
 import TrialCountDown from '../../trialCountDown/trialCountDown';
 import { useSelector } from 'react-redux';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import PlanScreen from '../planScreen/planScreen';
 import DeparturePage from '../../../Pages/departurePage/departurePage';
 const socket = io.connect("http://192.168.29.169:4000")
@@ -67,6 +68,8 @@ const Header=({profile,allStaffPlusOwner,hotelId,profileArrays,policeReport,tota
      navigation.navigate('LoginPage')
     }
     console.log('is last',isLast24Hours)
+
+ 
 return (
     <>
   {planSlice===false? <Drawer.Navigator
@@ -100,15 +103,26 @@ showsVerticalScrollIndicator={true}
 
       {/* 👇 Logout Button Bottom Fixed */}
       <View style={{ padding: 20, marginTop: "auto" }}>
-        <Button
-          mode="contained"
-          buttonColor="#28a745"
-          style={{ borderRadius: 25, height: 50, paddingTop: 4, fontSize: 16 }}
-          onPress={logoutHandler}
-        >
-          Sign Out
-        </Button>
-      </View>
+  <Button
+    mode="contained"
+    buttonColor="#F3F4F6"
+    textColor="#374151"
+    style={{
+      borderRadius: 25,
+      height: 50,
+      justifyContent: "center",
+      elevation: 0, // shadow remove for clean look
+      borderWidth:1,
+      borderColor:'#E5E7EB'
+    }}
+    contentStyle={{
+      height: 50,
+    }}
+    onPress={logoutHandler}
+  >
+    Sign Out
+  </Button>
+</View>
     </DrawerContentScrollView>
   )}
 >

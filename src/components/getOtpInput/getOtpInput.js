@@ -3,7 +3,7 @@ import { OtpInput } from "react-native-otp-entry";
 import { View,Text,Image,ActivityIndicator } from 'react-native';
 import { Button } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
-import LoginImage from '../common/loginImage/loginImage';
+import LottieView from "lottie-react-native";
 import unavailableImg from '../../../assets/settingIcon/unavailable.png'
 import * as SecureStore from 'expo-secure-store';
 import { useEffect,useState } from 'react';
@@ -181,8 +181,15 @@ const GetOtpInput=({hotelObj,data})=>{
 return (
     <>
     <SafeAreaView style={{ flex: 1 }}>
-    <LoginImage/>
-    {/* <Text>otp is {recieveOtpObj.otp}</Text> */}
+          <View style={{ alignItems: "center", marginTop: 20 }}>
+      <LottieView
+        source={require("../../../assets/animation/OTP.json")}
+        autoPlay
+        loop
+        style={{ width: 200, height: 200 }}
+      />
+    </View>
+    <Text>otp is {recieveOtpObj.otp}</Text>
     <View style={{ paddingHorizontal: 16 }}>
     <OtpInput numberOfDigits={5} onTextChange={(text) => setMyOtp(text)} />
       </View> 
@@ -202,7 +209,7 @@ return (
                          marginRight: 20,
                          width:`${loading?100:""}`
                       }}
-                      buttonColor="rgba(234, 88, 12, 1)"
+                      buttonColor="#007BFF"
                       onPress={verifyOtpHandler}
                     >
            {/* VERiFY OTP */}
@@ -226,7 +233,7 @@ return (
                          marginTop:12,
                          marginRight: 20,
                       }}
-                      buttonColor="rgba(234, 88, 12, 1)"
+                      buttonColor="#6C757D"
                       onPress={cancelOtpHandler}
                     >
            CANCEL

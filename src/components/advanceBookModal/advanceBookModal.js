@@ -54,13 +54,40 @@ useEffect(()=>{
       checkInDate:checkInDate,
       customerPhoneNumber:customerPhoneNumber
       }
+      const formatDateForToast= (dateString) => {
+        const [day, month, year] = dateString.split("/");
+      
+        const dateObj = new Date(year, month - 1, day);
+      
+        return dateObj.toLocaleDateString("en-IN", {
+          day: "numeric",
+          month: "long",
+        });
+      };
       try {
         const response = await axios.post(`${BASE_URL}/hotel/deleteCustomerDetailsAdvance/${deleteObj.id}`,deleteObj);
         // console.log('response in delete obj is',response?.data)
+        const formattedDate = formatDateForToast(currentDates);
         Toast.show({
           type: ALERT_TYPE.SUCCESS,
-          title: "Advance Customer Details Deleted Successfully",
-          autoClose: 10000, // 10 sec me band hoga
+          title: "Booking Cancelled",
+          textBody: `Room ${roomNo} for ${formattedDate}`,
+          autoClose:10000,
+          containerStyle: {
+            borderRadius: 16,
+            marginHorizontal: 20,
+            paddingVertical: 12,
+            backgroundColor: "#16A34A", // soft success green
+          },
+          titleStyle: {
+            fontSize: 15,
+            fontWeight: "600",
+            color: "#fff",
+          },
+          textBodyStyle: {
+            fontSize: 13,
+            color: "#E5E7EB",
+          },
         });
         socket.emit('deleteCustomerDetailsAdvance', response?.data?.getAdvanceCustomerDetailsArray)
     } catch (error) {
@@ -122,6 +149,16 @@ return (
             frontDeskExecutiveName:values.executiveName,
         }
         // console.log('advance customer',advanceCustomerObj)
+        const formatDateForToast= (dateString) => {
+          const [day, month, year] = dateString.split("/");
+        
+          const dateObj = new Date(year, month - 1, day);
+        
+          return dateObj.toLocaleDateString("en-IN", {
+            day: "numeric",
+            month: "long",
+          });
+        };
      try{
       if(matchRoomResponseAdvance === true){
         const response = await axios.post(
@@ -131,8 +168,24 @@ return (
         // console.log("response in update obj is", response?.data);
         Toast.show({
           type: ALERT_TYPE.SUCCESS,
-          title: "Advance Customer Details Updated Successfully",
-          autoClose: 10000,
+          title: "Details Updated",
+          textBody: `Guest information updated`,
+          autoClose:10000,
+          containerStyle: {
+            borderRadius: 16,
+            marginHorizontal: 20,
+            paddingVertical: 12,
+            backgroundColor: "#16A34A", // soft success green
+          },
+          titleStyle: {
+            fontSize: 15,
+            fontWeight: "600",
+            color: "#fff",
+          },
+          textBodyStyle: {
+            fontSize: 13,
+            color: "#E5E7EB",
+          },
         });
         socket.emit("updateCustomerDetailsAdvance", response?.data?.getAdvanceCustomerDetailsArray);
       }
@@ -142,10 +195,27 @@ return (
           advanceCustomerObj
         );
         // console.log("response in add obj advance is", response?.data);
+        const formattedDate = formatDateForToast(currentDates);
         Toast.show({
           type: ALERT_TYPE.SUCCESS,
-          title: "Advance Customer Details Added Successfully",
-          autoClose: 10000,
+          title: "Booking Confirmed",
+          textBody: `Room ${roomNo} for ${formattedDate}`,
+          autoClose:10000,
+          containerStyle: {
+            borderRadius: 16,
+            marginHorizontal: 20,
+            paddingVertical: 12,
+            backgroundColor: "#16A34A", // soft success green
+          },
+          titleStyle: {
+            fontSize: 15,
+            fontWeight: "600",
+            color: "#fff",
+          },
+          textBodyStyle: {
+            fontSize: 13,
+            color: "#E5E7EB",
+          },
         });
         socket.emit("addCustomerDetailsAdvance", response?.data?.getAdvanceCustomerDetailsArray);
       }
@@ -193,7 +263,7 @@ return (
           <ScrollView
                       contentContainerStyle={{
                         alignItems: "center",
-                        paddingBottom: 20,
+                        padding: 20,
                       }}
                       keyboardShouldPersistTaps="handled"
                       style={{ flex: 1 }}

@@ -7,6 +7,7 @@ import account from "../../../assets/settingIcon/account.png";
 import deleteImg from "../../../assets/settingIcon/delete.png";
 import switchImg from "../../../assets/settingIcon/switch.png";
 import transactionImg from "../../../assets/settingIcon/transaction.png";
+import privacyImg from "../../../assets/settingIcon/privacyPolicy.png";
 import nextImg from "../../../assets/settingIcon/next.png";
 import successImage from "../../../assets/AllIcons/successImg.gif"
 import * as SecureStore from 'expo-secure-store';
@@ -48,7 +49,7 @@ const BottomSheetContent = ({ existingAccountHandler }) => (
                          justifyContent:'center',
                          marginTop:0,
                       }}
-                      buttonColor="rgba(234, 88, 12, 1)"
+                      buttonColor="#007BFF"
                       onPress={existingAccountHandler}
                     >
            Log In To Existing Account
@@ -285,84 +286,20 @@ useEffect(()=>{
           dispatch(getPaymentActiveAsync(hotelId))
           }
               },[hotelId])
+
 const paymentHistoryHandler=()=>{
   navigation.navigate("PaymentHistoryPage",{heading:'Payment History',
   paymentHistory:paymentHistorySelector,paymentActive:paymentActiveSelector});
 }
 
+const privacyPolicyHandler=()=>{
+  navigation.navigate("PrivacyPolicyPage",{heading:'Privacy Policy'});
+}
   return (
     <>
       {/* Main Settings UI */}
-      {/* <View style={{ width: "100%", backgroundColor: "white" }}>
-        <Text
-          style={{
-            paddingLeft: 32,
-            paddingTop: 16,
-            fontSize: 15,
-            fontWeight: "500",
-          }}
-        >
-          Login
-        </Text>
-        <Pressable onPress={addAccountHandler}>
-          <View
-            style={{
-              flexDirection: "row",
-              gap: 5,
-              marginTop: 20,
-              marginLeft: 26,
-              marginBottom: 30,
-            }}
-          >
-            <Image source={account} style={{ width: 20, height: 20 }} />
-            <Text style={{ fontSize: 15, marginTop: -2 }}>Add account</Text>
-          </View>
-        </Pressable>
-
-      {profileArray?.length>0?  <Pressable onPress={switchAccountHandler}>
-          <View
-            style={{
-              flexDirection: "row",
-              gap: 5,
-              marginLeft: 26,
-              marginBottom: 30,
-            }}
-          >
-            <Image source={switchImg} style={{ width: 20, height: 20 }} />
-            <Text style={{ fontSize: 15, marginTop: -2 }}>Switch account</Text>
-          </View>
-        </Pressable>:null}
-
-       { !profile?.post && (paymentActiveSelector?.activeSubscription ||paymentHistorySelector?.subscriptionArray?.length>0
-       )?<Pressable onPress={paymentHistoryHandler}>
-          <View
-            style={{
-              flexDirection: "row",
-              gap: 5,
-              marginLeft: 26,
-              marginBottom: 30,
-            }}
-          >
-            <Image source={transactionImg} style={{ width: 20, height: 20 }} />
-            <Text style={{ fontSize: 15, marginTop: -2 }}>Payment History</Text>
-          </View>
-        </Pressable>:null}
-
-        {!profile?.post?<Pressable onPress={deleteHotelHandler}>
-        <View
-            style={{
-              flexDirection: "row",
-              gap: 5,
-              marginLeft: 26,
-              marginBottom: 30,
-            }}
-          >
-            <Image source={{uri:hotelImgFirst}} style={{ width: 35, height: 35,borderRadius:20,marginLeft:-7 }} />
-            <Text style={{ fontSize: 15,paddingTop:3 }}>Delete Hotel</Text>
-          </View>
-        </Pressable>:null}
-      </View> */}
-<View style={{ width: "100%", backgroundColor: "white" }}>
+  <ScrollView>
+  <View style={{ width: "100%", backgroundColor: "white",marginTop:12 }}>
 <Text style={{paddingLeft: 32,paddingTop: 16,fontSize: 15,fontWeight: "600",color:'#6B7280'}}> ACCOUNT</Text>
 <View style={{height: 1,backgroundColor: "#E5E7EB",marginTop: 8,marginHorizontal: 32,}}/>
 <Pressable onPress={addAccountHandler}>
@@ -439,6 +376,31 @@ const paymentHistoryHandler=()=>{
         
 
 </View>:null}
+
+<View style={{ width: "100%", backgroundColor: "white",marginTop:20 }}>
+<Text style={{paddingLeft: 32,paddingTop: 16,fontSize: 15,fontWeight: "600",color:'#6B7280'}}>LEGAL</Text>
+<View style={{height: 1,backgroundColor: "#E5E7EB",marginTop: 8,marginHorizontal: 32,}}/>
+{<Pressable  onPress={privacyPolicyHandler} >
+<View style={{flexDirection:'row',justifyContent:"space-between",marginTop:20,marginBottom:30,marginLeft:26}}>
+        <View
+            style={{
+              flexDirection: "row",
+              gap: 5,
+            }}
+          >
+            <Image source={privacyImg} style={{ width: 35, height: 35,borderRadius:20,marginLeft:-7 }} />
+            <Text style={{ fontSize: 15,paddingTop:3 }}>Privacy Policy</Text>
+          </View>
+          <View>
+<Image source={nextImg} style={{ width: 20, height: 20,marginRight:20 }} />
+</View>   
+          </View>
+        </Pressable>}
+        
+
+</View>
+  </ScrollView>
+
 
 
 

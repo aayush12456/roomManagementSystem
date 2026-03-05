@@ -23,6 +23,7 @@ import { useNavigation } from "@react-navigation/native";
 const Payment=({hotelId,profile})=>{
   console.log('pto',profile)
 const BASE_URL = "http://192.168.29.169:4000";
+// const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
 const navigation=useNavigation()
 const [planType,setPlanType]=useState('')
 const [planAmount,setPlanAmount]=useState('')

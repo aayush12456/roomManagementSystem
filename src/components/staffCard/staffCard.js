@@ -71,13 +71,22 @@ console.log('staff hotel',hotelId)
         `${BASE_URL}/hotel/deleteStaffOwner/${staffObject.id}`,
         staffObject
       );
-  
       Toast.show({
         type: ALERT_TYPE.SUCCESS,
-        title: "staff Details Deleted Successfully",
-        autoClose: 3000,
+        title: `Staff removed from system`,
+        autoClose:3000,
+        containerStyle: {
+          borderRadius: 16,
+          marginHorizontal: 20,
+          paddingVertical: 12,
+          backgroundColor: "#1F2937", // professional dark
+        },
+        titleStyle: {
+          fontSize: 15,
+          fontWeight: "600",
+          color: "#FFFFFF",
+        },
       });
-  
       setTimeout(async() => {
        await sendNotificationToAll();
         socket.emit("deleteStaffOwnerObj", response?.data);

@@ -127,7 +127,7 @@ return (
                          marginLeft: 12,
                          marginRight: 20,
                       }}
-                      buttonColor="rgba(234, 88, 12, 1)"
+                      buttonColor="#0069D9"
                       onPress={loginHandler}
                     >
            SEND OTP
@@ -137,12 +137,10 @@ return (
         <Text style={{textAlign:'center',paddingTop:16}}>Don't have an account?</Text>
       </View>
       <View style={{flexDirection:'row', gap:6,marginTop:0,}}>
-      <View>
-        <Image source={signUpImg} style={{width:80,height:80,marginLeft:12}}/>
-      </View>
-      <View style={{width:'70%'}} >
+      <View style={{width:'100%'}} >
          <Button
-                      mode="contained"
+                      mode="outlined"
+                      textColor='#0069D9'
                       style={{
                         height: 50, // Set the desired height
                         borderRadius:23,
@@ -152,8 +150,9 @@ return (
                          marginLeft: 12,
                          marginTop:12,
                          marginRight: 20,
+                         borderColor:'#0069D9'
                       }}
-                      buttonColor="rgba(234, 88, 12, 1)"
+
                       onPress={signUpHandler}
                     >
            SIGN UP

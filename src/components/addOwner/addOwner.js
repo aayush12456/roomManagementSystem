@@ -76,10 +76,10 @@ const AddOwner=({hotelsId,profile,notifyTokenArray,planStatus,paymentActiveSelec
       };
 
       const addOwnerHandler=async()=>{
-        // if (planStatus !== "free" && paymentActiveSelector.activeSubscription==null) {
-        //   dispatch(planScreenActions.planScreenVisibleToggle())
-        //   return
-        // }
+        if (planStatus !== "free" && paymentActiveSelector.activeSubscription==null) {
+          dispatch(planScreenActions.planScreenVisibleToggle())
+          return
+        }
         if (!validate()) return;
         setLoading(true); 
         const formData = new FormData()
@@ -115,8 +115,19 @@ const AddOwner=({hotelsId,profile,notifyTokenArray,planStatus,paymentActiveSelec
           console.log("response in staff", response.data);
           Toast.show({
             type: ALERT_TYPE.SUCCESS,
-            title: "Owner Details Added Successfully",
-            autoClose: 10000,
+            title: `New owner added`,
+            autoClose:3000,
+            containerStyle: {
+              borderRadius: 16,
+              marginHorizontal: 20,
+              paddingVertical: 12,
+              backgroundColor: "#1F2937", // professional dark
+            },
+            titleStyle: {
+              fontSize: 15,
+              fontWeight: "600",
+              color: "#FFFFFF",
+            },
           });
           sendNotificationToAll()
           socket.emit('addOwnerObj', response?.data)
@@ -230,14 +241,15 @@ keyboardShouldPersistTaps="handled"
                   style={{ width: 60, height: 60, borderRadius: 30 }}
                 />
                 <Button
-                  mode="contained"
+                mode="outlined"
+                textColor='#0069D9'
                   style={{
                     height: 40,
                     borderRadius: 11,
                     justifyContent: 'center',
-                    marginTop: 2
+                    marginTop: 2,
+                    borderColor:'#0069D9'
                   }}
-                  buttonColor="rgba(234, 88, 12, 1)"
                   onPress={uploadOwnerImage}
                 >
                   {ownerImage ? "Change" : "Upload"}

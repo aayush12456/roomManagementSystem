@@ -86,70 +86,14 @@ const AddStaff=({profile,notifyTokenArray, hotelId,planStatus,paymentActiveSelec
     }
   };
 
-  // const addStaffHandler=async()=>{
-  //   if (planStatus !== "free" && paymentActiveSelector.activeSubscription==null) {
-  //     dispatch(planScreenActions.planScreenVisibleToggle())
-  //     return
-  //   }
-  //   if (!validate()) return;
-  //   const formData = new FormData()
-  //   formData.append("staffName",staffName)
-  //   formData.append("staffPhone",staffPhoneNumber)
-  //   formData.append("staffAddress",staffAddress)
-  //   formData.append("staffPost",staffPost)
-  //   formData.append("hotelId",hotelDetailSelector?._id)
-  //   if (staffImage) {
-  //     const imageUri = staffImage;
-  //       const fileName = imageUri.split("/").pop();
-  //       const fileType = "image/jpeg"; // ya mime-type detect karlo
-    
-  //       formData.append("staffImg", {
-  //         uri: imageUri,
-  //         type: fileType,
-  //         name: fileName,
-  //       });
-  //   }
-  //   formData.append('personName',profile.name)
-  //   formData.append('imgUrl',profile.image)
-  //   formData.append('message','added new staff')
-  //   console.log('form',formData)
-  //   try {
-  //     const response = await axios.post(
-  //       `${BASE_URL}/hotel/addStaff`,
-  //       formData,
-  //       {
-  //         headers: {
-  //           "Content-Type": "multipart/form-data",
-  //         },
-  //       }
-  //     );
-  //     console.log("response in staff", response.data);
-  //     Toast.show({
-  //       type: ALERT_TYPE.SUCCESS,
-  //       title: "Staff Details Added Successfully",
-  //       autoClose: 10000,
-  //     });
-
-  //       sendNotificationToAll();
-  //     socket.emit('addStaffOwnerObj', response?.data)
-  //   } catch (error) {
-  //     console.error("Error in Add/Update Staff", error.message);
-  //   }
-  //   setStaffName('')
-  //   setStaffAddress('')
-  //   setStaffPhoneNumber('')
-  //   setStaffImage('')
-  //   setStaffPost('')
-  //   setErrors({});
-  // }
+  
   const addStaffHandler = async () => {
 
     // 🔒 Subscription Check (Same)
-    if (planStatus !== "trial" && paymentActiveSelector.activeSubscription == null) {
+    if (planStatus !== "free" && paymentActiveSelector.activeSubscription == null) {
       dispatch(planScreenActions.planScreenVisibleToggle());
       return;
     }
-  
     // ❌ Validation Check (Same)
     if (!validate()) return;
     setLoading(true); 
@@ -197,10 +141,20 @@ const AddStaff=({profile,notifyTokenArray, hotelId,planStatus,paymentActiveSelec
       // ✅ FAST USER FEEL: Toast instantly
       Toast.show({
         type: ALERT_TYPE.SUCCESS,
-        title: "Staff Details Added Successfully",
-        autoClose: 3000,
+        title: `New staff added`,
+        autoClose:3000,
+        containerStyle: {
+          borderRadius: 16,
+          marginHorizontal: 20,
+          paddingVertical: 12,
+          backgroundColor: "#1F2937", // professional dark
+        },
+        titleStyle: {
+          fontSize: 15,
+          fontWeight: "600",
+          color: "#FFFFFF",
+        },
       });
-  
       // ✅ FAST USER FEEL: Form reset instantly
       setStaffName("");
       setStaffAddress("");
@@ -384,14 +338,15 @@ keyboardShouldPersistTaps="handled"
                   style={{ width: 60, height: 60, borderRadius: 30 }}
                 />
                 <Button
-                  mode="contained"
+                 mode="outlined"
+                 textColor='#0069D9'
                   style={{
                     height: 40,
                     borderRadius: 11,
                     justifyContent: 'center',
-                    marginTop: 2
+                    marginTop: 2,
+                    borderColor:'#0069D9'
                   }}
-                  buttonColor="rgba(234, 88, 12, 1)"
                   onPress={uploadStaffImage}
                 >
                   {staffImage ? "Change" : "Upload"}
@@ -401,25 +356,7 @@ keyboardShouldPersistTaps="handled"
     <Text style={{ color: "red", marginTop: 8 }}>{errors.staffImage}</Text>
   )}
             </View>
-        {/* <View style={{ width: '100%', overflow: 'hidden' }}>
-         <Button
-                      mode="contained"
-                      style={{
-                        height: 50, // Set the desired height
-                        borderRadius:11,
-                        color: '#FFFFFF',
-                         fontSize: 16, 
-                         justifyContent:'center',
-                         marginTop: 20,
-                         marginLeft: 12,
-                         marginRight: 20,
-                      }}
-                      buttonColor="rgba(234, 88, 12, 1)"
-                      onPress={addStaffHandler}
-                    >
-           SUBMIT
-                    </Button>
-      </View> */}
+      
 <View style={{ width: '100%', overflow: 'hidden' }}>
 <Button
   mode="contained"

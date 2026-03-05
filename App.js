@@ -1,8 +1,7 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef,useCallback } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Provider } from 'react-redux';
-import { ActivityIndicator, View ,Platform} from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import io from 'socket.io-client';
 import { AlertNotificationRoot } from 'react-native-alert-notification';
@@ -26,7 +25,9 @@ import * as Updates from "expo-updates";
 import { DevSettings } from "react-native";
 import PaymentSuccessPage from './src/Pages/paymentSuccessPage/paymentSuccessPage';
 import PaymentHistoryPage from './src/Pages/paymentHistoryPage/paymentHistoryPage';
-// import InternetChecker from './src/components/common/internetChecker/internetChecker';
+import PrivacyPolicyPage from './src/Pages/privacyPolicyPage/privacyPolicyPage';
+import InternetChecker from './src/components/common/internetChecker/internetChecker';
+import SplashScreen from './src/components/splashScreen/splashScreen';
 
 
 
@@ -49,6 +50,7 @@ export default function App() {
   const socketRef = useRef(null);
 
 
+
   // ✅ SecureStore se login data lana
   useEffect(() => {
     const getLoginDataToSecureStore = async () => {
@@ -65,19 +67,24 @@ export default function App() {
       } catch (error) {
         console.error('Error retrieving SecureStore data:', error);
         setLoginObj({});
-      } finally {
-        setLoading(false);
+      // } finally {
+      //   setLoading(false);
+      // }
+      }
+      finally {
+        setTimeout(() => {
+          setLoading(false);
+        }, 2000);   // 👈 2 second splash force karega
       }
     };
 
     getLoginDataToSecureStore();
   }, []);
-
   
   const isLoggedIn = loginObj && loginObj.token && loginObj.token !== "";
   const hotelId = loginObj?.matchedHotels?.[0]?._id;
 
-  // ✅ Socket setup hook (always called)
+ 
   useEffect(() => {
     if (!hotelId) return;
 
@@ -154,15 +161,17 @@ export default function App() {
   
 
   return (
+
     <Provider store={store}>
       <AlertNotificationRoot theme='dark'>
       <NavigationContainer>
-      {/* <InternetChecker /> */}
+      <InternetChecker />
         {loading ? (
           // ✅ Loader yaha render hoga
-          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <ActivityIndicator size="large" color="orange" />
-          </View>
+          // <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          //   <ActivityIndicator size="large" color="orange" />
+          // </View>
+          <SplashScreen/>
         ) : (
           // ✅ Navigation tab render hoga
           <Stack.Navigator initialRouteName={isLoggedIn ? "HeaderPage" : "LoginPage"}>
@@ -238,10 +247,17 @@ export default function App() {
               component={PaymentHistoryPage}
               options={{ headerShown: false }}
             />
+                 <Stack.Screen
+              name="PrivacyPolicyPage"
+              component={PrivacyPolicyPage}
+              options={{ headerShown: false }}
+            />
           </Stack.Navigator>
         )}
       </NavigationContainer>
       </AlertNotificationRoot>
     </Provider>
+
+
   );
 }

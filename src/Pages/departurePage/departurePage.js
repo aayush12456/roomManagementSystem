@@ -3,6 +3,7 @@ import io from "socket.io-client";
 import axios from "axios";
 import { useEffect,useState } from "react";
 const socket = io.connect("http://192.168.29.169:4000")
+// const socket = io.connect("https://roommanagementsystembackend-1.onrender.com")
 const DeparturePage=({hotelId})=>{
 const BASE_URL = "http://192.168.29.169:4000";
 // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";

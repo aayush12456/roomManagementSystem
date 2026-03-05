@@ -346,7 +346,8 @@ const DashboardPage = ({ profile,notifyTokenArray,planStatus }) => {
 
   const roomMssg = addRoomSelector?.mssg || deleteRoomSelector?.mssg;
   const floorMssg = addFloorSelector?.mssg || deleteFloorSelector?.mssg;
-
+  console.log('room msff',deleteRoomSelector)
+  const roomNumber=addRoomSelector?.roomNumber||deleteRoomSelector?.roomNumber
   const [loginObj, setLoginObj] = useState(null);
 
   // -----------------------------
@@ -467,9 +468,22 @@ const DashboardPage = ({ profile,notifyTokenArray,planStatus }) => {
     resetFloorSlices();
 
     if (roomMssg === "New room added successfully") {
+   
       Toast.show({
         type: ALERT_TYPE.SUCCESS,
-        title: "Room Added Successfully",
+        title: `Room ${roomNumber} Added`,
+        autoClose:10000,
+        containerStyle: {
+          borderRadius: 16,
+          marginHorizontal: 20,
+          paddingVertical: 12,
+          backgroundColor: "#1F2937", // professional dark
+        },
+        titleStyle: {
+          fontSize: 15,
+          fontWeight: "600",
+          color: "#FFFFFF",
+        },
       });
       // sendNotification(
       //   notifyTokenArray,
@@ -483,9 +497,20 @@ const DashboardPage = ({ profile,notifyTokenArray,planStatus }) => {
     if (roomMssg === "Room deleted successfully") {
       Toast.show({
         type: ALERT_TYPE.SUCCESS,
-        title: "Room Deleted Successfully",
+        title: `Room ${roomNumber} Removed`,
+        autoClose:10000,
+        containerStyle: {
+          borderRadius: 16,
+          marginHorizontal: 20,
+          paddingVertical: 12,
+          backgroundColor: "#1F2937",
+        },
+        titleStyle: {
+          fontSize: 15,
+          fontWeight: "600",
+          color: "#FFFFFF",
+        },
       });
-
       resetRoomSlices();
       safeRefetch();
     }
@@ -502,7 +527,19 @@ const DashboardPage = ({ profile,notifyTokenArray,planStatus }) => {
     if (floorMssg === "New Floor Added Successfully") {
       Toast.show({
         type: ALERT_TYPE.SUCCESS,
-        title: "Floor Added Successfully",
+        title: `New Floor Added`,
+        autoClose:10000,
+        containerStyle: {
+          borderRadius: 16,
+          marginHorizontal: 20,
+          paddingVertical: 12,
+          backgroundColor: "#1F2937",
+        },
+        titleStyle: {
+          fontSize: 15,
+          fontWeight: "600",
+          color: "#FFFFFF",
+        },
       });
 
       resetFloorSlices();
@@ -512,9 +549,20 @@ const DashboardPage = ({ profile,notifyTokenArray,planStatus }) => {
     if (floorMssg === "Floor deleted successfully") {
       Toast.show({
         type: ALERT_TYPE.SUCCESS,
-        title: "Floor Deleted Successfully",
+        title: `Floor Removed`,
+        autoClose:10000,
+        containerStyle: {
+          borderRadius: 16,
+          marginHorizontal: 20,
+          paddingVertical: 12,
+          backgroundColor: "#1F2937",
+        },
+        titleStyle: {
+          fontSize: 15,
+          fontWeight: "600",
+          color: "#FFFFFF",
+        },
       });
-
       resetFloorSlices();
       safeRefetch();
     }

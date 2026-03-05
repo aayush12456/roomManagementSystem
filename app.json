@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "hotelManagementSystem",
+    "name": "HotelOptix",
     "slug": "hotelManagementSystem",
     "version": "1.0.0",
     "updates": {
@@ -14,7 +14,7 @@
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#6A64F8"
     },
     "ios": {
       "supportsTablet": true
@@ -23,7 +23,7 @@
       "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundImage": "./assets/adaptive-background.png"
       },
       "edgeToEdgeEnabled": true,
       "permissions": [
@@ -40,7 +40,7 @@
       [
         "expo-notifications",
         {
-        "icon": "./assets/notification.png"
+          "icon": "./assets/notification.png"
         }
       ]
     ],

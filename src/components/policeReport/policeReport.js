@@ -549,16 +549,18 @@ style={{
         }}
       />
     )}
-    <View style={{marginTop:14}}>
+    <View style={{marginTop:12}}>
     <Button
-              mode="contained"
+                  mode="outlined"
+                  textColor='#0069D9'
               style={{
                 borderRadius: 11,
+                borderColor:'#0069D9'
               }}
-              buttonColor="rgba(234, 88, 12, 1)"
+        
               onPress={rangeDateHandler}
             >
-   Go
+  Go
             </Button>
     </View>
   </View>
@@ -569,11 +571,11 @@ style={{
           <Button
             mode="contained"
             style={{ borderRadius: 11 }}
-            buttonColor="rgba(234, 88, 12, 1)"
+            buttonColor="#007BFF"
             onPress={generateAndDownloadPDF}
             disabled={policeReport?.length === 0 || !dateSelector.type}
           >
-            Download Pdf
+            Export PDF
           </Button>
         </View>
 
@@ -678,10 +680,10 @@ style={{
                       <Text style={{ minWidth: 120, textAlign: "center", paddingHorizontal: 8 }}>{item.customerDestination}</Text>
                       <Text style={{ minWidth: 120, textAlign: "center", paddingHorizontal: 8 }}>{item.checkInDate}</Text>
                       <Text style={{ minWidth: 120, textAlign: "center", paddingHorizontal: 8 }}>{item.checkOutDate}</Text>
-                      <Button mode="contained" style={{ borderRadius: 11, marginLeft: 20,height:40 }} buttonColor="rgba(234, 88, 12, 1)" onPress={() => moreDetailsHandler(item._id)}>
-                     Details
+                      <Button mode="outlined" style={{ borderRadius: 11, marginLeft: 20,height:40,border:'#007BFF' }} textColor="#007BFF"  onPress={() => moreDetailsHandler(item._id)}>
+                    View Details
                       </Button>
-                      <Button mode="contained" style={{ borderRadius: 11, marginLeft: 20,height:40 }} buttonColor="rgba(234, 88, 12, 1)" onPress={() => deleteCustomerReport(item._id)}>
+                      <Button mode="contained" style={{ borderRadius: 11, marginLeft: 20,height:40 }} buttonColor="#DC3545" onPress={() => deleteCustomerReport(item._id)}>
                         Delete
                       </Button>
                       
