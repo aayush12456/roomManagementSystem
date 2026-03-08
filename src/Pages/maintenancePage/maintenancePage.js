@@ -6,10 +6,11 @@ const MaintenancePage=({route})=>{
     const floorName=route.params.titles
     const profileName=route.params.profileName
     // console.log('profile is',profileName)
+    const post=route.params.post
 return (
     <>
         <AnotherHeader edit={route}/>
-    <Maintenance roomDetails={formData} floorName={floorName} profileName={profileName}/>
+    <Maintenance roomDetails={formData} floorName={floorName} profileName={profileName} post={post}/>
     </>
 )
 }

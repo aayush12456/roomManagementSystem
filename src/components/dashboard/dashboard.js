@@ -18,7 +18,7 @@ import { getPaymentActiveAsync } from "../../Redux/Slice/getPaymentActiveSlice/g
 
 const socket = io.connect("http://192.168.29.169:4000")
 // const socket = io.connect("https://roommanagementsystembackend-1.onrender.com")
-const Dashboard=({hotelDetails,profile,notifyTokenArray,planStatus})=>{
+const Dashboard=({hotelDetails,profile,notifyTokenArray,planStatus,hotelName})=>{
   const BASE_URL = "http://192.168.29.169:4000";
   // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
   console.log('hotel details is',hotelDetails)
@@ -321,7 +321,7 @@ return (
                         return (
                           <View style={{marginTop:12,marginLeft:8,marginRight:8}} key={floorIndex}>
                             <RoomDetailCard roomTitle={floorKey} roomDetails={floorRooms} 
-                             currentDate={currentDate} profile={profile} 
+                             currentDate={currentDate} profile={profile} hotelName={hotelName}
                              onFloorDeleted={handleFloorDeleted} notifyTokenArray={notifyTokenArray} 
                              planStatus={planStatus} paymentActiveSelector={paymentActiveSelector} />
                           </View>
@@ -371,6 +371,7 @@ return (
                       
                       <AddFloorModal floorAlert={floorAlert} setFloorAlert={setFloorAlert} hotelId={hotelDetails?._id}
                       notifyTokenArray={notifyTokenArray} profile={profile} planStatus={planStatus} paymentActiveSelector={paymentActiveSelector}
+                      hotelName={hotelName}
                       />
                     </SafeAreaView>  
 

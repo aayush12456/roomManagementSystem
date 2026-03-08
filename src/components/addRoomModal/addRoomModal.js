@@ -11,7 +11,7 @@ import axios from "axios"
 import { getMessageNotifyAsync } from "../../Redux/Slice/getMessageNotifySlice/getMessageNotifySlice";
 import { planScreenActions } from "../../Redux/Slice/planScreenSlice/planScreenSlice";
 const AddRoomModal=({roomAlert,setRoomAlert,hotelId,floorSelect,profile,notifyTokenArray,planStatus
-,paymentActiveSelector})=>{
+,paymentActiveSelector,hotelName})=>{
   console.log('token in room',notifyTokenArray)
     const screenWidth = Dimensions.get("window").width;
     console.log('profile in room',profile)
@@ -40,7 +40,7 @@ const AddRoomModal=({roomAlert,setRoomAlert,hotelId,floorSelect,profile,notifyTo
       to: token,
       sound: 'default',
       title: 'Room Notification 🔔',
-      body: `${profile?.name} added a new room 🚀`,
+      body: `${profile?.name} added a new room to ${hotelName} 🚀`,
       data: {
         type: 'ROOM_ADDED',
       },

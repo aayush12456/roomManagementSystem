@@ -323,7 +323,7 @@ import { deleteRoomData } from "../../Redux/Slice/deleteRoomSlice/deleteRoomSlic
 import { addFloorData } from "../../Redux/Slice/addFloorSlice/addFloorSlice";
 import { deleteFloorData } from "../../Redux/Slice/deleteFloorSlice/deleteFloorSlice";
 
-const DashboardPage = ({ profile,notifyTokenArray,planStatus }) => {
+const DashboardPage = ({ profile,notifyTokenArray,planStatus,hotelName }) => {
   const dispatch = useDispatch();
   console.log('profiles',profile)
   console.log('notify tokens dash',notifyTokenArray)
@@ -574,7 +574,7 @@ const DashboardPage = ({ profile,notifyTokenArray,planStatus }) => {
   // -----------------------------
 
   return <Dashboard hotelDetails={hotelDetailSelector} profile={profile}  
-notifyTokenArray={notifyTokenArray} planStatus={planStatus} />;
+notifyTokenArray={notifyTokenArray} planStatus={planStatus} hotelName={hotelName} />;
 };
 
 export default DashboardPage;

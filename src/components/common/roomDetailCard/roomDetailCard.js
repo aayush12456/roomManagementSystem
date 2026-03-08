@@ -369,7 +369,7 @@ import { planScreenActions } from "../../../Redux/Slice/planScreenSlice/planScre
 const socket = io.connect("http://192.168.29.169:4000");
 // const socket = io.connect("https://roommanagementsystembackend-1.onrender.com");
 const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDeleted,notifyTokenArray,
-  planStatus,paymentActiveSelector }) => {
+  planStatus,paymentActiveSelector,hotelName }) => {
  console.log('profile in card',profile)
  console.log('room details',roomDetails)
  console.log('current date',currentDate)
@@ -444,7 +444,7 @@ const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDe
 
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
 
-    if (delta < 300 && !profile.post) {
+    if (delta < 300 && !profile?.post) {
       clearTimeout(timeoutRef.current);
       anotherClickHandler(roomId, roomType, shortLabel);
     } else {
@@ -675,7 +675,7 @@ const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDe
       const maintainHandler=(roomDetails)=>{
       console.log('details is',roomDetails)
       navigation.navigate('MaintenancePage',{ formData:roomDetails,heading:`${convertFloorName(roomTitle)} Maintenance`,
-      title:`${convertFloorName(roomTitle)} Maintenance`,titles:`${convertFloorName(roomTitle)}`,profileName:profile?.name });
+      title:`${convertFloorName(roomTitle)} Maintenance`,titles:`${convertFloorName(roomTitle)}`,profileName:profile?.name,post:profile?.post });
       }
 
       useEffect(() => {
@@ -736,7 +736,7 @@ const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDe
         to: token,
         sound: 'default',
         title: `${type=="room"?'Room':'Floor'} Notification 🔔`,
-        body: `${profile?.name} deleted a ${type=="room"?"room":'floor'} 🚀`,
+        body: `${profile?.name} deleted a ${type=="room"?"room":'floor'} from ${hotelName} 🚀`,
         data: {
           type: 'ROOM_DELETE',
         },
@@ -918,7 +918,7 @@ const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDe
               );
             })}
 
-          {!profile.post ? (
+          {!profile?.post ? (
             <Pressable onPress={() => addRoomHandler(roomTitle)}>
               <View
                 style={{
@@ -954,6 +954,7 @@ const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDe
         currentDates={currentDate}
         planStatus={planStatus}
         paymentActiveSelector={paymentActiveSelector}
+       profile={profile}
       />
 
       <AdvanceBookModal
@@ -969,6 +970,7 @@ const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDe
         currentDates={currentDate}
         planStatus={planStatus}
         paymentActiveSelector={paymentActiveSelector}
+        profile={profile}
       />
 
       <AddRoomModal
@@ -980,6 +982,7 @@ const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDe
         notifyTokenArray={notifyTokenArray}
         planStatus={planStatus}
         paymentActiveSelector={paymentActiveSelector}
+        hotelName={hotelName}
       />
       
       <MessageModal messageAlert={messageAlert} setMessageAlert={setMessageAlert} label={label} 
@@ -989,6 +992,7 @@ const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDe
 
       <MaintenanceModal  maintainAlert={maintainAlert} setMaintainAlert={setMaintainAlert}
     finalMainCleanObj={finalMainCleanObj} maintainObj={anotherMainCleanObj} customerArray={customerArray}
+    profile={profile}
     />
 
       <AwesomeAlert

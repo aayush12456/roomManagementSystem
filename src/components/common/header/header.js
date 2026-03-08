@@ -149,7 +149,7 @@ showsVerticalScrollIndicator={true}
         
       >
            {(props) => <DashboardPage {...props} profile={profile} notifyTokenArray={notifyTokenArray}
-           planStatus={planStatus}
+           planStatus={planStatus} hotelName={hotelName}
            />}
         </Drawer.Screen>
 
@@ -164,7 +164,8 @@ showsVerticalScrollIndicator={true}
       >
             {(props) => <PerformancePage {...props} policeReport={policeReportArray} totalRoom={totalRoom}/>}
         </Drawer.Screen>
-         <Drawer.Screen
+
+         {profile?.post === "Housekeeping Staff"?null:<Drawer.Screen
         name='Reports'
         options={{
           drawerIcon:()=>(
@@ -174,7 +175,8 @@ showsVerticalScrollIndicator={true}
         }}
       >
          {(props) => <ReportPage {...props}  planStatus={planStatus}/>}
-        </Drawer.Screen>
+        </Drawer.Screen>}
+
       <Drawer.Screen
         name='Profile'
         options={{
@@ -185,7 +187,7 @@ showsVerticalScrollIndicator={true}
         }}
       >
         {(props) => <ProfilePage {...props}  profile={profile} allStaffOwner={allStaffPlusOwner}
-         hotelIds={hotelId} notifyTokenArray={notifyTokenArray} planStatus={planStatus} />}
+         hotelIds={hotelId} notifyTokenArray={notifyTokenArray} planStatus={planStatus} hotelName={hotelName} />}
         </Drawer.Screen>
 
         <Drawer.Screen
@@ -228,7 +230,7 @@ showsVerticalScrollIndicator={true}
       {(props) =><NotificationPage hotelId={hotelId}  allStaffOwner={allStaffPlusOwner} />}
         </Drawer.Screen>
 
-         <Drawer.Screen
+        {profile?.post === "Housekeeping Staff"?null: <Drawer.Screen
         name='Departure List'
         // component={SettingsPage}
         options={{
@@ -239,7 +241,7 @@ showsVerticalScrollIndicator={true}
         }}
       >
       {(props) =><DeparturePage hotelId={hotelId} />}
-        </Drawer.Screen>
+        </Drawer.Screen>}
 
        {!profile?.post && planStatus !== "free" && paymentActiveSelector.activeSubscription==null? <Drawer.Screen
         name='Premium'

@@ -9,7 +9,7 @@ import axios from "axios";
 import { planScreenActions } from "../../Redux/Slice/planScreenSlice/planScreenSlice";
 const socket = io.connect("http://192.168.29.169:4000")
 // const socket = io.connect("https://roommanagementsystembackend-1.onrender.com")
-const StaffCard=({staffObj,hotelId,profile,notifyTokenArray,planStatus,paymentActiveSelector})=>{
+const StaffCard=({staffObj,hotelId,profile,notifyTokenArray,planStatus,paymentActiveSelector,hotelName})=>{
 console.log('staff hotel',hotelId)
   const BASE_URL = "http://192.168.29.169:4000";
   // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
@@ -120,7 +120,7 @@ console.log('staff hotel',hotelId)
     to: token,
     sound: 'default',
     title: 'Profile Notification 🔔',
-    body: `${profile?.name} deleted a Staff 🚀`,
+    body: `${profile?.name} removed a staff member from ${hotelName} 🚀`,
     data: {
       type: 'PROFILE_DELETE',
     },

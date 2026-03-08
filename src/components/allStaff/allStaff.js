@@ -1,6 +1,6 @@
 import {View,ScrollView} from 'react-native'
 import StaffCard from '../staffCard/staffCard'
-const AllStaff=({allStaff,hotelsId,profile,notifyTokenArray,planStatus,paymentActiveSelector})=>{
+const AllStaff=({allStaff,hotelsId,profile,notifyTokenArray,planStatus,paymentActiveSelector,hotelName})=>{
     console.log('all',allStaff)
     console.log('staff is',hotelsId)
 return (
@@ -11,7 +11,8 @@ return (
             return (
              <View key={staff?._id}>
             <StaffCard staffObj={staff} hotelId={hotelsId} profile={profile} 
-            notifyTokenArray={notifyTokenArray} planStatus={planStatus} paymentActiveSelector={paymentActiveSelector}/>
+            notifyTokenArray={notifyTokenArray} planStatus={planStatus}
+             paymentActiveSelector={paymentActiveSelector} hotelName={hotelName}/>
 
              </View>
             )

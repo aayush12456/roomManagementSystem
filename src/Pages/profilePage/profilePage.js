@@ -8,7 +8,7 @@ import AllStaff from "../../components/allStaff/allStaff"
 import AddOwner from "../../components/addOwner/addOwner"
 import { useDispatch,useSelector } from "react-redux"
 import { getPaymentActiveAsync } from "../../Redux/Slice/getPaymentActiveSlice/getPaymentActiveSlice"
-const ProfilePage=({profile,allStaffOwner,hotelIds,notifyTokenArray,planStatus})=>{
+const ProfilePage=({profile,allStaffOwner,hotelIds,notifyTokenArray,planStatus,hotelName})=>{
   console.log('staff profile',allStaffOwner)
   console.log('id is',hotelIds)
   const dispatch=useDispatch()
@@ -91,13 +91,13 @@ console.log('pay active in funal',paymentActiveSelector)
           return <Hierarchy allStaff={allStaffArray} allOwner={allOwnerArray} />;
         case "allStaff":
           return <AllStaff allStaff={allStaffArray} hotelsId={hotelIds} profile={profile}notifyTokenArray={notifyTokenArray}
-          planStatus={planStatus} paymentActiveSelector={paymentActiveSelector}/>;
+          planStatus={planStatus} paymentActiveSelector={paymentActiveSelector} hotelName={hotelName}/>;
         case "addStaff":
           return <AddStaff profile={profile}notifyTokenArray={notifyTokenArray}hotelId={hotelIds} planStatus={planStatus}
-          paymentActiveSelector={paymentActiveSelector}/>;
+          paymentActiveSelector={paymentActiveSelector} hotelName={hotelName}/>;
         case "addOwner":
           return <AddOwner  hotelsId={hotelIds}  profile={profile}notifyTokenArray={notifyTokenArray} 
-          planStatus={planStatus} paymentActiveSelector={paymentActiveSelector} />;
+          planStatus={planStatus} paymentActiveSelector={paymentActiveSelector} hotelName={hotelName} />;
         default:
           return null;
       }

@@ -1,10 +1,11 @@
-import { View,Pressable,Modal,Dimensions, ScrollView,  KeyboardAvoidingView,Platform ,ActivityIndicator} from "react-native";
+import { View,Pressable,Modal,Dimensions, ScrollView,  KeyboardAvoidingView,Platform ,ActivityIndicator,Image} from "react-native";
 import { Text,TextInput,Button } from "react-native-paper"
 import { Formik } from 'formik';
 import { useState,useRef ,useEffect } from "react";
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import { advanceCustomerBookingSchema } from "../../schemas";
 import {useSelector,useDispatch} from 'react-redux'
+import accessImg from '../../../assets/roomIcon/noDelete.png'
 import axios from 'axios'
 import io from "socket.io-client";
 import { passDataObjSliceAcions } from "../../Redux/Slice/passDataSliceObj/passDataSliceObj";
@@ -12,7 +13,7 @@ import { planScreenActions } from "../../Redux/Slice/planScreenSlice/planScreenS
 const socket = io.connect("http://192.168.29.169:4000")
 // const socket = io.connect("https://roommanagementsystembackend-1.onrender.com")
 const AdvanceBookModal=({floor,roomType,roomNo,advanceAlert,selectedRoomId,roomNum,customerArrayAdvance
-  ,todayDate,currentDates,setAdvanceAlert,planStatus,paymentActiveSelector})=>{
+  ,todayDate,currentDates,setAdvanceAlert,planStatus,paymentActiveSelector,profile})=>{
   // console.log('customer array advance modal',customerArrayAdvance)
 const BASE_URL = "http://192.168.29.169:4000";  
 // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";  
@@ -253,11 +254,31 @@ return (
     }}
     >
         {/* <Text>hello world</Text> */}
-        { matchRoomResponseAdvance===false?<Text style={{textAlign:'center',fontSize:16,fontWeight:'bold'}}>Enter Advance Customer Details</Text>
+        {/* { matchRoomResponseAdvance===false?<Text style={{textAlign:'center',fontSize:16,fontWeight:'bold'}}>Enter Advance Customer Details</Text>
        :showTextFieldAdvance === false ?
        <Text style={{textAlign:'center',fontSize:16,fontWeight:'bold'}}>Advance Customer Details Preview</Text>
        :<Text style={{textAlign:'center',fontSize:16,fontWeight:'bold'}}>Update Advance Customer Details </Text>    
-    }
+    } */}
+
+{matchRoomResponseAdvance === false ? (
+  profile?.post !== "Housekeeping Staff" && (
+    <Text style={{ textAlign:'center', fontSize:16, fontWeight:'bold' }}>
+ Enter Advance Customer Details
+    </Text>
+  )
+) : showTextFieldAdvance === false ? (
+  <Text style={{ textAlign:'center', fontSize:16, fontWeight:'bold' }}>
+Advance Customer Details Preview
+  </Text>
+) : profile?.post !== "Housekeeping Staff" ? (
+  <Text style={{ textAlign:'center', fontSize:16, fontWeight:'bold' }}>
+ Update Advance Customer Details
+  </Text>
+) : (
+  <Text style={{ textAlign:'center', fontSize:16, fontWeight:'bold' }}>
+ Enter Advance Customer Details
+  </Text>
+)}
         {(matchRoomResponseAdvance === false || showTextFieldAdvance === true  )?
         <View style={{ flex: 1 }}>
           <ScrollView
@@ -268,8 +289,25 @@ return (
                       keyboardShouldPersistTaps="handled"
                       style={{ flex: 1 }}
                     >
+                       { profile?.post === "Housekeeping Staff"?<View style={{alignItems:"center",justifyContent:"center"}}>
+
+<Image
+source={accessImg} 
+style={{width:50,height:50,marginBottom:15}}
+resizeMode="contain"
+/>
+
+<Text style={{fontSize:16,fontWeight:"bold",marginBottom:6}}>
+Access Restricted
+</Text>
+
+<Text style={{textAlign:"center",color:"#6B7280"}}>
+Housekeeping staff can only view room status. Advance booking is not permitted.
+</Text>
+
+</View>:null}
                       {/* ---- TEXT INPUTS ---- */}
-                      <View>
+                     {profile?.post === "Housekeeping Staff"?null: <View>
                         <TextInput
                           label="Customer Name"
                           mode="outlined"
@@ -288,9 +326,9 @@ return (
                             {errors.customerName}
                           </Text>
                         )}
-                      </View>
+                      </View>}
 
-                      <View>
+                     { profile?.post === "Housekeeping Staff"?null:<View>
                         <TextInput
                           label="Customer Address"
                           mode="outlined"
@@ -310,9 +348,9 @@ return (
                               {errors.customerAddress}
                             </Text>
                           )}
-                      </View>
+                      </View>}
 
-                      <View>
+                      {profile?.post === "Housekeeping Staff"?null:<View>
                         <TextInput
                           label="Customer Phone Number"
                           mode="outlined"
@@ -333,7 +371,7 @@ return (
                               {errors.customerPhoneNumber}
                             </Text>
                           )}
-                      </View>
+                      </View>}
 
                       {values.customerPhoneNumber?.trim().length > 0 && (
                         <>
@@ -414,7 +452,7 @@ return (
                         marginTop: 10,
                       }}
                     >
-                      <View style={{ width: "50%" }}>
+                      {profile?.post === "Housekeeping Staff"?null:<View style={{ width: "50%" }}>
                         <Button
                           mode="contained"
                           onPress={handleSubmit}
@@ -433,8 +471,8 @@ return (
                     :'Book'
                    }
                         </Button>
-                      </View>
-                      <View style={{ width: "50%" }}>
+                      </View>}
+                      <View style={{ width: "50%",marginLeft:`${profile?.post === "Housekeeping Staff"?70:0}` }}>
                         <Button
                           mode="contained"
                           style={{
@@ -450,7 +488,7 @@ return (
                             formikRef.current?.resetForm();
                           }}
                         >
-                          Cancel
+                        {profile?.post === "Housekeeping Staff"?'Close':'Cancel'}
                         </Button>
                       </View>
                     </View>
@@ -486,7 +524,7 @@ return (
       </View>
       {todayDate===filterCustomerObjAdvance.selectedDate?
       <View style={{flexDirection:'row',justifyContent:'space-between'}}>
-      <View style={{  overflow: 'hidden' }}>
+      {profile?.post === "Housekeeping Staff"?null:<View style={{  overflow: 'hidden' }}>
       <Button
                 mode="contained"
                 style={{
@@ -503,8 +541,8 @@ return (
               >
  Check In
               </Button>
-    </View>
-    <View style={{ width: '50%', overflow: 'hidden' }}>
+    </View>}
+    {profile?.post === "Housekeeping Staff"?null:<View style={{ width: '50%', overflow: 'hidden' }}>
             <Button
                       mode="contained"
                       style={{
@@ -525,12 +563,34 @@ return (
                     >
      Cancel
                     </Button>
-          </View>
+          </View>}
+          {profile?.post === "Housekeeping Staff"?<View style={{ width: '50%', overflow: 'hidden',marginLeft:70,marginTop:10 }}>
+            <Button
+                      mode="contained"
+                      style={{
+                        height: 50, // Set the desired height
+                        borderRadius:11,
+                        color: '#FFFFFF',
+                         fontSize: 16, 
+                         justifyContent:'center',
+                         marginTop: 20,
+                         marginLeft: 12,
+                         marginRight: 20,
+                      }}
+                      buttonColor="#6C757D"
+                      onPress={() => {
+                        setAdvanceAlert(false)
+                        formikRef.current?.resetForm(); // Form reset
+                      }}
+                    >
+     Close
+                    </Button>
+          </View>:null}
      </View> 
       
       
       :<View style={{flexDirection:'row',justifyContent:'space-between'}}>
-      <View style={{ width: '50%', overflow: 'hidden' }}>
+      {profile?.post === "Housekeeping Staff"?null:<View style={{ width: '50%', overflow: 'hidden' }}>
           <Button
                     mode="contained"
                     style={{
@@ -548,8 +608,8 @@ return (
                   >
          Update
                   </Button>
-        </View>
-        <View style={{ width: '50%', overflow: 'hidden' }}>
+        </View>}
+       {profile?.post === "Housekeeping Staff"?null:<View style={{ width: '50%', overflow: 'hidden' }}>
             <Button
                       mode="contained"
                       style={{
@@ -572,10 +632,10 @@ return (
                     :'Cancel'
                    }
                     </Button>
-          </View>
+          </View>}
       </View>}
          {todayDate===filterCustomerObjAdvance.selectedDate?null:<View style={{flexDirection:"row",justifyContent:'center'}}>
-         <View style={{ width: '50%', overflow: 'hidden' }}>
+         <View style={{ width: '50%', overflow: 'hidden',marginTop:`${profile?.post === "Housekeeping Staff"?20:0}` }}>
             <Button
                       mode="contained"
                       style={{

@@ -33,7 +33,7 @@ const floorSchema = Yup.object().shape({
 
 
 const AddFloorModal = ({ floorAlert, setFloorAlert,hotelId,notifyTokenArray,profile,
-  planStatus,paymentActiveSelector }) => {
+  planStatus,paymentActiveSelector,hotelName }) => {
   console.log('notify token in floor',notifyTokenArray)
   const dispatch=useDispatch()
   const [loading, setLoading] = useState(false);
@@ -59,7 +59,7 @@ const AddFloorModal = ({ floorAlert, setFloorAlert,hotelId,notifyTokenArray,prof
     to: token,
     sound: 'default',
     title: 'Floor Notification 🔔',
-    body: `${profile?.name} added a new Floor 🚀`,
+    body: `${profile?.name} added a new Floor to ${hotelName} 🚀`,
     data: {
       type: 'FLOOR_ADDED' },
     }));

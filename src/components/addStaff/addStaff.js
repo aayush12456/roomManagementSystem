@@ -12,7 +12,7 @@ import axios from "axios";
 import { planScreenActions } from "../../Redux/Slice/planScreenSlice/planScreenSlice";
 const socket = io.connect("http://192.168.29.169:4000")
 // const socket = io.connect("https://roommanagementsystembackend-1.onrender.com")
-const AddStaff=({profile,notifyTokenArray, hotelId,planStatus,paymentActiveSelector})=>{
+const AddStaff=({profile,notifyTokenArray, hotelId,planStatus,paymentActiveSelector,hotelName})=>{
   console.log('payment select',paymentActiveSelector)
   console.log('plan status',planStatus)
   const BASE_URL = "http://192.168.29.169:4000";
@@ -203,7 +203,7 @@ const AddStaff=({profile,notifyTokenArray, hotelId,planStatus,paymentActiveSelec
     to: token,
     sound: 'default',
     title: 'Profile Notification 🔔',
-    body: `${profile?.name} added a new Staff 🚀`,
+    body: `${profile?.name} added a new staff member to ${hotelName} 🚀`,
     data: {
       type: 'PROFILE_ADDED',
     },

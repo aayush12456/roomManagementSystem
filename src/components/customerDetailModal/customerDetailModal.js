@@ -3,6 +3,7 @@ import { useState,useRef ,useEffect } from "react";
 import { Text,TextInput,Button } from "react-native-paper"
 import { Formik } from 'formik';
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
+import accessImg from '../../../assets/roomIcon/noDelete.png'
 import { customerDetailsSchema } from "../../schemas";
 import { View,Pressable,Modal,Dimensions, ScrollView,Image,ActivityIndicator } from "react-native";
 import SignatureScreen from "react-native-signature-canvas";
@@ -60,8 +61,9 @@ const safeTimeToISOString = (timeStr) => {
 
 
 const CustomerDetailModal=({showAlert,setShowAlert,selectedRoomId,customerArray,roomType,floor,roomNo,
-  currentDates,planStatus,paymentActiveSelector})=>{
+  currentDates,planStatus,paymentActiveSelector,profile})=>{
   // console.log('customer array',customerArray)
+  console.log('profile is customer',profile)
   console.log('plan stat',planStatus)
   const BASE_URL = "http://192.168.29.169:4000";
   // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
@@ -370,12 +372,31 @@ extraCustomers: filterCustomerObj?.extraCustomers?.map(item => ({
       }}
     >
       {/* 🔹 Scroll starts from Customer Name */}
-     { matchRoomResponse===false?<Text style={{textAlign:'center',fontSize:16,fontWeight:'bold'}}>Enter Customer Details</Text>
+     {/* { matchRoomResponse===false ?<Text style={{textAlign:'center',fontSize:16,fontWeight:'bold'}}>Enter Customer Details</Text>
        :showTextField === false ?
        <Text style={{textAlign:'center',fontSize:16,fontWeight:'bold'}}>Customer Details Preview</Text>
        :<Text style={{textAlign:'center',fontSize:16,fontWeight:'bold'}}>Update Customer Details </Text>    
-    }
-      {(matchRoomResponse === false || showTextField === true  )?
+    } */}
+    {matchRoomResponse === false ? (
+  profile?.post !== "Housekeeping Staff" && (
+    <Text style={{ textAlign:'center', fontSize:16, fontWeight:'bold' }}>
+      Enter Customer Details
+    </Text>
+  )
+) : showTextField === false ? (
+  <Text style={{ textAlign:'center', fontSize:16, fontWeight:'bold' }}>
+    Customer Details Preview
+  </Text>
+) : profile?.post !== "Housekeeping Staff" ? (
+  <Text style={{ textAlign:'center', fontSize:16, fontWeight:'bold' }}>
+    Update Customer Details
+  </Text>
+) : (
+  <Text style={{ textAlign:'center', fontSize:16, fontWeight:'bold' }}>
+    Customer Details Preview
+  </Text>
+)}
+      {(matchRoomResponse === false || showTextField === true  ) ?
       <ScrollView
         contentContainerStyle={{
           padding: 20,
@@ -385,7 +406,24 @@ extraCustomers: filterCustomerObj?.extraCustomers?.map(item => ({
         showsVerticalScrollIndicator={false}
         scrollEnabled={scrollEnabled} 
       >
-        <View>
+         { profile?.post === "Housekeeping Staff"?<View style={{alignItems:"center",justifyContent:"center"}}>
+
+<Image
+source={accessImg} 
+style={{width:50,height:50,marginBottom:15}}
+resizeMode="contain"
+/>
+
+<Text style={{fontSize:16,fontWeight:"bold",marginBottom:6}}>
+Access Restricted
+</Text>
+
+<Text style={{textAlign:"center",color:"#6B7280"}}>
+Housekeeping staff do not have permission to add guests.
+</Text>
+
+</View>:null}
+       {profile?.post !== "Housekeeping Staff"? <View>
         <TextInput
           label="Customer Name"
           mode="outlined"
@@ -395,9 +433,9 @@ extraCustomers: filterCustomerObj?.extraCustomers?.map(item => ({
           value={values.customerName}
         />
         {touched.customerName && errors.customerName && <Text style={{ color: 'red', marginLeft: 12 }}>{errors.customerName}</Text>}
-        </View>
+        </View>:null}
 
-        <View>
+        {profile?.post !== "Housekeeping Staff"?<View>
         <TextInput
           label="Customer Address"
           mode="outlined"
@@ -407,9 +445,9 @@ extraCustomers: filterCustomerObj?.extraCustomers?.map(item => ({
           value={values.customerAddress}
         />
          {touched.customerAddress && errors.customerAddress && <Text style={{ color: 'red', marginLeft: 12 }}>{errors.customerAddress}</Text>}
-        </View>
+        </View>:null}
 
-        <View>
+        {profile?.post !== "Housekeeping Staff"?<View>
         <TextInput
           label="Customer Phone Number"
           mode="outlined"
@@ -420,7 +458,7 @@ extraCustomers: filterCustomerObj?.extraCustomers?.map(item => ({
           value={values.customerPhoneNumber}
         />
          {touched.customerPhoneNumber && errors.customerPhoneNumber && <Text style={{ color: 'red', marginLeft: 12 }}>{errors.customerPhoneNumber}</Text>}
-        </View>
+        </View>:null}
 
       
 
@@ -941,6 +979,7 @@ extraCustomers: filterCustomerObj?.extraCustomers?.map(item => ({
         // alignItems: "center",
       }}
       >
+        
      <View>
      <View style={{flexDirection:"row",gap:6,paddingTop:10}}>
         <Text>Room Type : </Text>
@@ -1081,7 +1120,7 @@ extraCustomers: filterCustomerObj?.extraCustomers?.map(item => ({
       </ScrollView>
       }
         <View style={{flexDirection:"row",justifyContent:'space-between'}}>
-       {(matchRoomResponse === false || showTextField === true)?<View style={{ width: '50%', overflow: 'hidden' }}>
+       {(matchRoomResponse === false || showTextField === true) && profile?.post !== "Housekeeping Staff" ?(<View style={{ width: '50%', overflow: 'hidden' }}>
             <Button
                       mode="contained"
                       onPress={handleSubmit}
@@ -1103,8 +1142,8 @@ extraCustomers: filterCustomerObj?.extraCustomers?.map(item => ({
                     :'Check In'
                    }
                     </Button>
-          </View>:
-          <View style={{ width: '50%', overflow: 'hidden' }}>
+          </View>):
+       (profile?.post!=="Housekeeping Staff"?<View style={{ width: '50%', overflow: 'hidden' }}>
           <Button
                     mode="contained"
                     style={{
@@ -1122,10 +1161,10 @@ extraCustomers: filterCustomerObj?.extraCustomers?.map(item => ({
                   >
          Update
                   </Button>
-        </View>
+        </View>:null)
           }
           {
-            (matchRoomResponse===true && showTextField==false)?   <View style={{ width: '50%', overflow: 'hidden' }}>
+            (matchRoomResponse===true && showTextField==false) && (profile?.post!=="Housekeeping Staff")?   <View style={{ width: '50%', overflow: 'hidden' }}>
             <Button
                       mode="contained"
                       style={{
@@ -1149,7 +1188,8 @@ extraCustomers: filterCustomerObj?.extraCustomers?.map(item => ({
                     </Button>
           </View>:null
           }
-          {(matchRoomResponse === false || showTextField === true) ?<View style={{ width: '50%', overflow: 'hidden' }}>
+          {(matchRoomResponse === false || showTextField === true) ?<View style={{ width: '50%', overflow: 'hidden',
+          marginLeft:`${ profile?.post === "Housekeeping Staff"?70:''}`}}>
             <Button
                       mode="contained"
                       style={{
@@ -1169,7 +1209,7 @@ extraCustomers: filterCustomerObj?.extraCustomers?.map(item => ({
                         formikRef.current?.resetForm(); // Form reset
                       }}
                     >
-     Cancel
+  {profile?.post === "Housekeeping Staff"?'Close':'Cancel'}
                     </Button>
           </View>:null}
         </View>
@@ -1193,14 +1233,14 @@ extraCustomers: filterCustomerObj?.extraCustomers?.map(item => ({
                         formikRef.current?.resetForm(); // Form reset
                       }}
                     >
-     Cancel
+   {profile?.post === "Housekeeping Staff"?'Close':'Cancel'}
                     </Button>
           </View>:null}
         </View>
        
     </View>
   </View>
-
+ 
   
 </Modal>
 

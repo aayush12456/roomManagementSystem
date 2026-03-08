@@ -10,7 +10,7 @@ import { useDispatch } from "react-redux";
 import { planScreenActions } from "../../Redux/Slice/planScreenSlice/planScreenSlice";
 const socket = io.connect("http://192.168.29.169:4000")
 // const socket = io.connect("https://roommanagementsystembackend-1.onrender.com")
-const AddOwner=({hotelsId,profile,notifyTokenArray,planStatus,paymentActiveSelector})=>{
+const AddOwner=({hotelsId,profile,notifyTokenArray,planStatus,paymentActiveSelector,hotelName})=>{
     const BASE_URL = "http://192.168.29.169:4000";
     // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
     const dispatch=useDispatch()
@@ -165,7 +165,7 @@ const AddOwner=({hotelsId,profile,notifyTokenArray,planStatus,paymentActiveSelec
         to: token,
         sound: 'default',
         title: 'Profile Notification 🔔',
-        body: `${profile?.name} added a new Owner 🚀`,
+        body: `${profile?.name} added a new Owner to ${hotelName} 🚀`,
         data: {
           type: 'PROFILE_ADDED',
         },

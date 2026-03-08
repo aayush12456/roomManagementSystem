@@ -10,7 +10,7 @@ const socket = io.connect("http://192.168.29.169:4000");
 // const socket = io.connect("https://roommanagementsystembackend-1.onrender.com");
 import { useNavigation } from "@react-navigation/native"
 const screenWidth = Dimensions.get("window").width;
-const MaintenanceModal=({ maintainAlert,setMaintainAlert,maintainObj,finalMainCleanObj,customerArray})=>{
+const MaintenanceModal=({ maintainAlert,setMaintainAlert,maintainObj,finalMainCleanObj,customerArray,post})=>{
   const navigation=useNavigation()
     console.log('maintain obj',maintainObj)
     console.log('final main',finalMainCleanObj)
@@ -100,10 +100,10 @@ return (
     </View>
   </Pressable>
   <Pressable onPress={()=>maintainCleanHandler('Maintenance Room')}>
-  <View style={{flexDirection:"row",gap:10,marginTop:20}}>
+  {post === "Housekeeping Staff"?null:<View style={{flexDirection:"row",gap:10,marginTop:20}}>
     <Image source={personImg} style={{width:24,height:24}}/>
     <Text>Maintenance Room</Text>
-    </View>
+    </View>}
   </Pressable>
 </View>}
 {finalMainCleanObj?.roomId===maintainObj?.roomId && finalMainCleanObj?.type=="Clean Room"?<View>
@@ -143,7 +143,7 @@ return (
 </View>:null}
 
 <View style={{flexDirection:'row',justifyContent:`${maintainObj.floorName && finalMainCleanObj?.roomId?'space-between':'center'}`}}>
-{maintainObj.floorName && finalMainCleanObj?.roomId?<View style={{ width: '50%', alignItems: 'center', marginTop: 20 }}>
+{maintainObj.floorName && finalMainCleanObj?.roomId ?<View style={{ width: '50%', alignItems: 'center', marginTop: 20 }}>
   <Button
     mode="contained"
     style={{
