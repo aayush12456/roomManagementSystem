@@ -1,4 +1,4 @@
-import { Text,Button,TextInput,Switch } from "react-native-paper"
+import { Text,Button,TextInput,Switch,Snackbar } from "react-native-paper"
 import { useEffect,useState } from "react"
 import * as SecureStore from 'expo-secure-store';
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -32,6 +32,8 @@ const Dashboard=({hotelDetails,profile,notifyTokenArray,planStatus,hotelName})=>
   const [matchRoomArray,setMatchRoomArray]=useState([])
   const [deletedFloorName, setDeletedFloorName] = useState(null);
   const [isDashboardScrollEnabled, setIsDashboardScrollEnabled] = useState(true);
+  const [snackbarVisible, setSnackbarVisible] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
 console.log('das scroll',isDashboardScrollEnabled)
     const navigation = useNavigation();
     const dispatch=useDispatch()
@@ -211,10 +213,25 @@ return (
                     </Button> } */}
                     <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
                     <View style={{position:'absolute',right:0}}>
-                    <Switch  
+                    {/* <Switch  
                     value={!isDashboardScrollEnabled}    // ← important
                    onValueChange={() => setIsDashboardScrollEnabled(!isDashboardScrollEnabled)}
-                   />
+                   /> */}
+                  <Switch
+  value={!isDashboardScrollEnabled}
+  onValueChange={() => {
+    const newValue = !isDashboardScrollEnabled;
+    setIsDashboardScrollEnabled(newValue);
+
+    if (!newValue) {
+      setSnackbarMessage("Lock Screen Mode Enabled");
+    } else {
+      setSnackbarMessage("Lock Screen Mode Disabled");
+    }
+
+    setSnackbarVisible(true);
+  }}
+/>
                         </View>
                     <View style={{ marginTop:-24,flexDirection:'row',justifyContent:'center' }}>
                       
@@ -374,7 +391,13 @@ return (
                       hotelName={hotelName}
                       />
                     </SafeAreaView>  
-
+                    <Snackbar
+  visible={snackbarVisible}
+  onDismiss={() => setSnackbarVisible(false)}
+  duration={2000}
+>
+  {snackbarMessage}
+</Snackbar>
     </>
 )
 }

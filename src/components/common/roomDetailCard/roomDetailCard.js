@@ -795,7 +795,7 @@ const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDe
   <View
     style={{
       flex: 1,
-      backgroundColor: "yellow",
+      backgroundColor: "#FFE0B2",
       justifyContent: "center",
       alignItems: "center",
       paddingVertical:10,

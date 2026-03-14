@@ -28,6 +28,8 @@ import PaymentHistoryPage from './src/Pages/paymentHistoryPage/paymentHistoryPag
 import PrivacyPolicyPage from './src/Pages/privacyPolicyPage/privacyPolicyPage';
 import InternetChecker from './src/components/common/internetChecker/internetChecker';
 import SplashScreen from './src/components/splashScreen/splashScreen';
+import AppExplainPage from './src/Pages/appExplainPage/appExplainPage';
+import AllHotelPage from './src/Pages/allHotelPage/allHotelPage';
 
 
 
@@ -249,6 +251,16 @@ export default function App() {
                  <Stack.Screen
               name="PrivacyPolicyPage"
               component={PrivacyPolicyPage}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="AppExplainPage"
+              component={AppExplainPage}
+              options={{ headerShown: false }}
+            />
+             <Stack.Screen
+              name="AllHotelPage"
+              component={AllHotelPage}
               options={{ headerShown: false }}
             />
           </Stack.Navigator>

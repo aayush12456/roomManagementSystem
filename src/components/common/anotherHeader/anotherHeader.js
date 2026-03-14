@@ -28,6 +28,9 @@ const AnotherHeader=({edit})=>{
               else if(edit?.params?.heading==="Privacy Policy"){
                 navigation.goBack();
                 }
+                else if(edit?.params?.heading==="How to Use the App"){
+                  navigation.goBack();
+                  }
             else if(edit?.params?.heading===edit?.params?.title){
               navigation.goBack();
               }

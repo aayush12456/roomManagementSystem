@@ -22,15 +22,29 @@ const ProfilePage=({profile,allStaffOwner,hotelIds,notifyTokenArray,planStatus,h
     const isSmallScreen = screenHeight <= 640;
 
     const [index, setIndex] = useState(0);
+    // const routes = useMemo(() => {
+    //   if (profile?.post) {
+    //     // If user has a "post", show only MyProfile & Hierarchy
+    //     return [
+    //       { key: "myProfile", title: "My Profile", focusedIcon: "account-circle" },
+    //       { key: "hierarchy", title: "Hierarchy", focusedIcon: "family-tree" },
+    //     ];
+    //   } else {
+    //     // If no post, show all options
+    //     return [
+    //       { key: "myProfile", title: "My Profile", focusedIcon: "account-circle" },
+    //       { key: "hierarchy", title: "Hierarchy", focusedIcon: "family-tree" },
+    //       { key: "allStaff", title: "All Staff", focusedIcon: "account-group" },
+    //       { key: "addStaff", title: "Add Staff", focusedIcon: "account-plus" },
+    //       { key: "addOwner", title: "Add Owner", focusedIcon: "account-tie" },
+    //     ];
+    //   }
+    // }, [profile?.post]);
+
     const routes = useMemo(() => {
-      if (profile?.post) {
-        // If user has a "post", show only MyProfile & Hierarchy
-        return [
-          { key: "myProfile", title: "My Profile", focusedIcon: "account-circle" },
-          { key: "hierarchy", title: "Hierarchy", focusedIcon: "family-tree" },
-        ];
-      } else {
-        // If no post, show all options
+
+      // Owner (no post)
+      if (!profile?.post) {
         return [
           { key: "myProfile", title: "My Profile", focusedIcon: "account-circle" },
           { key: "hierarchy", title: "Hierarchy", focusedIcon: "family-tree" },
@@ -39,6 +53,23 @@ const ProfilePage=({profile,allStaffOwner,hotelIds,notifyTokenArray,planStatus,h
           { key: "addOwner", title: "Add Owner", focusedIcon: "account-tie" },
         ];
       }
+    
+      // Hotel Supervisor
+      if (profile?.post === "Hotel Supervisor") {
+        return [
+          { key: "myProfile", title: "My Profile", focusedIcon: "account-circle" },
+          { key: "hierarchy", title: "Hierarchy", focusedIcon: "family-tree" },
+          { key: "allStaff", title: "All Staff", focusedIcon: "account-group" },
+          { key: "addStaff", title: "Add Staff", focusedIcon: "account-plus" },
+        ];
+      }
+    
+      // Other Staff
+      return [
+        { key: "myProfile", title: "My Profile", focusedIcon: "account-circle" },
+        { key: "hierarchy", title: "Hierarchy", focusedIcon: "family-tree" },
+      ];
+    
     }, [profile?.post]);
 //   const MyProfileRoute = () => (
 //     <View style={{ flex: 1 }}>

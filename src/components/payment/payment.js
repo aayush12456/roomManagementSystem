@@ -120,7 +120,7 @@ return (
       <Card style={{ margin: 10, borderRadius: 10 }}>
       <Card.Content>
       {/* <ScrollView style={{ maxHeight: 200,}}   nestedScrollEnabled={true}> */}
-      <ScrollView style={{ maxHeight: 200,}}>
+      <ScrollView style={{ maxHeight: 300,}}>
         {
           premium.premiumData.map((premiumSub) => (
             <View

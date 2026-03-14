@@ -8,6 +8,7 @@ import deleteImg from "../../../assets/settingIcon/delete.png";
 import switchImg from "../../../assets/settingIcon/switch.png";
 import transactionImg from "../../../assets/settingIcon/transaction.png";
 import privacyImg from "../../../assets/settingIcon/privacyPolicy.png";
+import questionImg from "../../../assets/settingIcon/question.png";
 import nextImg from "../../../assets/settingIcon/next.png";
 import successImage from "../../../assets/AllIcons/successImg.gif"
 import * as SecureStore from 'expo-secure-store';
@@ -295,6 +296,9 @@ const paymentHistoryHandler=()=>{
 const privacyPolicyHandler=()=>{
   navigation.navigate("PrivacyPolicyPage",{heading:'Privacy Policy'});
 }
+const appExplainHandler=()=>{
+  navigation.navigate("AppExplainPage",{heading:'How to Use the App',profile:profile});
+}
   return (
     <>
       {/* Main Settings UI */}
@@ -399,6 +403,30 @@ const privacyPolicyHandler=()=>{
         
 
 </View>
+
+
+{profile?.post==="Housekeeping Staff"?null:<View style={{ width: "100%", backgroundColor: "white",marginTop:20,marginBottom:20 }}>
+<Text style={{paddingLeft: 32,paddingTop: 16,fontSize: 15,fontWeight: "600",color:'#6B7280'}}>HELP & SUPPORT</Text>
+<View style={{height: 1,backgroundColor: "#E5E7EB",marginTop: 8,marginHorizontal: 32,}}/>
+{<Pressable  onPress={appExplainHandler}>
+<View style={{flexDirection:'row',justifyContent:"space-between",marginTop:20,marginBottom:30,marginLeft:26}}>
+        <View
+            style={{
+              flexDirection: "row",
+              gap: 5,
+            }}
+          >
+            <Image source={questionImg} style={{ width: 35, height: 35,borderRadius:20,marginLeft:-7 }} />
+            <Text style={{ fontSize: 15,paddingTop:3 }}>How to Use the App</Text>
+          </View>
+          <View>
+<Image source={nextImg} style={{ width: 20, height: 20,marginRight:20 }} />
+</View>   
+          </View>
+        </Pressable>}
+        
+
+</View>}
   </ScrollView>
 
 

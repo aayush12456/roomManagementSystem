@@ -30,6 +30,12 @@ return (
             </Text>
             <Text style={{fontSize:15}}> Aayush Tapadia</Text>
         </Text>
+        <View style={{height: 1,backgroundColor: "#E5E7EB",marginTop:-2,marginHorizontal: 32,}}/>
+        <Text style={{paddingLeft:12,paddingTop:12,paddingBottom:12}}>
+            <Text style={{fontWeight:'800',fontSize:15}}>Product Idea Contributor :
+            </Text>
+            <Text style={{fontSize:15}}> Diptanshu Chouhan</Text>
+        </Text>
     </Card>
     </View>
 {

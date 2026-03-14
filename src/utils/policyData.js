@@ -12,6 +12,7 @@ export const privacyPolicyData = [
       title: "Introduction",
       points: [
         "This Application is developed and maintained by Aayush Tapadia to provide hotel management and room booking services to registered hotels and their authorized staff.",
+        "The initial concept and product idea for this Application were discussed and supported by Diptanshu Chouhan ",
         "Hotels using this Application act as independent Data Controllers for the customer information they collect and manage.",
         "The Developer acts solely as a Technology Service Provider."
       ],
@@ -97,6 +98,8 @@ export const privacyPolicyData = [
         points: [
           "Aayush Tapadia",
           "aayushtapadia28@gmail.com",
+          "Diptanshu Chouhan",
+          "diptanshu88277@gmail.com",
           "HotelOptix"
         ],
         img:contact

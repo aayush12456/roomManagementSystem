@@ -95,6 +95,7 @@ showsVerticalScrollIndicator={true}
           }}
         />
         <Text style={{ color: "black", fontSize: 20,fontWeight:500,textAlign:'center',paddingTop:6 }}>{profile?.name}</Text>
+        <Text style={{ color: "#666666",textAlign:'center',paddingTop:6 }}>{hotelName}</Text>
       </View>
 
       <View style={{ marginTop: 20 }}>
