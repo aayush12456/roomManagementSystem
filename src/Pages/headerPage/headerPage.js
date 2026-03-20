@@ -8,7 +8,7 @@ import io from "socket.io-client";
 import axios from "axios";
 import * as Notifications from "expo-notifications";
 import * as Device from "expo-device";
-import { Platform,View,Text,Image,Animated } from "react-native";
+import { Platform,View,Text,Image,Animated,Alert } from "react-native";
 import { deleteSwitchProfileData } from "../../Redux/Slice/deleteSwitchProfileSlice/deleteSwitchProfileSlice";
 import FreeTrialModal from "../../components/common/freeTrialModal/freeTrialModal";
 import money from '../../../assets/premiumIcon/Money.gif'
@@ -20,6 +20,8 @@ const socket = io.connect("http://192.168.29.169:4000")
 const HeaderPage=({route})=>{
   const BASE_URL = "http://192.168.29.169:4000";
   // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
+  const [nameList,setNameList]=useState({})
+  const [hotelNameList,setHotelNameList]=useState({})
   const { paymentData} = route.params || {};
   console.log("Payment Data 👉", paymentData);
   const profileData = route?.params?.profileData;
@@ -526,8 +528,123 @@ useEffect(() => {
   }
 }, [profileData?.mssg]);
 
+const fetchDetailSelector =
+  finalHotelDetailSelector && Object.keys(finalHotelDetailSelector).length > 0
+    ? finalHotelDetailSelector
+    : loginObj?.matchedHotels[0];
+    console.log('fetch detais',fetchDetailSelector)
+
+useEffect(() => {
+  const fetchName = async () => {
+    try {
+      if (fetchDetailSelector?._id) {
+        const response = await axios.get(
+          `${BASE_URL}/hotel/getAllName/${fetchDetailSelector?._id}`
+        );
+        setNameList(response?.data || {});
+      }
+    } catch (error) {}
+  };
+
+  fetchName();
+
+  socket.on("getName", (newUser) => {
+    setNameList(newUser);
+  });
+  return () => {
+    socket.off("getName");
+  };
+}, [fetchDetailSelector?._id]);
+
+console.log('all hotel obj',nameList)
+
+useEffect(() => {
+  if (nameList?.names && profileObj?.name) {
+
+    const isExist = nameList.names.includes(profileObj.name);
+
+    if (!isExist) {
+      Alert.alert(
+        "Access Revoked",
+        "Your account access has been removed.\nPlease contact your administrator for assistance.",
+        [
+          {
+            text: "OK",
+            onPress: async () => {
+              await removeLoginData();
+              navigation.reset({
+                index: 0,
+                routes: [{ name: "LoginPage" }],
+              });
+            },
+          },
+        ],
+        { cancelable: false } // ❗ user back press se avoid nahi kar payega
+      );
+    }
+  }
+}, [nameList, profileObj]);
 
 
+useEffect(() => {
+  const fetchHotelName = async () => {
+    try {
+      if (fetchDetailSelector?._id) {
+        const response = await axios.get(
+          `${BASE_URL}/hotel/getAllHotelName/${fetchDetailSelector?._id}`
+        );
+        setHotelNameList(response?.data || {});
+      }
+    } catch (error) {}
+  };
+
+  fetchHotelName();
+
+  socket.on("getHotelName", (newUser) => {
+    setHotelNameList(newUser);
+  });
+  return () => {
+    socket.off("getHotelName");
+  };
+}, [fetchDetailSelector?._id]);
+
+
+const [alertShown, setAlertShown] = useState(false);
+
+useEffect(() => {
+  if (
+    hotelNameList?.hotelNames &&
+    fetchDetailSelector?.hotelName
+  ) {
+    const isExist = hotelNameList.hotelNames.includes(
+      fetchDetailSelector.hotelName
+    );
+
+    if (!isExist && !alertShown) {
+      setAlertShown(true); // ✅ ek baar hi chalega
+
+      Alert.alert(
+        "Hotel Unavailable",
+        "This hotel is no longer available. Your access has been revoked. Please contact support for assistance.",
+        [
+          {
+            text: "OK",
+            onPress: async () => {
+              await removeLoginData();
+              navigation.reset({
+                index: 0,
+                routes: [{ name: "LoginPage" }],
+              });
+            },
+          },
+        ],
+        { cancelable: false }
+      );
+    }
+  }
+}, [hotelNameList,fetchDetailSelector, alertShown]);
+
+console.log('all hotel name obj',hotelNameList)
 return (
   
     <>

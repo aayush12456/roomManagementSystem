@@ -34,6 +34,9 @@ const AnotherHeader=({edit})=>{
             else if(edit?.params?.heading===edit?.params?.title){
               navigation.goBack();
               }
+              else if(edit?.params?.heading===edit?.params?.hotelName){
+                navigation.goBack();
+                }
     }
 return (
     <>

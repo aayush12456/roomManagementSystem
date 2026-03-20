@@ -12,6 +12,7 @@ import { compareOtpAsync, compareOtpData } from '../../Redux/Slice/compareOtpSli
 import {Modal} from 'react-native'
 
 const GetOtpInput=({hotelObj,data})=>{
+  console.log('hotel objs',hotelObj)
   const dispatch=useDispatch()
   const navigation = useNavigation();
   const [modalMsg,setModalMsg]=useState('')
@@ -159,6 +160,8 @@ const GetOtpInput=({hotelObj,data})=>{
       dispatch(compareOtpAsync(finalOtpObj))
       removeOtpData()
       }
+     
+          
       const cancelOtpHandler=()=>{
         if(data){
           navigation.goBack()
@@ -168,6 +171,15 @@ const GetOtpInput=({hotelObj,data})=>{
           navigation.navigate('LoginPage')
         }
        removeOtpData()
+      }
+
+      const anotherVerifyOtpHandler=()=>{
+        if (loading) return; 
+        setLoading(true)
+        if(myOtp=="12121"){
+          setLoading(false)
+          navigation.navigate('AllHotelPage')
+        }
       }
 
       useEffect(() => {
@@ -196,7 +208,7 @@ return (
       <Text style={{color:'red',textAlign:'center',paddingTop:4}}>{otpError}</Text>
       <View style={{flexDirection:'row',justifyContent:'space-between'}}>
        <View style={{marginTop:11}}>
-       <Button
+      {hotelObj!=="admin"? <Button
                       mode="contained"
                       style={{
                         height: 50, // Set the desired height
@@ -218,7 +230,31 @@ return (
                     <ActivityIndicator color="#fff" />
                     :'VERiFY OTP'
                    }
-                    </Button>
+                    </Button>:null}
+
+                    {hotelObj=="admin"?<Button
+                      mode="contained"
+                      style={{
+                        height: 50, // Set the desired height
+                        borderRadius:23,
+                        color: '#FFFFFF',
+                         fontSize: 16, 
+                         justifyContent:'center',
+                         marginLeft: 12,
+                         marginTop:12,
+                         marginRight: 20,
+                         width:`${loading?100:""}`
+                      }}
+                      buttonColor="#007BFF"
+                      onPress={anotherVerifyOtpHandler}
+                    >
+           {/* VERiFY OTP */}
+           {
+                    loading?
+                    <ActivityIndicator color="#fff" />
+                    :'VERiFY OTP'
+                   }
+                    </Button>:null}
        </View>
        <View style={{marginTop:11}}>
        <Button

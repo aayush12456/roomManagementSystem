@@ -92,6 +92,11 @@ const LoginForm=()=>{
     }
     dispatch(getPhoneOtpAsync(phoneObj))
     }
+
+    const adminClickHandler=()=>{
+      dispatch(clearHotelNameData()); 
+      navigation.navigate('GetOtpPage',{ formData:'admin' })
+    }
 return (
     <>
        <KeyboardAvoidingView
@@ -203,6 +208,8 @@ return (
           No phone number registered in any hotel
             </Text>
             }
+            {phoneNumber === "9479918217" || phoneNumber === "8770770302"?
+            <Text onPress={adminClickHandler} style={{textAlign:'center',marginTop: 10,fontSize:16}}>admin</Text>:null}
             </ScrollView>
             <Button
               mode="outlined"

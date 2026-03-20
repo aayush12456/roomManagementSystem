@@ -30,6 +30,7 @@ import InternetChecker from './src/components/common/internetChecker/internetChe
 import SplashScreen from './src/components/splashScreen/splashScreen';
 import AppExplainPage from './src/Pages/appExplainPage/appExplainPage';
 import AllHotelPage from './src/Pages/allHotelPage/allHotelPage';
+import AllHotelDetailsPage from './src/Pages/allHotelDetailsPage/allHotelDetailsPage';
 
 
 
@@ -261,6 +262,11 @@ export default function App() {
              <Stack.Screen
               name="AllHotelPage"
               component={AllHotelPage}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="AllHotelDetailsPage"
+              component={AllHotelDetailsPage}
               options={{ headerShown: false }}
             />
           </Stack.Navigator>

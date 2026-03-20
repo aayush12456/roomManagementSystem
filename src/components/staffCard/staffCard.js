@@ -65,7 +65,10 @@ console.log('staff hotel',hotelId)
       imgUrl: profile?.image,
       message: "delete a staff",
     };
-  
+    const deleteNameObj={
+      id:hotelId,
+      name:staffObj.name
+    }
     try {
       const response = await axios.post(
         `${BASE_URL}/hotel/deleteStaffOwner/${staffObject.id}`,
@@ -96,6 +99,14 @@ console.log('staff hotel',hotelId)
       console.log(error);
     } finally {
       setDeletingId(null); // STOP LOADER
+    }
+    try {
+      const response = await axios.post(`${BASE_URL}/hotel/deleteName/${deleteNameObj.id}`,deleteNameObj);
+      console.log('response in delete obj is',response?.data)
+      
+      socket.emit('deleteName', response?.data)
+    } catch (error) {
+      console.error('Error sending activate', error);
     }
   };
   

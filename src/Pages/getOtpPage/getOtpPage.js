@@ -5,6 +5,7 @@ const GetOtpPage=({route})=>{
     const { formData } = route?.params
     const {passData}=route?.params
     console.log('form data page',formData)
+    console.log('pass dara',passData)
 return(
     <>
     <GetOtpInput hotelObj={formData} data={passData}/>
