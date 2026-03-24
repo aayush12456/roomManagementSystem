@@ -31,6 +31,8 @@ import SplashScreen from './src/components/splashScreen/splashScreen';
 import AppExplainPage from './src/Pages/appExplainPage/appExplainPage';
 import AllHotelPage from './src/Pages/allHotelPage/allHotelPage';
 import AllHotelDetailsPage from './src/Pages/allHotelDetailsPage/allHotelDetailsPage';
+import ContactUsPage from './src/Pages/contactUsPage/contactUsPage';
+import ReplyPage from './src/Pages/replyPage/replyPage';
 
 
 
@@ -267,6 +269,16 @@ export default function App() {
             <Stack.Screen
               name="AllHotelDetailsPage"
               component={AllHotelDetailsPage}
+              options={{ headerShown: false }}
+            />
+               <Stack.Screen
+              name="ContactUsPage"
+              component={ContactUsPage}
+              options={{ headerShown: false }}
+            />
+             <Stack.Screen
+              name="ReplyPage"
+              component={ReplyPage}
               options={{ headerShown: false }}
             />
           </Stack.Navigator>

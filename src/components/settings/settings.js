@@ -10,6 +10,7 @@ import transactionImg from "../../../assets/settingIcon/transaction.png";
 import privacyImg from "../../../assets/settingIcon/privacyPolicy.png";
 import questionImg from "../../../assets/settingIcon/question.png";
 import nextImg from "../../../assets/settingIcon/next.png";
+import gmailImg from "../../../assets/settingIcon/mail.png";
 import successImage from "../../../assets/AllIcons/successImg.gif"
 import * as SecureStore from 'expo-secure-store';
 import { Button,Card } from "react-native-paper";
@@ -299,6 +300,9 @@ const privacyPolicyHandler=()=>{
 const appExplainHandler=()=>{
   navigation.navigate("AppExplainPage",{heading:'How to Use the App',profile:profile});
 }
+const contactUsHandler=()=>{
+  navigation.navigate("ContactUsPage",{heading:'Contact Us',profile:profile,hotelId:hotelId,hotelName:hotelName});
+}
   return (
     <>
       {/* Main Settings UI */}
@@ -392,8 +396,8 @@ const appExplainHandler=()=>{
               gap: 5,
             }}
           >
-            <Image source={privacyImg} style={{ width: 35, height: 35,borderRadius:20,marginLeft:-7 }} />
-            <Text style={{ fontSize: 15,paddingTop:3 }}>Privacy Policy</Text>
+            <Image source={privacyImg} style={{ width: 20, height: 20,borderRadius:20,marginLeft:-7 }} />
+            <Text style={{ fontSize: 15,marginTop:-2 }}>Privacy Policy</Text>
           </View>
           <View>
 <Image source={nextImg} style={{ width: 20, height: 20,marginRight:20 }} />
@@ -416,15 +420,31 @@ const appExplainHandler=()=>{
               gap: 5,
             }}
           >
-            <Image source={questionImg} style={{ width: 35, height: 35,borderRadius:20,marginLeft:-7 }} />
-            <Text style={{ fontSize: 15,paddingTop:3 }}>How to Use the App</Text>
+            <Image source={questionImg} style={{ width: 20, height: 20,borderRadius:20,marginLeft:-7 }} />
+            <Text style={{ fontSize: 15,marginTop:-2 }}>How to Use the App</Text>
           </View>
           <View>
 <Image source={nextImg} style={{ width: 20, height: 20,marginRight:20 }} />
 </View>   
           </View>
         </Pressable>}
-        
+        <View style={{height: 1,backgroundColor: "#E5E7EB",marginTop: -12,marginHorizontal: 32,}}/>
+        {<Pressable  onPress={contactUsHandler}>
+<View style={{flexDirection:'row',justifyContent:"space-between",marginTop:20,marginBottom:30,marginLeft:26}}>
+        <View
+            style={{
+              flexDirection: "row",
+              gap: 5,
+            }}
+          >
+            <Image source={gmailImg} style={{ width: 20, height: 20,borderRadius:20,marginLeft:-7 }} />
+            <Text style={{ fontSize: 15,marginTop:-2 }}>Contact Us</Text>
+          </View>
+          <View>
+<Image source={nextImg} style={{ width: 20, height: 20,marginRight:20 }} />
+</View>   
+          </View>
+        </Pressable>}
 
 </View>}
   </ScrollView>

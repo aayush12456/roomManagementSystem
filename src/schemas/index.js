@@ -94,3 +94,9 @@ export const roomAdd=Yup.object({
   bedType:Yup.string().min(2).required("Please select bed type"),
   roomNumber:Yup.string().min(2).required("Please enter room number"),
 })
+
+export const contactUs=Yup.object({
+  name:Yup.string().min(2).required("Please enter name"),
+  phoneNumber:Yup.string().min(2).required("Please select phone number"),
+  message:Yup.string().min(2).required("Please enter messagge"),
+})

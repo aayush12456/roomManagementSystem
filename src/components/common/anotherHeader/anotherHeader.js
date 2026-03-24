@@ -31,6 +31,12 @@ const AnotherHeader=({edit})=>{
                 else if(edit?.params?.heading==="How to Use the App"){
                   navigation.goBack();
                   }
+                  else if(edit?.params?.heading==="Contact Us"){
+                    navigation.goBack();
+                    }
+                    else if(edit?.params?.heading==="Reply Mail"){
+                      navigation.goBack();
+                      }
             else if(edit?.params?.heading===edit?.params?.title){
               navigation.goBack();
               }

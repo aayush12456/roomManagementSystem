@@ -14,6 +14,7 @@ import myProfile from '../../../../assets/sidebarIcons/profile.png'
 import hotelIcon from '../../../../assets/sidebarIcons/hotelIcon.png'
 import premiumIcon from '../../../../assets/sidebarIcons/premium.png'
 import departureIcon from '../../../../assets/sidebarIcons/departure.png'
+import arrivalIcon from '../../../../assets/sidebarIcons/arrival.png'
 import notifyIcon from '../../../../assets/notification.png'
 import ProfilePage from '../../../Pages/profilePage/profilePage';
 import SettingsPage from '../../../Pages/settingsPage/settingsPage';
@@ -28,6 +29,7 @@ import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import PlanScreen from '../planScreen/planScreen';
 import DeparturePage from '../../../Pages/departurePage/departurePage';
+import ArrivalPage from '../../../Pages/arrivalPage/arrivalPage';
 const socket = io.connect("http://192.168.29.169:4000")
 // const socket = io.connect("https://roommanagementsystembackend-1.onrender.com")
 
@@ -242,6 +244,19 @@ showsVerticalScrollIndicator={true}
         }}
       >
       {(props) =><DeparturePage hotelId={hotelId} />}
+        </Drawer.Screen>}
+
+        {profile?.post === "Housekeeping Staff"?null: <Drawer.Screen
+        name="Today’s Arrivals"
+        // component={SettingsPage}
+        options={{
+          drawerIcon:()=>(
+            <Image  source={arrivalIcon}
+            style={{ width: 20, height: 20 }}/>
+        ),
+        }}
+      >
+      {(props) =><ArrivalPage hotelId={hotelId} />}
         </Drawer.Screen>}
 
        {!profile?.post && planStatus !== "free" && paymentActiveSelector.activeSubscription==null? <Drawer.Screen

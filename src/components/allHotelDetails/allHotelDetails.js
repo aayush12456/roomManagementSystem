@@ -2,6 +2,7 @@ import { ScrollView } from "react-native"
 import { Text,Card,Button } from "react-native-paper"
 import { View,Image} from "react-native"
 import { useEffect,useState } from "react"
+import { useNavigation } from '@react-navigation/native';
 import { useDispatch,useSelector } from "react-redux"
 import { getPaymentHistoryAsync } from "../../Redux/Slice/getPaymentHistorySlice/getPaymentHistorySlice"
 import { getPaymentActiveAsync } from "../../Redux/Slice/getPaymentActiveSlice/getPaymentActiveSlice"
@@ -13,6 +14,7 @@ const AllHotelDetails=({hotelDetails})=>{
     console.log('detus',hotelDetails)
     const BASE_URL = "http://192.168.29.169:4000";
     const dispatch=useDispatch()
+    const navigation = useNavigation();
     const [staffList, setStaffList] = useState([])
     const [ownerList, setOwnerList] = useState([])
     useEffect(()=>{
@@ -128,6 +130,10 @@ try {
 }
 }
 
+const replyHandler=(data)=>{
+console.log('data is',data)
+navigation.navigate('ReplyPage',{heading:'Reply Mail',profile:data,hotelId:hotelDetails?._id,hotelName:hotelDetails?.hotelName})
+}
 
 return (
     <>
@@ -146,18 +152,23 @@ return (
     <Text style={{paddingLeft:12,paddingTop:12,paddingBottom:12}}>
             <Text style={{fontSize:15}}>Registration No : 
             </Text>
-            <Text style={{fontSize:15}}>{hotelDetails?.hotelRegistrationNumber}</Text>
+            <Text style={{fontSize:15}}> {hotelDetails?.hotelRegistrationNumber}</Text>
+        </Text>
+        <Text style={{paddingLeft:12,paddingTop:4,paddingBottom:12}}>
+            <Text style={{fontSize:15}}>Register Date : 
+            </Text>
+            <Text style={{fontSize:15}}> {hotelDetails?.registerDate}</Text>
         </Text>
         <View style={{flexDirection:'row',gap:20}}>
         <Text style={{paddingLeft:12}}>
             <Text style={{fontSize:15}}>Total Rooms : 
             </Text>
-            <Text style={{fontSize:15}}>{hotelDetails?.totalRoom}</Text>
+            <Text style={{fontSize:15}}> {hotelDetails?.totalRoom}</Text>
         </Text>
         <Text style={{paddingLeft:12}}>
             <Text style={{fontSize:15}}>Total Floors : 
             </Text>
-            <Text style={{fontSize:15}}>{hotelDetails?.totalFloor}</Text>
+            <Text style={{fontSize:15}}> {hotelDetails?.totalFloor}</Text>
         </Text>
         </View>
         {paymentActiveSelector?.msg==="Active subscription"
@@ -203,6 +214,7 @@ return (
 
 </View>
 
+<View>
 <Button
   mode="contained"
   buttonColor="#DC3545"
@@ -215,9 +227,24 @@ return (
 >
 Delete
 </Button>
-
+<Button
+  mode="contained"
+  buttonColor="green"
+  style={{
+    borderRadius: 25,
+    height: 40,
+    justifyContent:"center",
+    marginTop:20
+  }}
+  onPress={()=>replyHandler(owner)}
+>
+Reply
+</Button>
 </View>
+</View>
+<View style={{height: 1,backgroundColor: "#E5E7EB",marginTop: 8,marginHorizontal: 32,}}/>
   </View>
+
   
             )
         })
@@ -250,6 +277,7 @@ Delete
       <Text style={{color:"grey"}}>{staff.post}</Text>
     </View>
     </View>
+    <View>
     <Button
   mode="contained"
   buttonColor="#DC3545"
@@ -262,6 +290,20 @@ Delete
 >
   Delete
 </Button>
+<Button
+  mode="contained"
+  buttonColor="green"
+  style={{
+    borderRadius: 25,
+    height: 40,
+    justifyContent:"center",
+    marginTop:20
+  }}
+onPress={()=>replyHandler(staff)}
+>
+Reply
+</Button>
+    </View>
     </View>
     <View style={{height: 1,backgroundColor: "#E5E7EB",marginTop: 8,marginHorizontal: 32,}}/>
   </View>

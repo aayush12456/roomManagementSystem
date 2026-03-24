@@ -111,7 +111,7 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
     if (!isNaN(staffCount) && staffCount > 0) {
       const staffObj = {};
       for (let i = 1; i <= staffCount; i++) {
-        staffObj[`staff${i}`] = { name: '', phone: '',image:null,post:'' };
+        staffObj[`staff${i}`] = { name: '', phone: '',image:null,post:'' ,email:''};
       }
       setStaffNamesArray(staffObj);
     } else {
@@ -363,17 +363,19 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
         const owner = ownerNames[key];
   
         if (!owner.name || owner.name.trim().length < 2) {
-          errors[`ownerName_${key}`] = `${key} name is invalid.`;
+          errors[`ownerName_${key}`] = `${key} name is required.`;
         }
   
         if (!owner.phone || !/^\d{10}$/.test(owner.phone)) {
-          errors[`ownerPhone_${key}`] = `${key} phone must be 10 digits.`;
+          errors[`ownerPhone_${key}`] = `${key} phone is required and must be 10 digits.`;
         }
   
         if (!owner.address || owner.address.trim().length < 2) {
-          errors[`ownerAddress_${key}`] = `${key} address is invalid.`;
+          errors[`ownerAddress_${key}`] = `${key} address is required.`;
         }
-  
+        if (!owner.email || owner.email.trim().length < 2) {
+          errors[`ownerEmail_${key}`] = `${key} email is required.`;
+        }
         if (!owner.image) {
           errors[`ownerImage_${key}`] = `${key} image is required.`;
         }
@@ -390,15 +392,18 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
         const staff = staffNamesArray[key];
   
         if (!staff.name || staff.name.trim().length < 2) {
-          errors[`staffName_${key}`] = `${key} name is invalid.`;
+          errors[`staffName_${key}`] = `${key} name is required.`;
         }
   
         if (!staff.phone || !/^\d{10}$/.test(staff.phone)) {
-          errors[`staffPhone_${key}`] = `${key} phone must be 10 digits.`;
+          errors[`staffPhone_${key}`] = `${key} is required and  phone must be 10 digits.`;
         }
   
         if (!staff.address || staff.address.trim().length < 2) {
-          errors[`staffAddress_${key}`] = `${key} address is invalid.`;
+          errors[`staffAddress_${key}`] = `${key} address is required.`;
+        }
+        if (!staff.email || staff.email.trim().length < 2) {
+          errors[`staffEmail_${key}`] = `${key} email is required.`;
         }
   
         if (!staff.post) {
@@ -475,6 +480,7 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
         name: owner.name,
         phone: owner.phone,
         address: owner.address,
+        email:owner.email
       }));
   
       formData.append("ownerImages", {
@@ -493,6 +499,7 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
         phone: staff.phone,
         address: staff.address,
         post: staff.post,
+        email:staff.email
       }));
   
       formData.append("staffImages", {
@@ -672,6 +679,23 @@ return (
   </Text>
 )}
       </View>
+
+      <View style={{ paddingHorizontal: 16, marginBottom: 10,marginTop:10 }}>
+        <TextInput
+          label={`Owner ${index + 1} Email `}
+          mode="outlined"
+          value={ownerNames[key].email}
+          onChangeText={(text) =>{
+            handleOwnerNameChange('email', text, index);
+          }
+          }
+        />
+        {formErrors[`ownerEmail_${key}`] && (
+  <Text style={{ color: 'red', marginTop: 4 }}>
+    {formErrors[`ownerEmail_${key}`]}
+  </Text>
+)}
+      </View>
       
       <View style={{ paddingHorizontal: 16, marginTop: 16 }}>
   <View style={{ flexDirection: 'row', gap: 20, alignItems: 'center' }}>
@@ -817,6 +841,22 @@ return (
            {formErrors[`staffAddress_${key}`] && (
   <Text style={{ color: 'red', marginTop: 4 }}>
     {formErrors[`staffAddress_${key}`]}
+  </Text>
+)}
+        </View>
+
+        <View  style={{ paddingHorizontal: 16, marginBottom: 10,marginTop:10 }}>
+          <TextInput
+            label={`Staff ${index + 1} Email `}
+            mode="outlined"
+            value={staffNamesArray[key].email}
+            onChangeText={(text) =>
+              handleStaffDataChange('email', text, index)
+            }
+          />
+           {formErrors[`staffEmail_${key}`] && (
+  <Text style={{ color: 'red', marginTop: 4 }}>
+    {formErrors[`staffEmail_${key}`]}
   </Text>
 )}
         </View>
