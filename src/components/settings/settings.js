@@ -548,7 +548,16 @@ const contactUsHandler=()=>{
         confirmButtonColor="#DD6B55"
         onCancelPressed={() => setHotelAlert(false)}
         onConfirmPressed={() => {
-          dispatch(deleteHotelAsync({id:hotelId}))
+          const deletehotelObj={
+            id:hotelId,
+            name:profile.name,
+            email:profile.email,
+            phone:profile.phone,
+            hotelName:hotelName,
+            post:profile.post,
+            hotelAddress:profile.address
+          }
+          dispatch(deleteHotelAsync(deletehotelObj))
          setHotelAlert(false)
         }}
       />

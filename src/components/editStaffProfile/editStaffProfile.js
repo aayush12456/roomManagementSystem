@@ -22,6 +22,7 @@ const EditStaffProfile=({editStaff,hotelId})=>{
     const [updatePost,setUpdatePost]=useState(editStaff?.post)
     const [updatePhone,setUpdatePhone]=useState(editStaff?.phone)
     const [updateAddress,setUpdateAddress]=useState(editStaff?.address)
+    const [updateEmail,setUpdateEmail]=useState(editStaff?.email)
     const [errors, setErrors] = useState({});
 
     const validate = () => {
@@ -42,6 +43,10 @@ const EditStaffProfile=({editStaff,hotelId})=>{
       if (!updateAddress?.trim()) {
         newErrors.staffAddress = "Staff Address is required";
       }
+      if (!updateEmail?.trim()) {
+        newErrors.staffEmail = "Staff Email is required";
+      }
+    
     
       if (!updatePost) {
         newErrors.staffPost = "Staff Post is required";
@@ -89,6 +94,7 @@ const EditStaffProfile=({editStaff,hotelId})=>{
         formData.append("staffPhone",updatePhone)
         formData.append("staffAddress",updateAddress)
         formData.append("staffPost",updatePost)
+        formData.append("staffEmail",updateEmail)
         formData.append("hotelId",hotelId)
         formData.append("staffId",staffId)
         if (updateImage) {
@@ -198,6 +204,16 @@ keyboardShouldPersistTaps="handled"
         onChangeText={(text) => setUpdateAddress(text)}
       />
       {errors.staffAddress && <Text style={{ color: "red" }}>{errors.staffAddress}</Text>}
+    </View>
+
+    <View style={{ paddingHorizontal: 16, marginTop: 16 }}>
+      <TextInput
+        label="Staff Email"
+        mode="outlined"
+        value={updateEmail}
+        onChangeText={(text) => setUpdateEmail(text)}
+      />
+      {errors.staffEmail && <Text style={{ color: "red" }}>{errors.staffEmail}</Text>}
     </View>
     {/* <View style={{ paddingHorizontal: 16, marginTop: 16 }}>
       <TextInput

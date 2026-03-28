@@ -259,7 +259,7 @@ showsVerticalScrollIndicator={true}
       {(props) =><ArrivalPage hotelId={hotelId} />}
         </Drawer.Screen>}
 
-       {!profile?.post && planStatus !== "free" && paymentActiveSelector.activeSubscription==null? <Drawer.Screen
+       { !profile?.post && planStatus !== "free" && paymentActiveSelector.activeSubscription==null?<Drawer.Screen
         name='Premium'
         // component={SettingsPage}
         options={{

@@ -31,6 +31,8 @@ useEffect(() => {
   }
 
 }, [deleteHotelSelector])
+
+
 return (
     <>
     <ScrollView>
@@ -44,6 +46,9 @@ return (
             )
         })
     }
+
+
+
       <View style={{ padding: 20, marginTop: "auto" }}>
   <Button
     mode="contained"

@@ -4,6 +4,7 @@ import phone from '../../../assets/profileIcon/phone.png'
 import location from '../../../assets/profileIcon/location.png'
 import edit from '../../../assets/profileIcon/edit.png'
 import designation from '../../../assets/profileIcon/designation.png'
+import mail from '../../../assets/settingIcon/mail.png'
 import { useNavigation } from "@react-navigation/native"
 const MyProfile=({profiles})=>{
   console.log('my profile',profiles)
@@ -61,6 +62,20 @@ return (
             <View style={{flexDirection:"row",gap:25,marginTop:5,marginLeft:42,marginRight:42,marginBottom:40}}>
               <Image source={location} style={{ width: 18, height:18 }}/>
               <Text style={{fontSize:15}}>{profiles?.address}</Text>
+            </View>
+
+            <View
+          style={{
+            height: 1,
+            backgroundColor: "#ccc",
+            marginHorizontal: 15,
+            marginBottom: 10,
+            marginTop:-20
+          }}
+        />
+          <View style={{flexDirection:"row",gap:25,marginTop:5,marginLeft:42,marginRight:42,marginBottom:40}}>
+              <Image source={mail} style={{ width: 18, height:18 }}/>
+              <Text style={{fontSize:15}}>{profiles?.email}</Text>
             </View>
 
             <View

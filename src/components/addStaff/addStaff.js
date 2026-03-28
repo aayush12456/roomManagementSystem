@@ -24,6 +24,7 @@ const AddStaff=({profile,notifyTokenArray, hotelId,planStatus,paymentActiveSelec
   const [staffAddress,setStaffAddress]=useState('')
   const [staffPost,setStaffPost]=useState('')
   const [staffImage,setStaffImage]=useState('')
+  const [staffEmail,setStaffEmail]=useState('')
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
@@ -45,6 +46,9 @@ const AddStaff=({profile,notifyTokenArray, hotelId,planStatus,paymentActiveSelec
 
     if (!staffAddress.trim()) {
       newErrors.staffAddress = "Staff Address is required";
+    }
+    if (!staffEmail.trim()) {
+      newErrors.staffEmail = "Staff Email is required";
     }
 
     if (!staffPost) {
@@ -103,6 +107,7 @@ const AddStaff=({profile,notifyTokenArray, hotelId,planStatus,paymentActiveSelec
     formData.append("staffName", staffName);
     formData.append("staffPhone", staffPhoneNumber);
     formData.append("staffAddress", staffAddress);
+    formData.append("staffEmail", staffEmail);
     formData.append("staffPost", staffPost);
     formData.append("hotelId", hotelDetailSelector?._id);
   
@@ -158,6 +163,7 @@ const AddStaff=({profile,notifyTokenArray, hotelId,planStatus,paymentActiveSelec
       // ✅ FAST USER FEEL: Form reset instantly
       setStaffName("");
       setStaffAddress("");
+      setStaffEmail("")
       setStaffPhoneNumber("");
       setStaffImage("");
       setStaffPost("");
@@ -300,6 +306,16 @@ keyboardShouldPersistTaps="handled"
         />
          {errors.staffAddress && <Text style={{ color: "red" }}>{errors.staffAddress}</Text>}
         </View>
+        <View style={{ paddingHorizontal: 16,marginTop:12 }}>
+        <TextInput
+          label="Staff Email"
+          mode="outlined"
+          onChangeText={(text) => setStaffEmail(text)}
+          value={staffEmail}
+        />
+         {errors.staffEmail && <Text style={{ color: "red" }}>{errors.staffEmail}</Text>}
+        </View>
+
         <View style={{
         borderWidth: 1,
         borderColor: '#888',

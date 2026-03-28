@@ -11,10 +11,13 @@ import { useState,useEffect } from 'react';
 import { getHotelNameAsync } from '../../Redux/Slice/getHotelNameSlice/getHotelNameSlice';
 import { clearHotelNameData } from '../../Redux/Slice/getHotelNameSlice/getHotelNameSlice';
 import { clearPhoneOtpData, getPhoneOtpAsync } from '../../Redux/Slice/getPhoneOtpSlice/getPhoneOtpSlice';
+import { adminAccessAsync } from '../../Redux/Slice/adminAccessSlice/adminAccessSlice';
 const LoginForm=()=>{
   const phoneNameSelectorObj=useSelector((state)=>state?.getHotelNameData?.getHotelNameObj)
   const getPhoneOtpSelectorObj=useSelector((state)=>state.getPhoneOtpData.getPhoneOtpObj)
   console.log('get phone otp',getPhoneOtpSelectorObj)
+  const adminAccessObj=useSelector((state)=>state.adminAccess.getAdminAccessObj)
+  console.log('admin access obj',adminAccessObj)
     const [phoneNumber,setPhoneNumber]=useState('')
     const [isModalVisible, setModalVisible] = useState(false);
     const [isKeyboardVisible, setKeyboardVisible] = useState(false);
@@ -97,6 +100,12 @@ const LoginForm=()=>{
       dispatch(clearHotelNameData()); 
       navigation.navigate('GetOtpPage',{ formData:'admin' })
     }
+    const accessId=1
+    useEffect(() => {
+      if (accessId) {
+       dispatch(adminAccessAsync(accessId))
+      }
+    }, [phoneNameObj]);
 return (
     <>
        <KeyboardAvoidingView
@@ -208,7 +217,7 @@ return (
           No phone number registered in any hotel
             </Text>
             }
-            {phoneNumber === "9479918217" || phoneNumber === "8770770302"?
+            {phoneNumber === "9479918217" || adminAccessObj?.accessAllData?.phone!==null?
             <Text onPress={adminClickHandler} style={{textAlign:'center',marginTop: 10,fontSize:16}}>admin</Text>:null}
             </ScrollView>
             <Button

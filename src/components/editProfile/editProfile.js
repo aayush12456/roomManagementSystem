@@ -14,6 +14,7 @@ const EditProfile=({edit})=>{
     console.log('hotel selct',hotelDetailSelector)
     const phoneNumber=edit?.params?.formData?.phone
     const address=edit?.params?.formData?.address
+    const email=edit?.params?.formData?.email
     const profileImage=edit?.params?.formData?.image
     const name=edit?.params?.formData?.name
     const post=edit?.params?.formData?.post?edit?.params?.formData?.post:"Owner"
@@ -22,6 +23,7 @@ const EditProfile=({edit})=>{
     const [updatePhone,setUpdatePhone]=useState(phoneNumber)
     const [updateImage,setUpdateImage]=useState('')
     const [updateAddress,setUpdateAddress]=useState(address)
+    const [updateEmail,setUpdateEmail]=useState(email)
     const [errors, setErrors] = useState({});
 
     const validate = () => {
@@ -37,7 +39,9 @@ const EditProfile=({edit})=>{
       if (!updateAddress.trim()) {
         newErrors.address = " Address is required";
       }
-    
+      if (!updateEmail.trim()) {
+        newErrors.email = "Email is required";
+      }
       setErrors(newErrors);
       return Object.keys(newErrors).length === 0; // true agar koi error nahi hai
     };
@@ -83,6 +87,7 @@ const EditProfile=({edit})=>{
       formData.append("phone",updatePhone)
       formData.append("oldPhone",phoneNumber)
       formData.append("address",updateAddress)
+      formData.append("email",updateEmail)
       formData.append("id",hotelDetailSelector?._id)
       formData.append("staffId",staffId)
       if (updateImage) {
@@ -184,7 +189,15 @@ keyboardShouldPersistTaps="handled"
       {errors.address && <Text style={{ color: "red" }}>{errors.address}</Text>} 
     </View>
 
-
+    <View style={{ paddingHorizontal: 16, marginTop: 16 }}>
+      <TextInput
+        label="Email"
+        mode="outlined"
+        value={updateEmail}
+        onChangeText={(text) => setUpdateEmail(text)}
+      />
+      {errors.address && <Text style={{ color: "red" }}>{errors.email}</Text>} 
+    </View>
         
         <View style={{
   paddingHorizontal: 16,

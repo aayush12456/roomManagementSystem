@@ -110,9 +110,9 @@ useEffect(()=>{
     setAdvanceAlert(false)
     }
     
-    const updateCustomerDetailsAdvance=(roomId)=>{
-      setShowTextFieldAdvance(true)
-    }
+    // const updateCustomerDetailsAdvance=(roomId)=>{
+    //   setShowTextFieldAdvance(true)
+    // }
     
 return (
     <>
@@ -590,7 +590,7 @@ Housekeeping staff can only view room status. Advance booking is not permitted.
       
       
       :<View style={{flexDirection:'row',justifyContent:'space-between'}}>
-      {profile?.post === "Housekeeping Staff"?null:<View style={{ width: '50%', overflow: 'hidden' }}>
+      {/* {profile?.post === "Housekeeping Staff"?null:<View style={{ width: '50%', overflow: 'hidden' }}>
           <Button
                     mode="contained"
                     style={{
@@ -608,7 +608,30 @@ Housekeeping staff can only view room status. Advance booking is not permitted.
                   >
          Update
                   </Button>
-        </View>}
+        </View>} */
+        <View style={{ width: '50%', overflow: 'hidden',marginLeft:`${profile?.post === "Housekeeping Staff"?70:0}` }}>
+        <Button
+        mode="contained"
+        style={{
+          height: 50, // Set the desired height
+          borderRadius:11,
+          color: '#FFFFFF',
+           fontSize: 16, 
+           justifyContent:'center',
+           marginTop:`${profile?.post === "Housekeeping Staff"?40:20}`,
+           marginLeft: 12,
+           marginRight: 20,
+        }}
+        buttonColor="#6C757D"
+        onPress={() => {
+          setAdvanceAlert(false)
+          formikRef.current?.resetForm(); // Form reset
+        }}
+      >
+Close
+      </Button>
+      </View>
+        }
        {profile?.post === "Housekeeping Staff"?null:<View style={{ width: '50%', overflow: 'hidden' }}>
             <Button
                       mode="contained"
@@ -634,7 +657,7 @@ Housekeeping staff can only view room status. Advance booking is not permitted.
                     </Button>
           </View>}
       </View>}
-         {todayDate===filterCustomerObjAdvance.selectedDate?null:<View style={{flexDirection:"row",justifyContent:'center'}}>
+         {/* {todayDate===filterCustomerObjAdvance.selectedDate?null:<View style={{flexDirection:"row",justifyContent:'center'}}>
          <View style={{ width: '50%', overflow: 'hidden',marginTop:`${profile?.post === "Housekeeping Staff"?20:0}` }}>
             <Button
                       mode="contained"
@@ -657,7 +680,7 @@ Housekeeping staff can only view room status. Advance booking is not permitted.
      Close
                     </Button>
           </View>
-         </View>}
+         </View>} */}
         </View>
         }
        

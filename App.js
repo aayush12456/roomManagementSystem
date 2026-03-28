@@ -33,6 +33,7 @@ import AllHotelPage from './src/Pages/allHotelPage/allHotelPage';
 import AllHotelDetailsPage from './src/Pages/allHotelDetailsPage/allHotelDetailsPage';
 import ContactUsPage from './src/Pages/contactUsPage/contactUsPage';
 import ReplyPage from './src/Pages/replyPage/replyPage';
+import AccessPage from './src/Pages/accessPage/accessPage';
 
 
 
@@ -281,6 +282,12 @@ export default function App() {
               component={ReplyPage}
               options={{ headerShown: false }}
             />
+              <Stack.Screen
+              name="AccessPage"
+              component={AccessPage}
+              options={{ headerShown: false }}
+            />
+   
           </Stack.Navigator>
         )}
       </NavigationContainer>

@@ -2,8 +2,9 @@ import RazorpayCheckout from "react-native-razorpay";
 import {View,Alert,Image, ScrollView,Pressable} from 'react-native'
 import { Card, Text, Button } from "react-native-paper";
 import axios from "axios";
+import io from "socket.io-client";
 import { premiumDetails } from "../../utils/premiumData";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 
 //test key
@@ -19,14 +20,17 @@ import { useNavigation } from "@react-navigation/native";
 // plan_S9mmQLUPh0YRcc --> 20 Rs plan
 // plan_S9mz77K7uN4Mhm -->299 Rs plan monthly
 // plan_S9mzyclsUgcKX8 -->699 Rs plan 6 months
-
+const socket = io.connect("http://192.168.29.169:4000")
 const Payment=({hotelId,profile})=>{
   console.log('pto',profile)
+  console.log('hotels',hotelId)
 const BASE_URL = "http://192.168.29.169:4000";
 // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
 const navigation=useNavigation()
 const [planType,setPlanType]=useState('')
 const [planAmount,setPlanAmount]=useState('')
+const [accessObj,setAccessObj]=useState({})
+const [checkStatus,setCheckStatus]=useState({})
 const planSelect=(type,amount)=>{
 setPlanType(type)
 setPlanAmount(amount)
@@ -97,6 +101,44 @@ console.log('respose razor',res)
       Alert.alert("Error creating subscription");
     }
   }
+
+  useEffect(() => {
+    const fetchAccessHandler = async () => {
+      try {
+        if (hotelId) {
+          const response = await axios.get(
+            `${BASE_URL}/hotel/getAccessAmount/${hotelId}`
+          );
+          setAccessObj(response?.data);
+        }
+      } catch (error) {}
+    };
+
+    fetchAccessHandler();
+
+    socket.on("getAccessAmount", (newUser) => {
+      setAccessObj(newUser);
+    });
+
+    return () => {
+      socket.off("getAccessAmount");
+    };
+  }, [hotelId]);
+console.log('Access obj',accessObj)
+useEffect(() => {
+  if (accessObj?.accessData?.length > 0) {
+    const check = accessObj.accessData.find(
+      (accessData) =>
+        accessData.hotelId == hotelId &&
+        accessData.phone == profile.phone
+    );
+
+    setCheckStatus(check || {});
+  } else {
+    setCheckStatus({});
+  }
+}, [accessObj?.accessData, hotelId, profile]); // 🔥 ONLY THIS
+console.log('check state',checkStatus)
 return (
     <>
      <View style={{ flex: 1, backgroundColor: "#f5f5f5" }}>
@@ -109,9 +151,14 @@ return (
 
 {
   premiumDetails.map((premium)=>{
-    if (
-      premium.monthly.type === "sevenDays" &&
-      profile.phone !== "9479918217"
+    // if (
+    //   premium.monthly.type === "sevenDays" &&
+    //   profile.phone !== "9479918217"
+    // ) {
+    //   return null;
+    // }
+   if (
+    premium.monthly.type =="sevenDays"  &&  premium.monthly.amount!==checkStatus?.amount 
     ) {
       return null;
     }

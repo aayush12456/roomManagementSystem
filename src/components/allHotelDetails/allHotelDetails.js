@@ -134,7 +134,10 @@ const replyHandler=(data)=>{
 console.log('data is',data)
 navigation.navigate('ReplyPage',{heading:'Reply Mail',profile:data,hotelId:hotelDetails?._id,hotelName:hotelDetails?.hotelName})
 }
-
+const accessHandler=(data)=>{
+  console.log('data is',data)
+  navigation.navigate('AccessPage',{heading:'Access',profile:data,hotelId:hotelDetails?._id,hotelName:hotelDetails?.hotelName})
+  }
 return (
     <>
     <ScrollView>
@@ -210,6 +213,11 @@ return (
   <Text style={{ fontWeight: "600" }}>{owner.name}</Text>
   <Text>{owner.phone}</Text>
   <Text>{owner.address}</Text>
+  <View style={{ maxWidth: 140 }}>
+  <Text>
+    {owner.email}
+  </Text>
+</View>
 </View>
 
 </View>
@@ -239,6 +247,19 @@ Delete
   onPress={()=>replyHandler(owner)}
 >
 Reply
+</Button>
+<Button
+  mode="contained"
+  buttonColor="blue"
+  style={{
+    borderRadius: 25,
+    height: 40,
+    justifyContent:"center",
+    marginTop:20
+  }}
+  onPress={()=>accessHandler(owner)}
+>
+Access
 </Button>
 </View>
 </View>
@@ -275,6 +296,11 @@ Reply
       <Text>{staff.phone}</Text>
       <Text>{staff.address}</Text>
       <Text style={{color:"grey"}}>{staff.post}</Text>
+      <View style={{ maxWidth: 140 }}>
+  <Text>
+    {staff.email}
+  </Text>
+</View>
     </View>
     </View>
     <View>

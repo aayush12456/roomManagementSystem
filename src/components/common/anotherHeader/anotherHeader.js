@@ -37,6 +37,9 @@ const AnotherHeader=({edit})=>{
                     else if(edit?.params?.heading==="Reply Mail"){
                       navigation.goBack();
                       }
+                      else if(edit?.params?.heading==="Access"){
+                        navigation.goBack();
+                        }
             else if(edit?.params?.heading===edit?.params?.title){
               navigation.goBack();
               }

@@ -24,6 +24,7 @@ import getAllHotelSlice from "../Slice/getAllHotelSlice/getAllHotelSlice"
 import deleteAdminStaffOwnerSlice from "../Slice/deleteAdminStaffOwnerSlice/deleteAdminStaffOwnerSlice"
 import contactUsSlice from "../Slice/contactUsSlice/contactUsSlice"
 import replyMailSlice from "../Slice/replyMailSlice/replyMailSlice"
+import adminAccessSlice from "../Slice/adminAccessSlice/adminAccessSlice"
 const store=configureStore({
     reducer:{
         hotelRegisterData:hotelRegisterSlice,
@@ -50,7 +51,8 @@ const store=configureStore({
         getAllHotelData:getAllHotelSlice,
         deleteAdminStaffOwnerData:deleteAdminStaffOwnerSlice,
         contactUs:contactUsSlice,
-        replyMail:replyMailSlice
+        replyMail:replyMailSlice,
+        adminAccess:adminAccessSlice
     }
 })
 export default store

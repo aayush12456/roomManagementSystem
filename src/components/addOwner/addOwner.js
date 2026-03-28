@@ -17,6 +17,7 @@ const AddOwner=({hotelsId,profile,notifyTokenArray,planStatus,paymentActiveSelec
     const [ownerName,setOwnerName]=useState('')
     const [ownerPhoneNumber,setOwnerPhoneNumber]=useState('')
     const [ownerAddress,setOwnerAddress]=useState('')
+    const [ownerEmail,setOwnerEmail]=useState('')
     const [ownerImage,setOwnerImage]=useState('')
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false);
@@ -38,6 +39,10 @@ const AddOwner=({hotelsId,profile,notifyTokenArray,planStatus,paymentActiveSelec
   
       if (!ownerAddress.trim()) {
         newErrors.ownerAddress = "Owner Address is required";
+      }
+      
+      if (!ownerEmail.trim()) {
+        newErrors.ownerEmail = "Owner Email is required";
       }
       if (!ownerImage) {
         newErrors.ownerImage = "Owner Image is required";
@@ -86,6 +91,7 @@ const AddOwner=({hotelsId,profile,notifyTokenArray,planStatus,paymentActiveSelec
         formData.append("ownerName",ownerName)
         formData.append("ownerPhone",ownerPhoneNumber)
         formData.append("ownerAddress",ownerAddress)
+        formData.append("ownerEmail",ownerEmail)
         formData.append("hotelId",hotelsId)
         if (ownerImage) {
           const imageUri = ownerImage;
@@ -139,6 +145,7 @@ const AddOwner=({hotelsId,profile,notifyTokenArray,planStatus,paymentActiveSelec
         }
         setOwnerName('')
         setOwnerAddress('')
+        setOwnerEmail('')
         setOwnerPhoneNumber('')
         setOwnerImage('')
         setErrors({});
@@ -234,6 +241,16 @@ keyboardShouldPersistTaps="handled"
          {errors.ownerAddress && <Text style={{ color: "red" }}>{errors.ownerAddress}</Text>}
         </View>
        
+        <View style={{ paddingHorizontal: 16,marginTop:12 }}>
+        <TextInput
+          label="Owner Email"
+          mode="outlined"
+          onChangeText={(text) => setOwnerEmail(text)}
+          value={ownerEmail}
+        />
+         {errors.ownerEmail && <Text style={{ color: "red" }}>{errors.ownerEmail}</Text>}
+        </View>
+
         <View style={{ paddingHorizontal: 16, marginTop: 16 }}>
               <View style={{ flexDirection: 'row', gap: 20, alignItems: 'center' }}>
                 <Image
