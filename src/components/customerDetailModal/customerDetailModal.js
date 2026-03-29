@@ -2,6 +2,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { useState,useRef ,useEffect } from "react";
 import { Text,TextInput,Button } from "react-native-paper"
 import { Formik } from 'formik';
+import {Picker} from '@react-native-picker/picker';
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import accessImg from '../../../assets/roomIcon/noDelete.png'
 import { customerDetailsSchema } from "../../schemas";
@@ -12,6 +13,7 @@ import io from "socket.io-client";
 import axios from "axios";
 import { passDataObjSliceAcions } from "../../Redux/Slice/passDataSliceObj/passDataSliceObj";
 import { planScreenActions } from "../../Redux/Slice/planScreenSlice/planScreenSlice";
+import { documentList } from "../../utils/signUpData";
 const socket = io.connect("http://192.168.29.169:4000")
 // const socket = io.connect("https://roommanagementsystembackend-1.onrender.com")
 const safeTimeToISOString = (timeStr) => {
@@ -176,7 +178,8 @@ return (
  totalCustomer: filterCustomerObj?.totalCustomer || '',
  relation:filterCustomerObj?.relation || '',
  customerIdProof: filterCustomerObj?.customerIdProof || '',
- customerAadharNumber: filterCustomerObj?.customerAadharNumber || '',
+//  customerAadharNumber: filterCustomerObj?.customerAadharNumber || '',
+customerIdDetails: filterCustomerObj?.customerIdDetails || '',
  customerCity: filterCustomerObj?.customerCity || '',
  customerOccupation: filterCustomerObj?.customerOccupation || '',
  customerDestination: filterCustomerObj?.customerDestination || '',
@@ -194,14 +197,17 @@ personalCheckOutTime: safeTimeToISOString(
  totalPayment: filterCustomerObj?.totalPayment ||'',
  paymentPaid: filterCustomerObj?.paymentPaid || '',
  paymentDue: filterCustomerObj?.paymentDue || '',
- executiveName: filterCustomerObj?.frontDeskExecutiveName || '',
+//  executiveName: filterCustomerObj?.frontDeskExecutiveName || '',
+executiveName: filterCustomerObj?.frontDeskExecutiveName || profile?.name || '',
  customerSignature: filterCustomerObj?.customerSignature || '',
 //  extraCustomers: [] 
 extraCustomers: filterCustomerObj?.extraCustomers?.map(item => ({
   customerName: item.customerName || "",
   customerAddress: item.customerAddress || "",
   customerPhoneNumber: item.customerPhoneNumber || "",
-  customerAadharNumber: item.customerAadharNumber || "",
+  // customerAadharNumber: item.customerAadharNumber || "",
+  customerIdProof: item.customerIdProof || "",
+  customerIdDetails: item.customerIdDetails || "",
 })) || [],
       }}
       enableReinitialize 
@@ -235,7 +241,9 @@ extraCustomers: filterCustomerObj?.extraCustomers?.map(item => ({
           customerName: item.customerName,
           customerAddress: item.customerAddress,
           customerPhoneNumber: item.customerPhoneNumber,
-          customerAadharNumber: item.customerAadharNumber
+          // customerAadharNumber: item.customerAadharNumber
+          customerIdProof: item.customerIdProof,
+          customerIdDetails: item.customerIdDetails
         }));
         
 
@@ -252,13 +260,14 @@ extraCustomers: filterCustomerObj?.extraCustomers?.map(item => ({
         totalCustomer:values.totalCustomer,
         // extraCustomers: values.extraCustomers,
         extraCustomers:formattedExtraCustomers,
-        relation:values.relation,
+        relation: values.relation?.trim() || "NA",
         customerIdProof:values.customerIdProof,
-        customerAadharNumber:values.customerAadharNumber,
+        // customerAadharNumber:values.customerAadharNumber,
+        customerIdDetails:values.customerIdDetails,
         customerCity:values.customerCity,
-        customerOccupation:values.customerOccupation,
-        customerDestination:values.customerDestination,
-        reasonToStay:values.reasonToStay,
+        customerOccupation: values.customerOccupation?.trim() || "NA",
+        customerDestination: values.customerDestination?.trim() || "NA",
+        reasonToStay: values.reasonToStay?.trim() || "NA",
         checkInDate:values.checkInDate,
         checkInTime:checkInTime,
         checkOutDate:values.checkOutDate,
@@ -339,7 +348,7 @@ extraCustomers: filterCustomerObj?.extraCustomers?.map(item => ({
         setLoading(false);   // ✅ STOP LOADER (always runs)
       }
 
-// console.log('customer detailss',customerDetailsObj)
+console.log('customer detailss',customerDetailsObj)
         resetForm()
         setShowAlert(false)
         setShowTextField(false); 
@@ -380,20 +389,20 @@ extraCustomers: filterCustomerObj?.extraCustomers?.map(item => ({
     {matchRoomResponse === false ? (
   profile?.post !== "Housekeeping Staff" && (
     <Text style={{ textAlign:'center', fontSize:16, fontWeight:'bold' }}>
-      Enter Customer Details
+      Enter Guest Details
     </Text>
   )
 ) : showTextField === false ? (
   <Text style={{ textAlign:'center', fontSize:16, fontWeight:'bold' }}>
-    Customer Details Preview
+   Guest Summary
   </Text>
 ) : profile?.post !== "Housekeeping Staff" ? (
   <Text style={{ textAlign:'center', fontSize:16, fontWeight:'bold' }}>
-    Update Customer Details
+    Update Guest Details
   </Text>
 ) : (
   <Text style={{ textAlign:'center', fontSize:16, fontWeight:'bold' }}>
-    Customer Details Preview
+  Guest Summary
   </Text>
 )}
       {(matchRoomResponse === false || showTextField === true  ) ?
@@ -425,7 +434,8 @@ Housekeeping staff do not have permission to add guests.
 </View>:null}
        {profile?.post !== "Housekeeping Staff"? <View>
         <TextInput
-          label="Customer Name"
+          // label="Customer Name"
+          label="Full Name"
           mode="outlined"
           style={{ width: screenWidth * 0.75, marginBottom: 10 }}
           onChangeText={handleChange('customerName')}
@@ -437,7 +447,8 @@ Housekeeping staff do not have permission to add guests.
 
         {profile?.post !== "Housekeeping Staff"?<View>
         <TextInput
-          label="Customer Address"
+          // label="Customer Address"
+          label="Address"
           mode="outlined"
           style={{ width: screenWidth * 0.75, marginBottom: 10 }}
           onChangeText={handleChange('customerAddress')}
@@ -449,7 +460,7 @@ Housekeeping staff do not have permission to add guests.
 
         {profile?.post !== "Housekeeping Staff"?<View>
         <TextInput
-          label="Customer Phone Number"
+          label="Mobile Number"
           mode="outlined"
           style={{ width: screenWidth * 0.75, marginBottom: 10 }}
           keyboardType="phone-pad"
@@ -461,48 +472,10 @@ Housekeeping staff do not have permission to add guests.
         </View>:null}
 
       
-
         {values.customerPhoneNumber?.trim().length > 0?<View>
         <TextInput
-          label="Relation"
-          mode="outlined"
-          style={{ width: screenWidth * 0.75, marginBottom: 10 }}
-          onChangeText={handleChange('relation')}
-          onBlur={handleBlur('relation')}
-          value={values.relation}
-        />
-          {touched.relation && errors.relation && <Text style={{ color: 'red', marginLeft: 12 }}>{errors.relation}</Text>}
-        </View>:null}
-
-        {values.customerPhoneNumber?.trim().length > 0?<View>
-        <TextInput
-          label="Customer Id Proof"
-          mode="outlined"
-          style={{ width: screenWidth * 0.75, marginBottom: 10 }}
-          onChangeText={handleChange('customerIdProof')}
-          onBlur={handleBlur('customerIdProof')}
-          value={values.customerIdProof}
-        />
-        {touched.customerIdProof && errors.customerIdProof && <Text style={{ color: 'red', marginLeft: 12 }}>{errors.customerIdProof}</Text>}
-        </View>:null}
-
-        {values.customerPhoneNumber?.trim().length > 0?<View>
-        <TextInput
-          label="Customer Aadhar Number"
-          mode="outlined"
-          keyboardType="phone-pad"
-          style={{ width: screenWidth * 0.75, marginBottom: 10 }}
-          onChangeText={handleChange('customerAadharNumber')}
-          onBlur={handleBlur('customerAadharNumber')}
-          value={values.customerAadharNumber}
-        />
-        {touched.customerAadharNumber && errors.customerAadharNumber && <Text style={{ color: 'red', marginLeft: 12 }}>{errors.customerAadharNumber}</Text>}
-        </View>:null}
-
-
-        {values.customerPhoneNumber?.trim().length > 0?<View>
-        <TextInput
-          label="Customer City"
+          // label="Customer City"
+          label="City"
           mode="outlined"
           style={{ width: screenWidth * 0.75, marginBottom: 10 }}
           onChangeText={handleChange('customerCity')}
@@ -511,34 +484,62 @@ Housekeeping staff do not have permission to add guests.
         />
          {touched.customerCity && errors.customerCity && <Text style={{ color: 'red', marginLeft: 12 }}>{errors.customerCity}</Text>}
         </View>:null}
-       
-        {values.customerPhoneNumber?.trim().length > 0?<View>
-        <TextInput
-          label="Customer Occupation"
-          mode="outlined"
-          style={{ width: screenWidth * 0.75, marginBottom: 10 }}
-          onChangeText={handleChange('customerOccupation')}
-          onBlur={handleBlur('customerOccupation')}
-          value={values.customerOccupation}
-        />
-         {touched.customerOccupation && errors.customerOccupation && <Text style={{ color: 'red', marginLeft: 12 }}>{errors.customerOccupation}</Text>}
-        </View>:null}
+
+        {values.customerPhoneNumber?.trim().length > 0 && (
+  <View style={{ width: screenWidth * 0.75, marginBottom: 10,marginTop:5 }}>
+    <View style={{
+      borderWidth: 1,
+      borderRadius: 5
+    }}>
+      <Picker
+        selectedValue={values.customerIdProof}
+        onValueChange={(itemValue) => setFieldValue('customerIdProof', itemValue)}
+      >
+    {documentList.map((item, index) => (
+          <Picker.Item
+            key={index}
+            label={item.label}
+            value={item.value}
+          />
+        ))}
+      </Picker>
+    </View>
+
+    {touched.customerIdProof && errors.customerIdProof && (
+      <Text style={{ color: 'red', marginLeft: 5 }}>
+        {errors.customerIdProof}
+      </Text>
+    )}
+
+  </View>
+)}
+
+{values.customerIdProof !== '' && (
+  <View>
+    <TextInput
+      label={`${values.customerIdProof} Details`}
+      mode="outlined"
+      style={{ width: screenWidth * 0.75, marginBottom: 10 }}
+      keyboardType="default"
+      onChangeText={(text) => {
+        setFieldValue('customerIdDetails', text)
+      }}
+      value={values.customerIdDetails}
+    />
+
+    {touched.customerIdDetails && errors.customerIdDetails && (
+      <Text style={{ color: 'red', marginLeft: 12 }}>
+        {errors.customerIdDetails}
+      </Text>
+    )}
+  </View>
+)}
+
 
         {values.customerPhoneNumber?.trim().length > 0?<View>
         <TextInput
-          label="Customer Destination"
-          mode="outlined"
-          style={{ width: screenWidth * 0.75, marginBottom: 10 }}
-          onChangeText={handleChange('customerDestination')}
-          onBlur={handleBlur('customerDestination')}
-          value={values.customerDestination}
-        />
-         {touched.customerDestination && errors.customerDestination && <Text style={{ color: 'red', marginLeft: 12 }}>{errors.customerDestination}</Text>}
-        </View>:null}
-
-        {values.customerPhoneNumber?.trim().length > 0?<View>
-        <TextInput
-          label="Total Customer"
+          // label="Total Customer"
+          label="Number of Guests"
           mode="outlined"
           style={{ width: screenWidth * 0.75, marginBottom: 10 }}
           // onChangeText={handleChange('totalCustomer')}
@@ -555,7 +556,9 @@ Housekeeping staff do not have permission to add guests.
       customerName: existing[i]?.customerName || "",
       customerAddress: existing[i]?.customerAddress || "",
       customerPhoneNumber: existing[i]?.customerPhoneNumber || "",
-      customerAadharNumber: existing[i]?.customerAadharNumber || "",
+      // customerAadharNumber: existing[i]?.customerAadharNumber || "",
+      customerIdProof: existing[i]?.customerIdProof || "",
+      customerIdDetails: existing[i]?.customerIdDetails || "",
     }));
               setFieldValue("extraCustomers", newArr);
             } else {
@@ -589,12 +592,13 @@ Housekeeping staff do not have permission to add guests.
     <View key={index} style={{ marginTop: 15 }}>
 
       <Text style={{ fontWeight: "bold", marginBottom: 5 }}>
-        Extra Customer {index + 1}
+        Extra Guest {index + 1}
       </Text>
 
       {/* ✅ NAME */}
       <TextInput
-        label={`Customer Name ${index + 1}`}
+        // label={`Customer Name ${index + 1}`}
+        label={`Full Name ${index + 1}`}
         mode="outlined"
         style={{ width: screenWidth * 0.75, marginBottom: 5 }}
         value={values.extraCustomers[index].customerName}
@@ -607,7 +611,8 @@ Housekeeping staff do not have permission to add guests.
 
       {/* ✅ ADDRESS */}
       <TextInput
-        label={`Customer Address ${index + 1}`}
+        // label={`Customer Address ${index + 1}`}
+        label={`Address ${index + 1}`}
         mode="outlined"
         style={{ width: screenWidth * 0.75, marginBottom: 5 }}
         value={values.extraCustomers[index].customerAddress}
@@ -619,7 +624,8 @@ Housekeeping staff do not have permission to add guests.
 
       {/* ✅ PHONE */}
       <TextInput
-        label={`Customer Phone Number ${index + 1}`}
+        // label={`Customer Phone Number ${index + 1}`}
+        label={`Mobile Number ${index + 1}`}
         mode="outlined"
         keyboardType="phone-pad"
         style={{ width: screenWidth * 0.75, marginBottom: 5 }}
@@ -631,7 +637,7 @@ Housekeeping staff do not have permission to add guests.
       {phoneError && <Text style={{ color: "red" }}>{errors.extraCustomers[index].customerPhoneNumber}</Text>}
 
       {/* ✅ AADHAR */}
-      <TextInput
+      {/* <TextInput
         label={`Customer Aadhar Number ${index + 1}`}
         mode="outlined"
         keyboardType="phone-pad"
@@ -641,23 +647,136 @@ Housekeeping staff do not have permission to add guests.
           setFieldValue(`extraCustomers[${index}].customerAadharNumber`, text)
         }
       />
-      {aadharError && <Text style={{ color: "red" }}>{errors.extraCustomers[index].customerAadharNumber}</Text>}
+      {aadharError && <Text style={{ color: "red" }}>{errors.extraCustomers[index].customerAadharNumber}</Text>} */}
+
+<View style={{ width: screenWidth * 0.75, marginBottom: 10 ,marginTop:5 }}>
+
+
+  <View style={{
+    borderWidth: 1,
+    borderRadius: 5
+  }}>
+    <Picker
+      selectedValue={values.extraCustomers[index].customerIdProof}
+      onValueChange={(itemValue) => {
+        setFieldValue(`extraCustomers[${index}].customerIdProof`, itemValue);
+        setFieldValue(`extraCustomers[${index}].customerIdDetails`, ""); // reset
+      }}
+    >
+      {documentList.map((item, i) => (
+        <Picker.Item key={i} label={item.label} value={item.value} />
+      ))}
+    </Picker>
+  </View>
+</View>
+
+{values.extraCustomers[index].customerIdProof !== '' && (
+  <TextInput
+    label={`${values.extraCustomers[index].customerIdProof} Details`}
+    mode="outlined"
+    style={{ width: screenWidth * 0.75, marginBottom: 10 }}
+    value={values.extraCustomers[index].customerIdDetails}
+    onChangeText={(text) =>
+      setFieldValue(`extraCustomers[${index}].customerIdDetails`, text)
+    }
+  />
+)}
 
     </View>
   );
 })}
 
+
+        {values.customerPhoneNumber?.trim().length > 0?<View>
+        <TextInput
+          label="Relation"
+          mode="outlined"
+          style={{ width: screenWidth * 0.75, marginBottom: 10 }}
+          onChangeText={handleChange('relation')}
+          onBlur={handleBlur('relation')}
+          value={values.relation}
+        />
+        <Text style={{ textAlign:'right' }}>Not Mandatory</Text>
+          {/* {touched.relation && errors.relation && <Text style={{ color: 'red', marginLeft: 12 }}>{errors.relation}</Text>} */}
+        </View>:null}
+
+        {/* {values.customerPhoneNumber?.trim().length > 0?<View>
+        <TextInput
+          label="Customer Id Proof"
+          mode="outlined"
+          style={{ width: screenWidth * 0.75, marginBottom: 10 }}
+          onChangeText={handleChange('customerIdProof')}
+          onBlur={handleBlur('customerIdProof')}
+          value={values.customerIdProof}
+        />
+        {touched.customerIdProof && errors.customerIdProof && <Text style={{ color: 'red', marginLeft: 12 }}>{errors.customerIdProof}</Text>}
+        </View>:null} */}
+
+        {/* {values.customerPhoneNumber?.trim().length > 0?<View>
+        <TextInput
+          label="Customer Aadhar Number"
+          mode="outlined"
+          keyboardType="phone-pad"
+          style={{ width: screenWidth * 0.75, marginBottom: 10 }}
+          onChangeText={handleChange('customerAadharNumber')}
+          onBlur={handleBlur('customerAadharNumber')}
+          value={values.customerAadharNumber}
+        />
+        {touched.customerAadharNumber && errors.customerAadharNumber && <Text style={{ color: 'red', marginLeft: 12 }}>{errors.customerAadharNumber}</Text>}
+        </View>:null} */}
+
+{/* 
+        {values.customerPhoneNumber?.trim().length > 0?<View>
+        <TextInput
+          label="Customer City"
+          mode="outlined"
+          style={{ width: screenWidth * 0.75, marginBottom: 10 }}
+          onChangeText={handleChange('customerCity')}
+          onBlur={handleBlur('customerCity')}
+          value={values.customerCity}
+        />
+         {touched.customerCity && errors.customerCity && <Text style={{ color: 'red', marginLeft: 12 }}>{errors.customerCity}</Text>}
+        </View>:null} */}
+       
+        {values.customerPhoneNumber?.trim().length > 0?<View>
+        <TextInput
+          label="Occupation"
+          mode="outlined"
+          style={{ width: screenWidth * 0.75, marginBottom: 10 }}
+          onChangeText={handleChange('customerOccupation')}
+          onBlur={handleBlur('customerOccupation')}
+          value={values.customerOccupation}
+        />
+         {/* {touched.customerOccupation && errors.customerOccupation && <Text style={{ color: 'red', marginLeft: 12 }}>{errors.customerOccupation}</Text>} */}
+         <Text style={{ textAlign:'right' }}>Not Mandatory</Text>
+        </View>:null}
+       
+        {values.customerPhoneNumber?.trim().length > 0?<View>
+        <TextInput
+          label="Destination"
+          mode="outlined"
+          style={{ width: screenWidth * 0.75, marginBottom: 10 }}
+          onChangeText={handleChange('customerDestination')}
+          onBlur={handleBlur('customerDestination')}
+          value={values.customerDestination}
+        />
+         {/* {touched.customerDestination && errors.customerDestination && <Text style={{ color: 'red', marginLeft: 12 }}>{errors.customerDestination}</Text>} */}
+         <Text style={{ textAlign:'right' }}>Not Mandatory</Text>
+        </View>:null}
+              
+
    
         {values.customerPhoneNumber?.trim().length > 0?<View>
         <TextInput
-          label="Reason To Stay"
+          label="Purpose of Visit"
           mode="outlined"
           style={{ width: screenWidth * 0.75, marginBottom: 10 }}
           onChangeText={handleChange('reasonToStay')}
           onBlur={handleBlur('reasonToStay')}
           value={values.reasonToStay}
         />
-         {touched.reasonToStay && errors.reasonToStay && <Text style={{ color: 'red', marginLeft: 12 }}>{errors.reasonToStay}</Text>}
+         {/* {touched.reasonToStay && errors.reasonToStay && <Text style={{ color: 'red', marginLeft: 12 }}>{errors.reasonToStay}</Text>} */}
+         <Text style={{ textAlign:'right' }}>Not Mandatory</Text>
         </View>:null}
       
        {values.customerPhoneNumber?.trim().length > 0?<View >
@@ -845,11 +964,21 @@ Housekeeping staff do not have permission to add guests.
       </View>:null}
       {values.customerPhoneNumber?.trim().length > 0?<View>
         <TextInput
-          label="Total Payment"
+          label="Total Amount"
           mode="outlined"
           keyboardType="phone-pad"
           style={{ width: screenWidth * 0.75, marginBottom: 10 }}
-          onChangeText={handleChange('totalPayment')}
+          // onChangeText={handleChange('totalPayment')}
+          onChangeText={(text) => {
+            handleChange('totalPayment')(text);
+          
+            const total = parseFloat(text || "0");
+            const paid = parseFloat(values.paymentPaid || "0");
+          
+            const due = total - paid;
+          
+            setFieldValue('paymentDue', due >= 0 ? String(due) : "0");
+          }}
           onBlur={handleBlur('totalPayment')}
           value={values.totalPayment}
         />
@@ -858,11 +987,21 @@ Housekeeping staff do not have permission to add guests.
 
         {values.customerPhoneNumber?.trim().length > 0?<View>
         <TextInput
-          label=" Payment Paid"
+          label="Amount Paid"
           mode="outlined"
           keyboardType="phone-pad"
           style={{ width: screenWidth * 0.75, marginBottom: 10 }}
-          onChangeText={handleChange('paymentPaid')}
+          // onChangeText={handleChange('paymentPaid')}
+          onChangeText={(text) => {
+            handleChange('paymentPaid')(text);
+          
+            const total = parseFloat(values.totalPayment || "0");
+            const paid = parseFloat(text || "0");
+          
+            const due = total - paid;
+          
+            setFieldValue('paymentDue', due >= 0 ? String(due) : "0");
+          }}
           onBlur={handleBlur('paymentPaid')}
           value={values.paymentPaid}
         />
@@ -882,29 +1021,43 @@ Housekeeping staff do not have permission to add guests.
         </View>:null}
 
         {values.customerPhoneNumber?.trim().length > 0?<View>
-        <TextInput
-          label=" Payment Due"
+        {/* <TextInput
+          label="Amount Due"
           mode="outlined"
           keyboardType="phone-pad"
           style={{ width: screenWidth * 0.75, marginBottom: 10 }}
           onChangeText={handleChange('paymentDue')}
           onBlur={handleBlur('paymentDue')}
           value={values.paymentDue}
-        />
+        /> */}
+        <TextInput
+        label="Amount Due"
+        mode="outlined"
+        keyboardType="phone-pad"
+        style={{ width: screenWidth * 0.75, marginBottom: 10 }}
+        value={values.paymentDue}
+        editable={false}
+        pointerEvents="none"
+/>
           {touched.paymentDue && errors.paymentDue && <Text style={{ color: 'red', marginLeft: 12 }}>{errors.paymentDue}</Text>}
         </View>:null}
 
-      {values.customerPhoneNumber?.trim().length > 0?<View>
-        <TextInput
-          label="Front Desk Executive Name"
-          mode="outlined"
-          style={{ width: screenWidth * 0.75, marginBottom: 10 }}
-          onChangeText={handleChange('executiveName')}
-          onBlur={handleBlur('executiveName')}
-          value={values.executiveName}
-        />
-        {touched.executiveName && errors.executiveName && <Text style={{ color: 'red', marginLeft: 12 }}>{errors.executiveName}</Text>}
-        </View>:null}
+      {values.customerPhoneNumber?.trim().length > 0? <View>
+    <TextInput
+      label="Front Desk Executive Name"
+      mode="outlined"
+      style={{ width: screenWidth * 0.75, marginBottom: 10 }}
+      value={values.executiveName}
+      editable={false}
+      pointerEvents="none"
+    />
+
+    {touched.executiveName && errors.executiveName && (
+      <Text style={{ color: 'red', marginLeft: 12 }}>
+        {errors.executiveName}
+      </Text>
+    )}
+  </View>:null}
         {values.customerPhoneNumber?.trim().length > 0 && !filterCustomerObj?.customerSignature ? (
   <View>
     <Pressable onPress={() => setShowSignaturePad(true)}>
@@ -985,87 +1138,91 @@ Housekeeping staff do not have permission to add guests.
         <Text>Room Type : </Text>
        <Text>{roomType}</Text>
       </View>
-      <View style={{flexDirection:"row",gap:6,paddingTop:10,width: "100%",
+      <View style={{flexDirection:"row",gap:6,paddingTop:15,width: "100%",
     alignItems: "flex-start"}}>
-        <Text>Customer Name : </Text>
+        <Text>Full Name : </Text>
        <Text style={{ flex: 1,flexShrink: 1}}>{filterCustomerObj.customerName}</Text>
       </View>
       <View style={{flexDirection:"row",gap:6,paddingTop:15,width: "100%",
     alignItems: "flex-start"}}>
-        <Text>Customer Address : </Text>
+        <Text>Address : </Text>
        <Text style={{ flex: 1,flexShrink: 1}}>{filterCustomerObj.customerAddress}</Text>
       </View>
       <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
-        <Text>Customer Phone Number : </Text>
+        <Text>Mobile Number : </Text>
        <Text>{filterCustomerObj.customerPhoneNumber}</Text>
       </View>
       <View style={{flexDirection:"row",gap:6,paddingTop:15,width: "100%",
     alignItems: "flex-start"}}>
-        <Text>Relation : </Text>
-       <Text style={{ flex: 1,flexShrink: 1}}>{filterCustomerObj.relation}</Text>
+        <Text>City : </Text>
+       <Text style={{ flex: 1,flexShrink: 1}}>{filterCustomerObj.customerCity}</Text>
       </View>
       <View style={{flexDirection:"row",gap:6,paddingTop:15,width: "100%",
     alignItems: "flex-start"}}>
-        <Text>Customer Id Proof : </Text>
+        <Text>ID Type : </Text>
        <Text style={{ flex: 1,flexShrink: 1}}>{filterCustomerObj.customerIdProof}</Text>
       </View>
       <View style={{flexDirection:"row",gap:6,paddingTop:15,width: "100%",
     alignItems: "flex-start"}}>
-        <Text>customer Aadhar Number : </Text>
-       <Text style={{flex: 1,flexShrink: 1}} >{filterCustomerObj.customerAadharNumber}</Text>
-      </View>
-      <View style={{flexDirection:"row",gap:6,paddingTop:15,width: "100%",
-    alignItems: "flex-start"}}>
-        <Text>Customer City : </Text>
-       <Text style={{flex: 1,flexShrink: 1}}>{filterCustomerObj.customerCity}</Text>
-      </View>
-       <View style={{flexDirection:"row",gap:6,paddingTop:15,width: "100%",
-    alignItems: "flex-start"}}>
-        <Text>Customer Occupation: </Text>
-       <Text style={{flex: 1,flexShrink: 1}}>{filterCustomerObj.customerOccupation}</Text>
-      </View>
-      <View style={{flexDirection:"row",gap:6,paddingTop:15,width: "100%",
-    alignItems: "flex-start"}}>
-        <Text>Customer Destination: </Text>
-       <Text style={{flex: 1,flexShrink: 1}}>{filterCustomerObj.customerDestination}</Text>
+        <Text>ID Details : </Text>
+       <Text style={{flex: 1,flexShrink: 1}} >{filterCustomerObj.customerIdDetails}</Text>
       </View>
       <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
-        <Text>Total Customer : </Text>
+        <Text>Number of Guests : </Text>
        <Text>{filterCustomerObj.totalCustomer}</Text>
       </View>
-    {
+      {
       filterCustomerObj?.extraCustomers?.map((customer)=>{
         return (
           <>
-          <View style={{marginTop:18}}>
+          <View style={{marginTop:15}}>
             <Text>{customer?.extraCustomerLabel} </Text>
-            <View style={{flexDirection:"row",gap:6,paddingTop:6,width: "100%",
+            <View style={{flexDirection:"row",gap:6,paddingTop:10,width: "100%",
     alignItems: "flex-start"}}>
-            <Text>Customer Name : </Text>
+            <Text>Full Name : </Text>
        <Text style={{flex: 1,flexShrink: 1}} >{customer?.customerName}</Text>
             </View>
-            <View style={{flexDirection:"row",gap:6,paddingTop:3,width: "100%",
+            <View style={{flexDirection:"row",gap:6,paddingTop:10,width: "100%",
     alignItems: "flex-start"}}>
-            <Text>Customer Address : </Text>
+            <Text>Address : </Text>
        <Text style={{flex: 1,flexShrink: 1}} >{customer?.customerAddress}</Text>
             </View>
-            <View style={{flexDirection:"row",gap:6,paddingTop:3}}>
-            <Text>Customer Phone Number : </Text>
+            <View style={{flexDirection:"row",gap:6,paddingTop:10}}>
+            <Text>Mobile Number : </Text>
        <Text>{customer?.customerPhoneNumber}</Text>
             </View>
-            <View style={{flexDirection:"row",gap:6,paddingTop:3, width: "100%",
-    alignItems: "flex-start"}}>
-            <Text>Customer Aadhar Number : </Text>
-       
-       <Text style={{flex: 1,flexShrink: 1}}>{customer?.customerAadharNumber}</Text>
+            <View style={{flexDirection:"row",gap:6,paddingTop:10}}>
+            <Text>ID Type : </Text>
+       <Text>{customer?.customerIdProof}</Text>
+            </View>
+            <View style={{flexDirection:"row",gap:6,paddingTop:10}}>
+            <Text>ID Details : </Text>
+       <Text>{customer?.customerIdDetails}</Text>
             </View>
           </View>
           </>
         )
       })
     }
+      <View style={{flexDirection:"row",gap:6,paddingTop:15,width: "100%",
+    alignItems: "flex-start"}}>
+        <Text>Relation : </Text>
+       <Text style={{ flex: 1,flexShrink: 1}}>{filterCustomerObj.relation}</Text>
+      </View>
+       <View style={{flexDirection:"row",gap:6,paddingTop:15,width: "100%",
+    alignItems: "flex-start"}}>
+        <Text>Occupation: </Text>
+       <Text style={{flex: 1,flexShrink: 1}}>{filterCustomerObj.customerOccupation}</Text>
+      </View>
+      <View style={{flexDirection:"row",gap:6,paddingTop:15,width: "100%",
+    alignItems: "flex-start"}}>
+        <Text>Destination: </Text>
+       <Text style={{flex: 1,flexShrink: 1}}>{filterCustomerObj.customerDestination}</Text>
+      </View>
+
+   
       <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
-        <Text>Reason To Stay: </Text>
+        <Text>Purpose of Visit: </Text>
        <Text>{filterCustomerObj.reasonToStay}</Text>
       </View>
       <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
@@ -1073,15 +1230,15 @@ Housekeeping staff do not have permission to add guests.
        <Text>{filterCustomerObj.checkInDate}</Text>
       </View>
       <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
-        <Text>check In Time : </Text>
+        <Text>Check In Time : </Text>
        <Text>{filterCustomerObj.checkInTime}</Text>
       </View>
       <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
-        <Text>check Out Date : </Text>
+        <Text>Check Out Date : </Text>
        <Text>{filterCustomerObj.checkOutDate}</Text>
       </View>
       <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
-        <Text>check Out Time : </Text>
+        <Text>Check Out Time : </Text>
        <Text>{filterCustomerObj.checkOutTime}</Text>
       </View>
       <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
@@ -1089,15 +1246,15 @@ Housekeeping staff do not have permission to add guests.
        <Text>{filterCustomerObj.personalCheckOutTime}</Text>
       </View>
       <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
-        <Text>Total Payment : </Text>
+        <Text>Total Amount : </Text>
        <Text>{filterCustomerObj.totalPayment}</Text>
       </View>
       <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
-        <Text>Payment Paid : </Text>
+        <Text>Amount Paid : </Text>
        <Text>{filterCustomerObj.paymentPaid}</Text>
       </View>
       <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
-        <Text>Payment Due : </Text>
+        <Text>Amount Due : </Text>
        <Text>{filterCustomerObj.paymentDue}</Text>
       </View>
       <View style={{flexDirection:"row",gap:6,paddingTop:15}}>

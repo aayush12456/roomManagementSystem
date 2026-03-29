@@ -263,20 +263,20 @@ return (
 {matchRoomResponseAdvance === false ? (
   profile?.post !== "Housekeeping Staff" && (
     <Text style={{ textAlign:'center', fontSize:16, fontWeight:'bold' }}>
- Enter Advance Customer Details
+ Enter Advance Guest Details
     </Text>
   )
 ) : showTextFieldAdvance === false ? (
   <Text style={{ textAlign:'center', fontSize:16, fontWeight:'bold' }}>
-Advance Customer Details Preview
+Advance Guest Summary
   </Text>
 ) : profile?.post !== "Housekeeping Staff" ? (
   <Text style={{ textAlign:'center', fontSize:16, fontWeight:'bold' }}>
- Update Advance Customer Details
+ Update Advance Guest Details
   </Text>
 ) : (
   <Text style={{ textAlign:'center', fontSize:16, fontWeight:'bold' }}>
- Enter Advance Customer Details
+ Enter Advance Guest Details
   </Text>
 )}
         {(matchRoomResponseAdvance === false || showTextFieldAdvance === true  )?
@@ -309,7 +309,7 @@ Housekeeping staff can only view room status. Advance booking is not permitted.
                       {/* ---- TEXT INPUTS ---- */}
                      {profile?.post === "Housekeeping Staff"?null: <View>
                         <TextInput
-                          label="Customer Name"
+                          label="Full Name"
                           mode="outlined"
                           style={{
                             width: screenWidth * 0.75,
@@ -330,7 +330,7 @@ Housekeeping staff can only view room status. Advance booking is not permitted.
 
                      { profile?.post === "Housekeeping Staff"?null:<View>
                         <TextInput
-                          label="Customer Address"
+                          label="Address"
                           mode="outlined"
                           style={{
                             width: screenWidth * 0.75,
@@ -352,7 +352,7 @@ Housekeeping staff can only view room status. Advance booking is not permitted.
 
                       {profile?.post === "Housekeeping Staff"?null:<View>
                         <TextInput
-                          label="Customer Phone Number"
+                          label="Mobile Number"
                           mode="outlined"
                           style={{
                             width: screenWidth * 0.75,
@@ -377,7 +377,7 @@ Housekeeping staff can only view room status. Advance booking is not permitted.
                         <>
                           <View>
                             <TextInput
-                              label="Total Payment"
+                              label="Total Amount"
                               mode="outlined"
                               style={{
                                 width: screenWidth * 0.75,
@@ -400,7 +400,7 @@ Housekeeping staff can only view room status. Advance booking is not permitted.
 
                           <View>
                             <TextInput
-                              label="Advance Payment"
+                              label="Advance Paid"
                               mode="outlined"
                               style={{
                                 width: screenWidth * 0.75,
@@ -502,24 +502,24 @@ Housekeeping staff can only view room status. Advance booking is not permitted.
       </View>
       <View style={{flexDirection:"row",gap:6,paddingTop:10,width: "100%",
     alignItems: "flex-start"}}>
-        <Text>Customer Name : </Text>
+        <Text>Full Name : </Text>
        <Text style={{ flex: 1,flexShrink: 1}}>{filterCustomerObjAdvance.customerName}</Text>
       </View>
       <View style={{flexDirection:"row",gap:6,paddingTop:15,width: "100%",
     alignItems: "flex-start"}}>
-        <Text>Customer Address : </Text>
+        <Text>Address : </Text>
        <Text style={{ flex: 1,flexShrink: 1}}>{filterCustomerObjAdvance.customerAddress}</Text>
       </View>
       <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
-        <Text>Customer Phone Number : </Text>
+        <Text>Mobile Number : </Text>
        <Text>{filterCustomerObjAdvance.customerPhoneNumber}</Text>
       </View>
       <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
-        <Text>Total Payment : </Text>
+        <Text>Total Amount : </Text>
        <Text>{filterCustomerObjAdvance.totalPayment}</Text>
       </View>
       <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
-        <Text>Advance Payment : </Text>
+        <Text>Advance Paid : </Text>
        <Text>{filterCustomerObjAdvance.advancePayment}</Text>
       </View>
       {todayDate===filterCustomerObjAdvance.selectedDate?

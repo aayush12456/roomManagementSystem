@@ -173,7 +173,7 @@ const PersonalReport=({personalReport,isSmallScreen,hotelDetailSelector,dateSele
                       <tr>
                         <th>Sr No</th>
                         <th>Room No</th>
-                        <th>Full Name & Aadhar No</th>
+                        <th>Full Name & Id Details</th>
                         <th>Permanent Address</th>
                         <th>Occupation</th>
                         <th>No of Person</th>
@@ -196,7 +196,7 @@ const PersonalReport=({personalReport,isSmallScreen,hotelDetailSelector,dateSele
                           <td>
                       <div style="margin-bottom:6px; ">
                         ${item.customerName || ''} 
-                        ${item.customerAadharNumber || ''}
+                        ${item.customerIdDetails|| ''}
                       </div>
                     
                       ${
@@ -204,7 +204,7 @@ const PersonalReport=({personalReport,isSmallScreen,hotelDetailSelector,dateSele
                           ? item.extraCustomers.map(ex => `
                             <div style="margin-top:4px; padding-left:10px;">
                               ${ex.customerName || ''} 
-                              ${ex.customerAadharNumber || ''}
+                              ${ex.customerIdDetails || ''}
                             </div>
                           `).join('')
                           : ''
@@ -292,7 +292,7 @@ const PersonalReport=({personalReport,isSmallScreen,hotelDetailSelector,dateSele
                     <tr>
                     <th>Sr No</th>
                     <th>Room No</th>
-                    <th>Full Name & Aadhar No</th>
+                    <th>Full Name & Id Details</th>
                     <th>Permanent Address</th>
                     <th>Occupation</th>
                     <th>No of Person</th>
@@ -315,7 +315,7 @@ const PersonalReport=({personalReport,isSmallScreen,hotelDetailSelector,dateSele
                       <td>
                       <div style="margin-bottom:6px; ">
                         ${item.customerName || ''} 
-                        ${item.customerAadharNumber || ''}
+                        ${item.customerIdDetails || ''}
                       </div>
                     
                       ${
@@ -323,7 +323,7 @@ const PersonalReport=({personalReport,isSmallScreen,hotelDetailSelector,dateSele
                           ? item.extraCustomers.map(ex => `
                             <div style="margin-top:4px; padding-left:10px;">
                               ${ex.customerName || ''} 
-                              ${ex.customerAadharNumber || ''}
+                              ${ex.customerIdDetails || ''}
                             </div>
                           `).join('')
                           : ''
@@ -645,7 +645,7 @@ style={{
                       <Text style={{minWidth: 120,textAlign: "center", paddingHorizontal: 8 }}>{item.totalPayment}</Text>
                      <Text style={{minWidth: 120,  textAlign: "center", paddingHorizontal: 8 }}>{item.paymentPaid}</Text>
                      <Text style={{ minWidth: 120, textAlign: "center", paddingHorizontal: 8 }}>{item.paymentDue}</Text>
-                     <Button mode="contained" style={{ borderRadius: 11, marginLeft: 20,height:40,border:'#007BFF' }}  textColor="#007BFF" onPress={() => morePersonalDetailsHandler(item._id)}>
+                     <Button mode="outlined" style={{ borderRadius: 11, marginLeft: 20,height:40,border:'#007BFF' }}  textColor="#007BFF" onPress={() => morePersonalDetailsHandler(item._id)}>
                   View Details
                       </Button>
                       <Button mode="contained" style={{ borderRadius: 11, marginLeft: 20 }}  buttonColor="#DC3545" onPress={() => deletePersonalCustomerReport(item._id)}>

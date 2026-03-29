@@ -645,7 +645,7 @@ return (
       {/* Owner Phone Number */}
       <View style={{ paddingHorizontal: 16 }}>
         <TextInput
-          label={`Owner ${index + 1} Phone Number`}
+          label={`Owner ${index + 1} Mobile Number`}
           mode="outlined"
           value={ownerNames[key].phone}
           onChangeText={(text) =>{
@@ -812,7 +812,7 @@ return (
         {/* Staff Phone Number */}
       <View style={{ paddingHorizontal: 16 }}>
         <TextInput
-          label={`Staff ${index + 1} Phone Number`}
+          label={`Staff ${index + 1} Mobile Number`}
           mode="outlined"
           value={staffNamesArray[key].phone}
           onChangeText={(text) =>

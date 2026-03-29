@@ -32,3 +32,9 @@ export const bedType=[
     {label:'Tripple Bed',value:'Tripple Bed'},
     {label:'Hall',value:'Hall'}
 ]
+export const documentList=[
+    { label: 'ID Type', value: '' },
+    { label: 'Aadhar Card', value: 'Aadhar Card' },
+    { label: 'Pan Card', value: 'Pan Card' },
+    { label: 'Passport', value: 'Passport' },
+]

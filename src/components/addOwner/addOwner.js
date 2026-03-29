@@ -223,7 +223,7 @@ keyboardShouldPersistTaps="handled"
         </View>
         <View style={{ paddingHorizontal: 16,marginTop:12 }}>
         <TextInput
-          label="Owner Phone Number"
+          label="Owner Mobile Number"
           mode="outlined"
           keyboardType="phone-pad"
           onChangeText={(text) => setOwnerPhoneNumber(text)}

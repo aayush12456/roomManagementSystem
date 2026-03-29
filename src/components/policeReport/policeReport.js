@@ -370,7 +370,21 @@ useEffect(() => {
                     <td>${item.customerOccupation}</td>
                     <td>${item.reasonToStay}</td>
                     <td>${item.totalCustomer}</td>
-                    <td>${item.customerIdProof}</td>
+                    <td style="text-align:left; padding-left:8px;">
+                    <div style="white-space:nowrap;">
+                      ${item.customerIdProof || ''}
+                    </div>
+                  
+                    ${
+                      item.extraCustomers?.length
+                        ? item.extraCustomers.map(ex => `
+                          <div style="white-space:nowrap; margin-top:4px;">
+                            ${ex.customerIdProof || ''}
+                          </div>
+                        `).join('')
+                        : ''
+                    }
+                  </td>
                     <td>${item.customerCity}</td>
                     <td>${item.customerDestination}</td>
                     <td>${item.checkInDate}</td>
