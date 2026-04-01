@@ -9,6 +9,9 @@ import { View } from "react-native";
 import { ScrollView,Pressable,Image } from "react-native";
 import RoomDetailCard from "../common/roomDetailCard/roomDetailCard";
 import plus from '../../../assets/roomIcon/plus.png'
+import totalRoomIcon from '../../../assets/roomIcon/totalRoom.png'
+import bookedRoomIcon from '../../../assets/roomIcon/bookedRoom.png'
+import circleIcon from '../../../assets/roomIcon/circle.png'
 import { SafeAreaView } from "react-native-safe-area-context";
 import {useSelector,useDispatch} from 'react-redux'
 import BookedModal from "../bookedModal/bookedModal";
@@ -261,7 +264,7 @@ return (
           />
         )}
       </View>
-                    <View style={{flexDirection:'row',justifyContent:'space-between',marginLeft:8,marginRight:8}}>
+                    {/* <View style={{flexDirection:'row',justifyContent:'space-between',marginLeft:8,marginRight:8}}>
                     <View>
                    <Text>Total Rooms : {totalRoom}</Text>
                    <View style={{flexDirection:'row',gap:5,marginTop:4}}>
@@ -308,30 +311,238 @@ return (
                     </Pressable>
                    <Text style={{paddingTop:4}}>Non Booked Room : {finalTotalRoom}</Text>
                     </View>
-                    </View>
-                    <View>
-                    {/* {room && typeof room === 'object' &&
-  Object.entries(room).map(([floorKey, floorRooms], floorIndex) => (
-    <View key={floorIndex} style={{ marginBottom: 10 }}>
-      <Text style={{ fontSize: 18, fontWeight: 'bold' }}>
-        {floorKey.replace(/([a-z])([A-Z])/g, '$1 $2')}
-      </Text>
+                    </View> */}
 
-      {floorRooms && typeof floorRooms === 'object' &&
-        Object.entries(floorRooms).map(([roomLabel, roomData], roomIndex) => (
-          <View key={roomIndex} style={{ padding: 6 }}>
-            <Text style={{ fontWeight: 'bold' }}>{roomLabel}</Text>
-            <Text>Room Type: {roomData.roomType}</Text>
-            <Text>Bed Type: {roomData.bedType}</Text>
-          </View>
-        ))}
+                   {/* newchange */}
+ 
+                   <View
+  style={{
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginHorizontal: 10,
+    marginTop: 12,
+  }}
+>
+  {/* Total Rooms */}
+  <View
+    style={{
+      flex: 1,
+      flexDirection: "row",
+      alignItems: "center",
+      backgroundColor: "#F5F7FB",
+      paddingVertical: 12,
+      paddingHorizontal: 10,
+      borderRadius: 14,
+      elevation: 3,
+      marginHorizontal: 4,
+    }}
+  >
+    <Image source={totalRoomIcon} style={{ width: 30, height:30 }} />
+
+    <View style={{ marginLeft: 6 }}>
+      <Text style={{ fontSize: 13, color: "#555" }}>
+        Total{"\n"}Rooms
+      </Text>
+      <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+        {totalRoom}
+      </Text>
     </View>
-  ))
-} */}
+  </View>
+
+  {/* Booked Rooms */}
+  <Pressable onPress={bookedRoomHandler}>
+  <View
+    style={{
+      flex: 1,
+      flexDirection: "row",
+      alignItems: "center",
+      backgroundColor: "#F5F7FB",
+      paddingVertical: 12,
+      paddingHorizontal: 10,
+      borderRadius: 14,
+      elevation: 3,
+      marginHorizontal: 4,
+    }}
+  >
+    <Image source={bookedRoomIcon} style={{ width:30, height: 30 }} />
+
+    <View style={{ marginLeft: 6 }}>
+      <Text style={{ fontSize: 13, color: "#555" }}>
+{todayDate!==currentDate?`Advance `:'Booked '}{"\n"}{todayDate!==currentDate?`Booked `:'Rooms '}
+      </Text>
+      <Text style={{ fontSize: 16, fontWeight: "bold", color:`${todayDate!==currentDate?'pink':'red'}` }}>
+        {bookedNumber}
+      </Text>
+    </View>
+  </View>
+  </Pressable>
+
+  {/* Available Rooms */}
+  <View
+    style={{
+      flex: 1,
+      flexDirection: "row",
+      alignItems: "center",
+      backgroundColor: "#F5F7FB",
+      paddingVertical: 12,
+      paddingHorizontal: 10,
+      borderRadius: 14,
+      elevation: 3,
+      marginHorizontal: 4,
+    }}
+  >
+    <Image source={circleIcon} style={{ width:30, height: 30 }} />
+
+    <View style={{ marginLeft: 6 }}>
+      <Text style={{ fontSize: 13, color: "#555" }}>
+        Available{"\n"}Rooms
+      </Text>
+      <Text style={{ fontSize: 16, fontWeight: "bold", color: "green" }}>
+        {finalTotalRoom}
+      </Text>
+    </View>
+  </View>
+</View>
+                  
+<View
+  style={{
+    marginHorizontal: 8,
+    backgroundColor: "#F9FAFB",
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    borderRadius: 16,
+    marginTop: 20,
+    marginBottom: 10,
+    elevation: 3,
+  }}
+>
+  {/* Row */}
+  <View
+    style={{
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "space-between",
+      marginRight:20,
+    }}
+  >
+    {/* LEFT TEXT */}
+    <Text
+      style={{
+        fontSize: 13,
+        fontWeight: "600",
+        color: "#333",
+      }}
+    >
+      Room Status
+    </Text>
+
+    {/* RIGHT INDICATORS */}
+    <View
+      style={{
+        flexDirection: "row",
+        alignItems: "center",
+      }}
+    >
+      {/* AC */}
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          borderWidth: 1,
+          borderColor: "blue",
+          borderRadius: 8,
+          paddingVertical: 3,
+          paddingHorizontal: 6,
+          marginLeft: 4,
+        }}
+      >
+        <View
+          style={{
+            width: 8,
+            height: 8,
+            borderWidth: 2,
+            borderColor: "#3B5EDB",
+            borderRadius: 2,
+            marginRight: 3,
+          }}
+        />
+        <Text style={{ fontSize: 11 }}>
+          AC 
+        </Text>
+      </View>
+
+      {/* NON AC */}
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          borderWidth: 1,
+          borderColor: "green",
+          borderRadius: 8,
+          paddingVertical: 3,
+          paddingHorizontal: 6,
+          marginLeft: 4,
+        }}
+      >
+        <View
+          style={{
+            width: 8,
+            height: 8,
+            borderWidth: 2,
+            borderColor: "#2E7D32",
+            borderRadius: 2,
+            marginRight: 3,
+          }}
+        />
+        <Text style={{ fontSize: 11 }}>
+          Non-AC
+        </Text>
+      </View>
+
+      {/* BOOKED */}
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          borderWidth: 1,
+          borderColor:
+            todayDate !== currentDate ? "pink" : "red",
+          borderRadius: 8,
+          paddingVertical: 3,
+          paddingHorizontal: 6,
+          marginLeft: 4,
+        }}
+      >
+        <View
+          style={{
+            width: 8,
+            height: 8,
+            borderWidth: 2,
+            borderColor:
+              todayDate !== currentDate ? "pink" : "red",
+            borderRadius: 2,
+            marginRight: 3,
+          }}
+        />
+        <Text
+          style={{
+            fontSize: 11,
+            
+          }}
+        >
+          {todayDate !== currentDate ? "Advance" : "Booked"} 
+        </Text>
+      </View>
+    </View>
+  </View>
+</View>
+
+                  
+<View>                  
 <ScrollView 
   scrollEnabled={isDashboardScrollEnabled}
  contentContainerStyle={{
-    paddingBottom: 100, // last card ke liye space
+    paddingBottom: 250, // last card ke liye space
   }}>
 {
           room && typeof room==='object'?Object.entries(filterRoom).map(([floorKey,floorRooms],floorIndex)=>{

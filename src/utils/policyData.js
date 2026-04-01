@@ -97,9 +97,8 @@ export const privacyPolicyData = [
         title: "Contact",
         points: [
           "Aayush Tapadia",
-          "aayushtapadia28@gmail.com",
           "Diptanshu Chouhan",
-          "diptanshu88277@gmail.com",
+          "hoteloptix@gmail.com",
           "HotelOptix"
         ],
         img:contact

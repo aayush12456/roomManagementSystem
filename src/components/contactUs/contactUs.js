@@ -93,7 +93,7 @@ keyboardShouldPersistTaps="handled">
       </View>
       <View style={{ paddingHorizontal:16,marginTop:12 }}>
         <TextInput
-          label="Your Phone Number"
+          label="Your Mobile Number"
           mode="outlined"
           keyboardType="numeric"
           value={values.phoneNumber}

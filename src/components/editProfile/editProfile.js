@@ -31,9 +31,9 @@ const EditProfile=({edit})=>{
   
  
       if (!updatePhone.trim()) {
-        newErrors.phone = "Phone Number is required";
+        newErrors.phone = "Mobile Number is required";
       } else if (!/^\d{10}$/.test(updatePhone)) {
-        newErrors.phone = "Phone Number must be 10 digits";
+        newErrors.phone = "Mobile Number must be 10 digits";
       }
   
       if (!updateAddress.trim()) {

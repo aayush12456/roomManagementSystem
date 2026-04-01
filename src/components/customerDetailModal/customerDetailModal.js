@@ -75,6 +75,7 @@ const CustomerDetailModal=({showAlert,setShowAlert,selectedRoomId,customerArray,
   const dispatch=useDispatch()
   // console.log('pass data obj ',passDataSelector)
   // console.log('hotel detail obj',hotelDetailSelector)
+  console.log('recent books',recentBookObj)
     const screenWidth = Dimensions.get("window").width;
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [showTimePicker, setShowTimePicker] = useState(false);
@@ -184,7 +185,7 @@ customerIdDetails: filterCustomerObj?.customerIdDetails || '',
  customerOccupation: filterCustomerObj?.customerOccupation || '',
  customerDestination: filterCustomerObj?.customerDestination || '',
  reasonToStay: filterCustomerObj?.reasonToStay || '',
- checkInDate: filterCustomerObj?.checkInDate || '',
+ checkInDate: filterCustomerObj?.checkInDate || recentBookObj?.checkInDate|| '',
 //  checkInTime: filterCustomerObj?.checkInTime || '',
  checkOutDate: filterCustomerObj?.checkOutDate || '',
  checkOutTime: filterCustomerObj?.checkOutTime || '',
@@ -194,9 +195,19 @@ personalCheckOutTime: safeTimeToISOString(
   filterCustomerObj?.personalCheckOutTime
 ),
 
- totalPayment: filterCustomerObj?.totalPayment ||'',
- paymentPaid: filterCustomerObj?.paymentPaid || '',
- paymentDue: filterCustomerObj?.paymentDue || '',
+ totalPayment: filterCustomerObj?.totalPayment || recentBookObj?.totalPayment||'',
+ paymentPaid: filterCustomerObj?.paymentPaid || recentBookObj?.advancePayment|| '',
+ paymentDue: filterCustomerObj?.paymentDue ||  (
+  recentBookObj?.totalPayment && recentBookObj?.advancePayment
+    ? String(
+        Math.max(
+          0,
+          parseFloat(recentBookObj.totalPayment || "0") -
+          parseFloat(recentBookObj.advancePayment || "0")
+        )
+      )
+    : ""
+)|| '',
 //  executiveName: filterCustomerObj?.frontDeskExecutiveName || '',
 executiveName: filterCustomerObj?.frontDeskExecutiveName || profile?.name || '',
  customerSignature: filterCustomerObj?.customerSignature || '',

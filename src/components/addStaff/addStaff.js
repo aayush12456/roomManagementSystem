@@ -39,9 +39,9 @@ const AddStaff=({profile,notifyTokenArray, hotelId,planStatus,paymentActiveSelec
     }
 
     if (!staffPhoneNumber.trim()) {
-      newErrors.staffPhone = "Phone Number is required";
+      newErrors.staffPhone = "Staff Mobile Number is required";
     } else if (!/^\d{10}$/.test(staffPhoneNumber)) {
-      newErrors.staffPhone = "Phone Number must be 10 digits";
+      newErrors.staffPhone = "Staff Mobile Number must be 10 digits";
     }
 
     if (!staffAddress.trim()) {

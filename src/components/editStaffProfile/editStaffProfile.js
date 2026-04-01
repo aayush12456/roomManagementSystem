@@ -35,9 +35,9 @@ const EditStaffProfile=({editStaff,hotelId})=>{
       }
     
       if (!updatePhone?.trim()) {
-        newErrors.staffPhone = "Staff Phone Number is required";
+        newErrors.staffPhone = "Staff Mobile Number is required";
       } else if (!/^\d{10}$/.test(updatePhone)) {
-        newErrors.staffPhone = "Staff Phone Number must be 10 digits";
+        newErrors.staffPhone = "Staff Mobile Number must be 10 digits";
       }
     
       if (!updateAddress?.trim()) {

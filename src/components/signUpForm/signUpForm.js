@@ -367,7 +367,7 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
         }
   
         if (!owner.phone || !/^\d{10}$/.test(owner.phone)) {
-          errors[`ownerPhone_${key}`] = `${key} phone is required and must be 10 digits.`;
+          errors[`ownerPhone_${key}`] = `${key} mobile number is required and must be 10 digits.`;
         }
   
         if (!owner.address || owner.address.trim().length < 2) {
@@ -396,7 +396,7 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
         }
   
         if (!staff.phone || !/^\d{10}$/.test(staff.phone)) {
-          errors[`staffPhone_${key}`] = `${key} is required and  phone must be 10 digits.`;
+          errors[`staffPhone_${key}`] = `${key} is required and mobile number must be 10 digits.`;
         }
   
         if (!staff.address || staff.address.trim().length < 2) {

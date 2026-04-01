@@ -32,9 +32,9 @@ const AddOwner=({hotelsId,profile,notifyTokenArray,planStatus,paymentActiveSelec
       }
   
       if (!ownerPhoneNumber.trim()) {
-        newErrors.ownerPhone = "Phone Number is required";
+        newErrors.ownerPhone = "Owner Mobile Number is required";
       } else if (!/^\d{10}$/.test(ownerPhoneNumber)) {
-        newErrors.ownerPhone = "Phone Number must be 10 digits";
+        newErrors.ownerPhone = "Owner Mobile Number must be 10 digits";
       }
   
       if (!ownerAddress.trim()) {

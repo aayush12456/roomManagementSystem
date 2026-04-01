@@ -9,8 +9,8 @@ export const getDynamicSignUpSchema = (ownerCount = 0,staffCount=0) => {
         .min(2, 'Name must be at least 2 characters')
         .required(`Owner ${i} name is required`),
       phone: Yup.string()
-        .matches(/^\d{10}$/, 'Phone number must be exactly 10 digits')
-        .required(`Owner ${i} phone number is required`),
+        .matches(/^\d{10}$/, 'Mobile number must be exactly 10 digits')
+        .required(`Owner ${i} mobile number is required`),
       image: Yup.string()
         .nullable()
         .required(`Owner ${i} image is required`)
@@ -23,8 +23,8 @@ export const getDynamicSignUpSchema = (ownerCount = 0,staffCount=0) => {
         .min(2, `Staff ${i} name must be at least 2 characters`)
         .required(`Staff ${i} name is required`),
       phone: Yup.string()
-        .matches(/^\d{10}$/, 'Phone number must be exactly 10 digits')
-        .required(`Staff ${i} phone number is required`),
+        .matches(/^\d{10}$/, 'Mobile number must be exactly 10 digits')
+        .required(`Staff ${i} mobile number is required`),
       image: Yup.string()
         .nullable()
         .required(`Staff ${i} image is required`),
@@ -40,16 +40,16 @@ export const getDynamicSignUpSchema = (ownerCount = 0,staffCount=0) => {
   });
 };
 export const customerDetailsSchema=Yup.object({
-  customerName:Yup.string().min(2).max(50).required("Please enter customer name"),
-  customerAddress:Yup.string().min(2).required("Please enter customer address"),
-  customerPhoneNumber:Yup.string().min(2).required("Please enter customer phone number"),
-  totalCustomer:Yup.string().min(1).required("Please enter total customer"),
+  customerName:Yup.string().min(2).max(50).required("Please enter full name"),
+  customerAddress:Yup.string().min(2).required("Please enter  address"),
+  customerPhoneNumber:Yup.string().min(2).required("Please enter mobile number"),
+  totalCustomer:Yup.string().min(1).required("Please enter no of guest"),
   // relation:Yup.string().min(1).required("Please enter relation"),
   relation: Yup.string().notRequired(),
-  customerIdProof:Yup.string().required("Please enter customer id proof"),
+  customerIdProof:Yup.string().required("Please enter id proof"),
   // customerAadharNumber:Yup.string().min(12).required("Please enter customer Aadhar Number"),
   customerIdDetails: Yup.string().required("Please enter ID details"),
-  customerCity:Yup.string().min(2).required("Please enter customer city"),
+  customerCity:Yup.string().min(2).required("Please enter city"),
   // customerOccupation:Yup.string().min(2).required("Please enter customer Occupation"),
   customerOccupation: Yup.string().notRequired(),
   // customerDestination:Yup.string().min(2).required("Please enter customer Destination"),
@@ -60,9 +60,9 @@ export const customerDetailsSchema=Yup.object({
   checkInTime:Yup.string().min(2).required("Please enter checkInTime"),
   checkOutDate:Yup.string().min(2).required("Please enter checkOutDate"),
  personalCheckOutTime:Yup.string().min(2).required("Please enter PersonalCheckOutTime"),
-  totalPayment:Yup.string().min(2).required("Please enter total payment"),
-  paymentPaid:Yup.string().min(2).required("Please enter payment paid"),
-  paymentDue:Yup.string().min(2).required("Please enter payment due"),
+  totalPayment:Yup.string().min(2).required("Please enter total amount"),
+  paymentPaid:Yup.string().min(2).required("Please enter amount paid"),
+  paymentDue:Yup.string().min(1).required("Please enter amount due"),
   executiveName:Yup.string().min(2).max(50).required("Please enter front desk executive name"),
   customerSignature: Yup.string().required("Customer Signature required") ,
   extraCustomers: Yup.array().when("totalCustomer", (totalCustomer, schema) => {
@@ -71,14 +71,14 @@ export const customerDetailsSchema=Yup.object({
     if (count > 1) {
       return schema.of(
         Yup.object({
-          customerName: Yup.string().min(2).required("Extra customer name required"),
-          customerAddress: Yup.string().min(2).required("Extra customer address required"),
-          customerPhoneNumber: Yup.string().min(10).required("Extra customer phone required"),
+          customerName: Yup.string().min(2).required("Extra full name required"),
+          customerAddress: Yup.string().min(2).required("Extra address required"),
+          customerPhoneNumber: Yup.string().min(10).required("Extra mobile number required"),
           // customerAadharNumber: Yup.string().min(12).required("Extra customer Aadhar required"),
           customerIdProof: Yup.string().required("Select ID proof"),
           customerIdDetails: Yup.string().required("Enter ID details"),
         })
-      ).min(count - 1, `Please enter ${count - 1} extra customers`);
+      ).min(count - 1, `Please enter ${count - 1} extra guest`);
     }
 
     return schema.notRequired();
@@ -87,12 +87,12 @@ export const customerDetailsSchema=Yup.object({
 })
 
 export const advanceCustomerBookingSchema=Yup.object({
-  customerName:Yup.string().min(2).max(50).required("Please enter customer name"),
-  customerAddress:Yup.string().min(2).required("Please enter customer address"),
-  customerPhoneNumber:Yup.string().min(2).required("Please enter customer phone number"),
+  customerName:Yup.string().min(2).max(50).required("Please enter full name"),
+  customerAddress:Yup.string().min(2).required("Please enter address"),
+  customerPhoneNumber:Yup.string().min(2).required("Please enter mobile number"),
   executiveName:Yup.string().min(2).max(50).required("Please enter front desk executive name"),
-  totalPayment:Yup.string().min(2).required("Please enter total payment"),
-  advancePayment:Yup.string().min(2).required("Please enter advance payment"),
+  totalPayment:Yup.string().min(2).required("Please enter total amount"),
+  advancePayment:Yup.string().min(2).required("Please enter advance amount"),
 })
 
 
@@ -104,6 +104,6 @@ export const roomAdd=Yup.object({
 
 export const contactUs=Yup.object({
   name:Yup.string().min(2).required("Please enter name"),
-  phoneNumber:Yup.string().min(2).required("Please select phone number"),
+  phoneNumber:Yup.string().min(2).required("Please select mobile number"),
   message:Yup.string().min(2).required("Please enter messagge"),
 })
