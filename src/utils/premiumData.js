@@ -31,7 +31,7 @@ premiumData: [
     {id:'7',name:'Add Floor',img:addFloor},
     {id:'8',name:'Remove Floor',img:deleteFloor}
 ],
-monthly: { name: "6-Month Plan", plan: "₹699.00 for 6 months",type:'Six',amount:'₹699' }
+monthly: { name: "6-Month Plan", plan: "₹999.00 for 6 months",type:'Six',amount:'₹999' }
 },
 
 {
@@ -46,5 +46,18 @@ monthly: { name: "6-Month Plan", plan: "₹699.00 for 6 months",type:'Six',amoun
         {id:'8',name:'Remove Floor',img:deleteFloor}
     ],
     monthly: { name: "seven days practice", plan: " ₹1 for 7 days",type:'sevenDays',amount:'₹1' }
-    }
+    },
+    {
+        premiumData: [
+            {id:'1',name:'Customer Check-in / Checkout',img:customerBooking},
+            {id:'2',name:'Advance Reservation Booking',img:advanceCustomerBooking},
+            {id:'3',name:'Add Staff Member',img:addEmployee},
+            {id:'4',name:'Remove Staff Member',img:deleteEmployee},
+            {id:'5',name:'Add Room',img:addRoom},
+            {id:'6',name:'Remove Room',img:deleteRoom},
+            {id:'7',name:'Add Floor',img:addFloor},
+            {id:'8',name:'Remove Floor',img:deleteFloor}
+        ],
+        monthly: { name: "seven days practice", plan: " ₹11 for 1 month",type:'monthPlan',amount:'₹11' }
+        }
     ];

@@ -15,7 +15,7 @@ const PlanScreen=({hotelId,profile})=>{
 console.log('profile is',profile)
 const dispatch=useDispatch()
 const navigation=useNavigation()
-const [selectedPlan, setSelectedPlan] = useState(699);
+const [selectedPlan, setSelectedPlan] = useState(999);
 const [planType,setPlanType]=useState('')
 const BASE_URL = "http://192.168.29.169:4000"; 
 // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com"; 
@@ -24,12 +24,14 @@ const BASE_URL = "http://192.168.29.169:4000";
 // plan_Rzu3d5Zlg3vI3A ->50 Rs plan
 // plan_S2Vj0VT1CEKM5a -> 299 Rs plan
 // plan_S2VjYWmEsj8Buc -> 699 Rs plan
+// plan_SZlNb6a8dqJ2BG -->999 Rs plan 6 month
 
 //live key
 // plan_S9OCXHRMG6W5ng --> 1 Rs plan
 // plan_S9mmQLUPh0YRcc --> 20 Rs plan
 // plan_S9mz77K7uN4Mhm -->299 Rs plan monthly
 // plan_S9mzyclsUgcKX8 -->699 Rs plan 6 months
+//plan_SZkCMWZR7eGAUo -->999 Rs plan 6 month
 
 let plan=""
   const subscribe = async (planType) => {
@@ -38,14 +40,14 @@ let plan=""
 //   plan="plan_S9mz77K7uN4Mhm"
 // }
 // else{
-//   plan="plan_S9mzyclsUgcKX8"
+//   plan="plan_SZkCMWZR7eGAUo"
 // }
 
     if(planType=="single"){
       plan="plan_S2Vj0VT1CEKM5a"
     }
     else{
-      plan="plan_S2VjYWmEsj8Buc"
+      plan="plan_SZlNb6a8dqJ2BG"
     }
     try {
       const res = await axios.post(
@@ -229,20 +231,20 @@ onPress={() => {
       {/* 6 Month */}
       <TouchableOpacity
         onPress={() => {
-            setSelectedPlan(699);
+            setSelectedPlan(999);
             setPlanType("Six"); // ya jo bhi value
           }}
         style={{
           width: "48%",
           backgroundColor:
-          selectedPlan === 699
+          selectedPlan === 999
             ? "rgba(245,197,66,0.15)"
             : "rgba(255,255,255,0.1)",
           borderRadius: 16,
           paddingVertical: 20,
           alignItems: "center",
           borderWidth: 1,
-          borderColor:selectedPlan === 699 ? "#F5C542" : "#444",
+          borderColor:selectedPlan === 999 ? "#F5C542" : "#444",
         }}
       >
         <Text
@@ -252,7 +254,7 @@ onPress={() => {
             fontWeight: "800",
           }}
         >
-          ₹699
+          ₹999
         </Text>
         <Text
           style={{

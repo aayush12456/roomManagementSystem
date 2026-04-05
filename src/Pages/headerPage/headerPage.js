@@ -659,6 +659,7 @@ return (
   onClose={() => setShowTrialModal(false)}
   hotelId={hotelId}
   endDate={endDate}
+  timeEnd={timeEnd}
 />
 
 {showPaymentSuccess && (

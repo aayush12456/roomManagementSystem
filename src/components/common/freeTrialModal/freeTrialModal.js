@@ -4,11 +4,12 @@ import { BlurView } from "expo-blur";
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect,useState } from "react";
 import TrialCountDown from "../../trialCountDown/trialCountDown";
-const FreeTrialModal = ({ visible, onClose,hotelId,endDate }) => {
+const FreeTrialModal = ({ visible, onClose,hotelId,endDate,timeEnd }) => {
   const [isLast24Hours, setIsLast24Hours] = useState(false);
   console.log('last 24',isLast24Hours)
   return (
-    <Modal
+    <>
+    {timeEnd.status=="trial"?<Modal
       transparent
       visible={visible}
       animationType="fade"
@@ -86,7 +87,9 @@ const FreeTrialModal = ({ visible, onClose,hotelId,endDate }) => {
 
         </View>
       </View>
-    </Modal>
+    </Modal>:null}
+    </>
+
   );
 };
 

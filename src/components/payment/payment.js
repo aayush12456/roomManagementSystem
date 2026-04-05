@@ -14,12 +14,15 @@ import { useNavigation } from "@react-navigation/native";
 // plan_S2VjYWmEsj8Buc -> 699 Rs plan
 //plan_SAq2J4tJf4cKLh -->50 Rs plan monthly
 //plan_SAsLiBomqZqf5r -->100 Rs plan 6 month
+//plan_SZlNb6a8dqJ2BG -->999 Rs plan 6 month
 
 //live key
 // plan_S9OCXHRMG6W5ng --> 1 Rs plan
 // plan_S9mmQLUPh0YRcc --> 20 Rs plan
+// plan_SZkU4c3g5WbN4e-->21 Rs plan
 // plan_S9mz77K7uN4Mhm -->299 Rs plan monthly
 // plan_S9mzyclsUgcKX8 -->699 Rs plan 6 months
+//plan_SZkCMWZR7eGAUo -->999 Rs plan 6 month
 const socket = io.connect("http://192.168.29.169:4000")
 const Payment=({hotelId,profile})=>{
   console.log('pto',profile)
@@ -45,8 +48,11 @@ let plan=""
     // else if(planType=="sevenDays"){
     //   plan="plan_S9OCXHRMG6W5ng"
     // }
+    // else if(planType=="monthPlan"){
+    //   plan="plan_SZkU4c3g5WbN4e"
+    // }
     // else{
-    //   plan="plan_S9mzyclsUgcKX8"
+    //   plan="plan_SZkCMWZR7eGAUo"
     // }
 
 
@@ -57,7 +63,7 @@ let plan=""
       plan="plan_RziUw1NAukBSo5"
     }
     else{
-      plan="plan_S2VjYWmEsj8Buc"
+      plan="plan_SZlNb6a8dqJ2BG"
     }
     try {
       const res = await axios.post(
@@ -158,7 +164,8 @@ return (
     //   return null;
     // }
    if (
-    premium.monthly.type =="sevenDays"  &&  premium.monthly.amount!==checkStatus?.amount 
+    premium.monthly.type =="sevenDays"  &&  premium.monthly.amount!==checkStatus?.amount || 
+    premium.monthly.type =="monthPlan"  &&  premium.monthly.amount!==checkStatus?.amount
     ) {
       return null;
     }
@@ -263,8 +270,10 @@ return (
       ? "Pay ₹299"
       : planType === "sevenDays"
       ? "Pay ₹1"
+      :planType==="monthPlan"
+      ? "Pay ₹11"
       : planType === "Six"
-      ? "Pay ₹699"
+      ? "Pay ₹999"
       : "Pay"}
       </Button>
     </View>

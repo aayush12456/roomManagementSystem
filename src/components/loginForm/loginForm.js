@@ -217,7 +217,7 @@ return (
           No phone number registered in any hotel
             </Text>
             }
-            {phoneNumber === "9479918217" || adminAccessObj?.accessAllData?.phone!==null?
+            {phoneNumber === "9479918217" || adminAccessObj?.accessAllData?.phone===phoneNumber?
             <Text onPress={adminClickHandler} style={{textAlign:'center',marginTop: 10,fontSize:16}}>admin</Text>:null}
             </ScrollView>
             <Button
