@@ -1,6 +1,6 @@
 import Report from "../../components/report/report"
 import { useEffect,useState } from "react"
-import { useDispatch,useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import io from "socket.io-client";
 import axios from 'axios'
 const socket = io.connect("http://192.168.29.169:4000")
@@ -8,9 +8,8 @@ const socket = io.connect("http://192.168.29.169:4000")
 const ReportPage=({planStatus})=>{
     const BASE_URL = "http://192.168.29.169:4000";
     // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
-    const dispatch=useDispatch()
     const hotelDetailSelector=useSelector((state)=>state.getHotelDetails.getHotelDetailsObj.hotelObj)
-    console.log('hotel details',hotelDetailSelector)
+    // console.log('hotel details',hotelDetailSelector)
     const [reportObj,setReportObj]=useState({})
     useEffect(() => {
         const fetchReportDetails = async () => {
@@ -19,7 +18,7 @@ const ReportPage=({planStatus})=>{
               const response = await axios.get(
                 `${BASE_URL}/hotel/getCustomerDetails/${hotelDetailSelector?._id}`
               );
-              console.log('report detail response',response?.data)
+              // console.log('report detail response',response?.data)
               setReportObj(response?.data || {} )
             }
           } catch (error) {
@@ -56,7 +55,7 @@ const ReportPage=({planStatus})=>{
         };
       }, [hotelDetailSelector._id]);
       const reportArray=reportObj?.reportArray
-      console.log('report details',reportArray)
+      // console.log('report details',reportArray)
       const PersonalReportArray=reportObj?.getCustomerDetailsArray
 return (
     <>

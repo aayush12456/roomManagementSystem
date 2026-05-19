@@ -12,7 +12,7 @@ import { compareOtpAsync, compareOtpData } from '../../Redux/Slice/compareOtpSli
 import {Modal} from 'react-native'
 
 const GetOtpInput=({hotelObj,data})=>{
-  console.log('hotel objs',hotelObj)
+  // console.log('hotel objs',hotelObj)
   const dispatch=useDispatch()
   const navigation = useNavigation();
   const [modalMsg,setModalMsg]=useState('')
@@ -20,7 +20,7 @@ const GetOtpInput=({hotelObj,data})=>{
   const [loading, setLoading] = useState(false);
   
   const compareOtpSelector=useSelector((state)=>state.compareOtpData.compareOtpObj)
-  console.log('compare otp selector',compareOtpSelector)
+  // console.log('compare otp selector',compareOtpSelector)
   const loginMssg=compareOtpSelector?.mssg
     const [myOtp,setMyOtp]=useState('')
     const [otpError,setOtpError]=useState('')
@@ -32,7 +32,7 @@ const GetOtpInput=({hotelObj,data})=>{
           if (data) {
             const parsedData = JSON.parse(data);
             setRecieveOtpObj(parsedData)
-            console.log('Retrieved OTP Data:', parsedData);
+            // console.log('Retrieved OTP Data:', parsedData);
             // You can also set it to local state if needed
           } else {
             console.log('No OTP data found in SecureStore');
@@ -53,7 +53,7 @@ const GetOtpInput=({hotelObj,data})=>{
               'loginOtpObj',
               JSON.stringify(compareOtpSelector)
             );
-            console.log('OTP obj saved to SecureStore');
+            // console.log('OTP obj saved to SecureStore');
           } catch (error) {
             console.error('Error saving to SecureStore:', error);
           }
@@ -66,47 +66,10 @@ const GetOtpInput=({hotelObj,data})=>{
         }
       }, [compareOtpSelector]);
 
-      // useEffect(() => {
-      //   const saveLoginDataToSecureStore = async () => {
-      //     try {
-      //       // 🛡️ Step 1: Make sure compareOtpSelector is a valid object
-      //       if (!compareOtpSelector || typeof compareOtpSelector !== 'object') {
-      //         console.log('⚠️ No valid compareOtpSelector found — skipping save');
-      //         return;
-      //       }
-      
-      //       // 🗑️ Step 2: Delete old SecureStore data if it exists
-      //       const existingData = await SecureStore.getItemAsync('loginOtpObj');
-      //       if (existingData) {
-      //         console.log('Old loginOtpObj found — deleting...');
-      //         await SecureStore.deleteItemAsync('loginOtpObj');
-      //       }
-      
-      //       // 💾 Step 3: Save new data safely
-      //       await SecureStore.setItemAsync(
-      //         'loginOtpObj',
-      //         JSON.stringify(compareOtpSelector)
-      //       );
-      
-      //       console.log('✅ New loginOtpObj saved to SecureStore');
-      //     } catch (error) {
-      //       console.error('Error handling SecureStore loginOtpObj:', error);
-      //     }
-      //   };
-      
-      //   // ✅ Only run when OTP verified
-      //   if (compareOtpSelector?.mssg === "fetch data") {
-      //     saveLoginDataToSecureStore();
-      //     navigation.navigate('HeaderPage');
-      //   }
-      // }, [compareOtpSelector]);
-      
-      
-
       const removeOtpData = async () => {
         try {
           await SecureStore.deleteItemAsync('otpData');
-          console.log('OTP data removed from SecureStore');
+          // console.log('OTP data removed from SecureStore');
         } catch (error) {
           console.error('Error removing OTP data:', error);
         }
@@ -122,7 +85,7 @@ const GetOtpInput=({hotelObj,data})=>{
             // console.log('Retrieved login obj Data:', parsedData);
             // You can also set it to local state if needed
           } else {
-            console.log('No login obj data found in SecureStore');
+            // console.log('No login obj data found in SecureStore');
             setLoginObj({})
           }
         } catch (error) {
@@ -142,13 +105,7 @@ const GetOtpInput=({hotelObj,data})=>{
         setLoading(false)
         return
        }
-      //  const finalOtpObj={
-      //   phone:recieveOtpObj.phoneNumber,
-      //   hotelName:hotelObj?.hotelName,
-      //   hotelId:hotelObj?.hotelId,
-      //   anotherPhone:loginObj?.phone,
-      //   anotherHotelId:loginObj?.matchedHotels[0]?._id
-      //  }
+  
       const finalOtpObj = {
         phone: recieveOtpObj?.phoneNumber,
         hotelName: hotelObj?.hotelName || '',
@@ -156,11 +113,11 @@ const GetOtpInput=({hotelObj,data})=>{
         anotherPhone: loginObj?.phone || '',
         anotherHotelId: loginObj?.matchedHotels?.[0]?._id || '',
       };
-       console.log('final otp obj',finalOtpObj)
+      //  console.log('final otp obj',finalOtpObj)
       dispatch(compareOtpAsync(finalOtpObj))
       removeOtpData()
       }
-     
+
           
       const cancelOtpHandler=()=>{
         if(data){
@@ -201,7 +158,8 @@ return (
         style={{ width: 200, height: 200 }}
       />
     </View>
-    <Text>otp is {recieveOtpObj.otp}</Text>
+    {/* <Text>otp is {recieveOtpObj.otp}</Text> */}
+    <Text style={{textAlign:'center',paddingBottom:15,color: '#6B7280'}}>otp send to {recieveOtpObj?.email} </Text>
     <View style={{ paddingHorizontal: 16 }}>
     <OtpInput numberOfDigits={5} onTextChange={(text) => setMyOtp(text)} />
       </View> 

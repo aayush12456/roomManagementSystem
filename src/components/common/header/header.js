@@ -2,7 +2,6 @@ import { createDrawerNavigator,DrawerContentScrollView,DrawerItemList } from '@r
 import DashboardPage from '../../../Pages/dashboardPage/dashboardPage';
 import ReportPage from '../../../Pages/reportPage/reportPage';
 import { Image,View ,Text} from 'react-native';
-import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import { Button } from 'react-native-paper';
 import * as SecureStore from 'expo-secure-store';
 import { useNavigation } from '@react-navigation/native';
@@ -26,7 +25,7 @@ import axios from "axios";
 import PaymentPage from '../../../Pages/paymentPage/paymentPage';
 import TrialCountDown from '../../trialCountDown/trialCountDown';
 import { useSelector } from 'react-redux';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import PlanScreen from '../planScreen/planScreen';
 import DeparturePage from '../../../Pages/departurePage/departurePage';
 import ArrivalPage from '../../../Pages/arrivalPage/arrivalPage';
@@ -41,19 +40,19 @@ const Header=({profile,allStaffPlusOwner,hotelId,profileArrays,policeReport,tota
     const Drawer = createDrawerNavigator();
     const navigation = useNavigation();
     const planSlice=useSelector((state)=>state.planScreenData.planScreenToggle)
-    console.log('profile is',profile)
+    // console.log('profile is',profile)
     const paymentActiveSelector=useSelector((state)=>state.getPaymentActive.getPaymentActiveObj)
-    console.log('pay seelctor',paymentActiveSelector)
+    // console.log('pay seelctor',paymentActiveSelector)
     // console.log('hotelid',hotelId)
-    console.log('notify tokens',notifyToken)
-    console.log('polive',policeReport)
+    // console.log('notify tokens',notifyToken)
+    // console.log('polive',policeReport)
     const policeReportArray=policeReport
     const [isLast24Hours, setIsLast24Hours] = useState(false);
     
     const removeLoginData = async () => {
         try {
           await SecureStore.deleteItemAsync('loginOtpObj');
-          console.log('login obj removed from SecureStore');
+          // console.log('login obj removed from SecureStore');
         } catch (error) {
           console.error('Error removing login obj:', error);
         }
@@ -61,7 +60,7 @@ const Header=({profile,allStaffPlusOwner,hotelId,profileArrays,policeReport,tota
     const logoutHandler=async()=>{
       try {
         const response = await axios?.post(`${BASE_URL}/hotel/deleteNotificationToken/${hotelId}`,{notifyToken:notifyToken});
-        console.log('notify token delete',response?.data)
+        // console.log('notify token delete',response?.data)
         socket.emit('deleteNotificationToken', response?.data)
     } catch (error) {
         // console.error('Error sending activate', error);
@@ -69,7 +68,7 @@ const Header=({profile,allStaffPlusOwner,hotelId,profileArrays,policeReport,tota
      removeLoginData()
      navigation.navigate('LoginPage')
     }
-    console.log('is last',isLast24Hours)
+    // console.log('is last',isLast24Hours)
 
  
 return (
@@ -77,13 +76,10 @@ return (
   {planSlice===false? <Drawer.Navigator
   drawerContent={(props) => (
     <DrawerContentScrollView {...props} 
-    // scrollEnabled={isLast24Hours}
-// showsVerticalScrollIndicator={isLast24Hours}
+  
 contentContainerStyle={{ flexGrow: 1 }}
 showsVerticalScrollIndicator={true}
     >
-      {/* <Text>Free Trial End</Text>
-      <Text>{countDownTime}</Text> */}
       <TrialCountDown hotelId={hotelId}   onLast24HoursChange={setIsLast24Hours} setTimeEnd={setTimeEnd}/>
       {/* 👇 Profile Section Top Fixed */}
       <View style={{ alignItems: "center", paddingVertical: 20 }}>
@@ -195,7 +191,6 @@ showsVerticalScrollIndicator={true}
 
         <Drawer.Screen
         name='Settings'
-        // component={SettingsPage}
         options={{
           drawerIcon:()=>(
             <Image  source={setting}
@@ -209,7 +204,6 @@ showsVerticalScrollIndicator={true}
 
         {!profile?.post?<Drawer.Screen
         name='Hotel Gallery'
-        // component={SettingsPage}
         options={{
           drawerIcon:()=>(
             <Image  source={hotelIcon}
@@ -222,7 +216,6 @@ showsVerticalScrollIndicator={true}
 
  <Drawer.Screen
         name='Notification'
-        // component={SettingsPage}
         options={{
           drawerIcon:()=>(
             <Image  source={notifyIcon}
@@ -235,7 +228,6 @@ showsVerticalScrollIndicator={true}
 
         {profile?.post === "Housekeeping Staff"?null: <Drawer.Screen
         name='Departure List'
-        // component={SettingsPage}
         options={{
           drawerIcon:()=>(
             <Image  source={departureIcon}
@@ -248,7 +240,6 @@ showsVerticalScrollIndicator={true}
 
         {profile?.post === "Housekeeping Staff"?null: <Drawer.Screen
         name="Today’s Arrivals"
-        // component={SettingsPage}
         options={{
           drawerIcon:()=>(
             <Image  source={arrivalIcon}
@@ -261,7 +252,6 @@ showsVerticalScrollIndicator={true}
 
        { !profile?.post && planStatus !== "free" && paymentActiveSelector.activeSubscription==null?<Drawer.Screen
         name='Premium'
-        // component={SettingsPage}
         options={{
           drawerIcon:()=>(
             <Image  source={premiumIcon}

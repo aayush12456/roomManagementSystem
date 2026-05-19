@@ -1,7 +1,6 @@
-import { View, Modal, Dimensions, ScrollView,Pressable, Alert } from "react-native";
+import { View, Modal, Dimensions,Pressable, Alert } from "react-native";
 import { Image } from 'expo-image';
 import { Text,Button } from "react-native-paper";
-import { useEffect,useState } from "react";
 import cleanImg from '../../../../assets/roomIcon/cleaning_2.png'
 import personImg from '../../../../assets/roomIcon/mechanic.png'
 import axios from "axios";
@@ -12,9 +11,9 @@ import { useNavigation } from "@react-navigation/native"
 const screenWidth = Dimensions.get("window").width;
 const MaintenanceModal=({ maintainAlert,setMaintainAlert,maintainObj,finalMainCleanObj,customerArray,post})=>{
   const navigation=useNavigation()
-    console.log('maintain obj',maintainObj)
-    console.log('final main',finalMainCleanObj)
-    console.log('customer modal',customerArray)
+    // console.log('maintain obj',maintainObj)
+    // console.log('final main',finalMainCleanObj)
+    // console.log('customer modal',customerArray)
     const BASE_URL = "http://192.168.29.169:4000";
     // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
     const maintainCleanHandler=async(type)=>{
@@ -22,7 +21,7 @@ const MaintenanceModal=({ maintainAlert,setMaintainAlert,maintainObj,finalMainCl
         ...maintainObj,
         type:type
       }
-      console.log('final main',finalMaintainObj)
+      // console.log('final main',finalMaintainObj)
       if(type==="Maintenance Room" && isRoomChecked){
         Alert.alert(
           "Maintenance Not Allowed",
@@ -33,7 +32,7 @@ const MaintenanceModal=({ maintainAlert,setMaintainAlert,maintainObj,finalMainCl
       }
       try {
         const response = await axios.post(`${BASE_URL}/hotel/addMaintenanceCleanRoom/${finalMaintainObj.id}`,finalMaintainObj);
-        console.log('response in delete obj is',response?.data)
+        // console.log('response in delete obj is',response?.data)
   
         socket.emit('addMaintainCleanRoom', response?.data)
     } catch (error) {
@@ -49,7 +48,7 @@ const deleteMainCleanObj={
 }
 try {
   const response = await axios.post(`${BASE_URL}/hotel/deleteMaintenanceCleanRoom/${deleteMainCleanObj.id}`,deleteMainCleanObj);
-  console.log('response in delete main clean obj is',response?.data)
+  // console.log('response in delete main clean obj is',response?.data)
 
   socket.emit('deleteMaintainCleanRoom', response?.data)
 } catch (error) {
@@ -64,13 +63,13 @@ navigation.goBack();
       item.roomId === finalMainCleanObj?.roomId ||
       item.roomId === maintainObj?.roomId
   );
-  console.log('is boks',isRoomBooked)
+  // console.log('is boks',isRoomBooked)
 
   const isRoomChecked = customerArray?.some(
     (item) =>
       item.roomId === maintainObj?.roomId
   );
-  console.log('is checked',isRoomChecked)
+  // console.log('is checked',isRoomChecked)
 return (
     <>
    <Modal visible={maintainAlert} transparent animationType="fade"   avoidKeyboard={true}>

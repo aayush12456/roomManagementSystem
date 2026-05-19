@@ -14,7 +14,7 @@ export const deleteFloorAsync = createAsyncThunk(
     
 
       const Responedata = response.data;
-      console.log( 'delete floor data ',Responedata)
+      // console.log( 'delete floor data ',Responedata)
       return Responedata
       
     } catch (error) {

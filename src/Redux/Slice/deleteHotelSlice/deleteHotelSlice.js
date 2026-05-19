@@ -14,7 +14,7 @@ export const deleteHotelAsync = createAsyncThunk(
     
 
       const Responedata = response.data;
-      console.log( 'delete hotel data ',Responedata)
+      // console.log( 'delete hotel data ',Responedata)
       return Responedata
       
     } catch (error) {

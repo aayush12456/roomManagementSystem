@@ -2,11 +2,10 @@ import React from "react";
 import { Modal, View, Text, TouchableOpacity } from "react-native";
 import { BlurView } from "expo-blur";
 import { Ionicons } from "@expo/vector-icons";
-import { useEffect,useState } from "react";
-import TrialCountDown from "../../trialCountDown/trialCountDown";
-const FreeTrialModal = ({ visible, onClose,hotelId,endDate,timeEnd }) => {
+import { useState } from "react";
+const FreeTrialModal = ({ visible, onClose,endDate,timeEnd }) => {
   const [isLast24Hours, setIsLast24Hours] = useState(false);
-  console.log('last 24',isLast24Hours)
+  // console.log('last 24',isLast24Hours)
   return (
     <>
     {timeEnd.status=="trial"?<Modal

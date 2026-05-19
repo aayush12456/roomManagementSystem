@@ -34,7 +34,7 @@ useEffect(() => {
       socket.off("getCustomerDetailsAdvance");
     };
   }, [hotelId]);
-  console.log('arrival ara',arrivalArray)
+  // console.log('arrival ara',arrivalArray)
 
   useEffect(() => {
     const getTodayDate = () => {

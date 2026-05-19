@@ -31,7 +31,7 @@ useEffect(() => {
     socket.off("getCustomerDetailsAdvance");
   };
 }, [hotelId]);
-console.log('hotels data',departureObj)
+// console.log('hotels data',departureObj)
 
 const today = new Date();
 const todayDate =
@@ -61,7 +61,7 @@ const todayDate =
     };
   });
 
-  console.log('final hotel data',checkoutTodayArray)
+  // console.log('final hotel data',checkoutTodayArray)
 return (
     <>
     <Departure checkOutArray={checkoutTodayArray}/>

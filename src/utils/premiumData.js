@@ -58,6 +58,6 @@ monthly: { name: "6-Month Plan", plan: "₹999.00 for 6 months",type:'Six',amoun
             {id:'7',name:'Add Floor',img:addFloor},
             {id:'8',name:'Remove Floor',img:deleteFloor}
         ],
-        monthly: { name: "seven days practice", plan: " ₹11 for 1 month",type:'monthPlan',amount:'₹11' }
+        monthly: { name: "monthly practice", plan: " ₹21 for 1 month",type:'monthPlan',amount:'₹21' }
         }
     ];

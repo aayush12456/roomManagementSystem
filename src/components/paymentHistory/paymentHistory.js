@@ -5,7 +5,7 @@ import { LinearGradient } from "expo-linear-gradient";
 
 const PaymentHistory=({paymentHistory,paymentActive})=>{
     // console.log('pays',paymentHistory)
-    // console.log('pay active',paymentActive)
+    console.log('pay active',paymentActive)
     const { height } = Dimensions.get("window");
     const CARD_HEIGHT = height * 0.5;  
 return (
@@ -27,7 +27,9 @@ return (
   />
         <Card.Content style={{marginTop:12}}>
            <View style={{flexDirection:"row",justifyContent:'space-between'}}>
-            <Text style={{fontWeight:700}}>{paymentActive?.activeSubscription?.amount=='₹299'?'Monthly Plan':'6 Monthly Plan'}</Text>
+           <Text style={{ fontWeight: 700 }}>{paymentActive?.activeSubscription?.amount === '₹1'? 'Seven Days Plan': paymentActive?.activeSubscription?.amount === '₹299'||
+      paymentActive?.activeSubscription?.amount === '₹11'? 'Monthly Plan': '6 Monthly Plan'}
+</Text>
             <Text style={{fontWeight:700}}>{paymentActive?.activeSubscription?.amount}</Text>
            </View>
            <View style={{flexDirection:'row',justifyContent:'space-between'}}>

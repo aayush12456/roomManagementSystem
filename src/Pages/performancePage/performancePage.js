@@ -1,12 +1,11 @@
-
-import { Text,BottomNavigation } from "react-native-paper"
+import { BottomNavigation } from "react-native-paper"
 import { View,Dimensions } from "react-native"
-import { useState,useMemo } from "react"
+import { useState} from "react"
 import Daily from "../../components/daily/daily";
 import Weekly from "../../components/weekly/weekly";
 const PerformancePage=({policeReport,totalRoom})=>{
 const screenHeight = Dimensions.get("window").height;
-console.log('polices',policeReport)
+// console.log('polices',policeReport)
     // console.log('screen height',screenHeight)
 const isSmallScreen = screenHeight <= 640;
 

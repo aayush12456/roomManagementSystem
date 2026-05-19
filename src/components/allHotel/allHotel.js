@@ -38,7 +38,7 @@ return (
     <ScrollView>
     {
           hotelList?.map((hotel)=>{
-            console.log('hotel admin',hotel)
+            // console.log('hotel admin',hotel)
             return (
                 <>
 <HotelCard hotelCard={hotel}/>

@@ -14,7 +14,7 @@ export const addFloorAsync = createAsyncThunk(
     
 
       const Responedata = response.data;
-      console.log( 'add floor data ',Responedata)
+      // console.log( 'add floor data ',Responedata)
       return Responedata
       
     } catch (error) {

@@ -14,7 +14,7 @@ export const getPaymentActiveAsync = createAsyncThunk(
     
 
       const Responedata = response.data;
-      console.log( 'get payment active data ',Responedata)
+      // console.log( 'get payment active data ',Responedata)
       return Responedata
       
     } catch (error) {

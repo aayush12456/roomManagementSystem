@@ -3,7 +3,7 @@ import { View, Text } from "react-native";
 import { PieChart } from "react-native-gifted-charts";
 
 const Graph = ({ occupied, available,finalTotalRoom, totalRoom,occupiedPercentage,availablePercentage }) => {
-  console.log('availa',available)
+  // console.log('availa',available)
   const chartData = [
     ...(occupied > 0 ? [{ value: occupied, color: "#FF6B6B" }] : []),
     ...(available > 0 ? [{ value: available, color: "#4ECDC4" }] : []),

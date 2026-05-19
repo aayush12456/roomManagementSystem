@@ -14,7 +14,7 @@ export const deleteSwitchProfileAsync = createAsyncThunk(
     
 
       const Responedata = response.data;
-      console.log( 'delete switch profile data ',Responedata)
+      // console.log( 'delete switch profile data ',Responedata)
       return Responedata
       
     } catch (error) {

@@ -14,7 +14,7 @@ export const getPhoneOtpAsync = createAsyncThunk(
     
 
       const Responedata = response.data;
-      console.log( 'get phone otp data ',Responedata)
+      // console.log( 'get phone otp data ',Responedata)
       return Responedata
       
     } catch (error) {

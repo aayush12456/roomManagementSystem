@@ -10,9 +10,11 @@ import { deleteAdminStaffOwnerAsync } from "../../Redux/Slice/deleteAdminStaffOw
 import io from "socket.io-client";
 import axios from "axios";
 const socket = io.connect("http://192.168.29.169:4000")
+// const socket = io.connect("https://roommanagementsystembackend-1.onrender.com")
 const AllHotelDetails=({hotelDetails})=>{
-    console.log('detus',hotelDetails)
+    // console.log('detus',hotelDetails)
     const BASE_URL = "http://192.168.29.169:4000";
+    // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";  
     const dispatch=useDispatch()
     const navigation = useNavigation();
     const [staffList, setStaffList] = useState([])
@@ -30,13 +32,13 @@ const AllHotelDetails=({hotelDetails})=>{
                     },[hotelDetails?._id])
 
             const paymentHistorySelector=useSelector((state)=>state.getPaymentHistory.getPaymentHistoryObj)
-            console.log('pay history',paymentHistorySelector)
+            // console.log('pay history',paymentHistorySelector)
             const paymentActiveSelector=useSelector((state)=>state.getPaymentActive.getPaymentActiveObj)
-            console.log('pay select',paymentActiveSelector)
+            // console.log('pay select',paymentActiveSelector)
             const subscriptionArray=paymentHistorySelector?.subscriptionArray
 
             const deleteStaffSelector=useSelector((state)=>state.deleteAdminStaffOwnerData.deleteAdminStaffOwnerObj)
-            console.log('delete staff',deleteStaffSelector)
+            // console.log('delete staff',deleteStaffSelector)
 
 
 
@@ -84,7 +86,7 @@ const AllHotelDetails=({hotelDetails})=>{
   }
 
 const deleteStaffHandler=async(staff)=>{
-console.log('staf is',staff)
+// console.log('staf is',staff)
 const staffObject = {
     id:hotelDetails?._id,
     staffId: staff?._id,
@@ -99,7 +101,7 @@ dispatch(deleteAdminStaffOwnerAsync(staffObject))
 
 try {
   const response = await axios.post(`${BASE_URL}/hotel/deleteName/${deleteNameObj.id}`,deleteNameObj);
-  console.log('response in delete obj is',response?.data)
+  // console.log('response in delete obj is',response?.data)
   
   socket.emit('deleteName', response?.data)
 } catch (error) {
@@ -115,14 +117,14 @@ const ownerObject={
     message:'owner'
 }
 dispatch(deleteAdminStaffOwnerAsync(ownerObject))
-console.log('ownrer ong',ownerObject)
+// console.log('ownrer ong',ownerObject)
 const deleteNameObj={
   id:hotelDetails?._id,
   name:owner.name
 }
 try {
   const response = await axios.post(`${BASE_URL}/hotel/deleteName/${deleteNameObj.id}`,deleteNameObj);
-  console.log('response in delete obj is',response?.data)
+  // console.log('response in delete obj is',response?.data)
   
   socket.emit('deleteName', response?.data)
 } catch (error) {
@@ -131,11 +133,11 @@ try {
 }
 
 const replyHandler=(data)=>{
-console.log('data is',data)
+// console.log('data is',data)
 navigation.navigate('ReplyPage',{heading:'Reply Mail',profile:data,hotelId:hotelDetails?._id,hotelName:hotelDetails?.hotelName})
 }
 const accessHandler=(data)=>{
-  console.log('data is',data)
+  // console.log('data is',data)
   navigation.navigate('AccessPage',{heading:'Access',profile:data,hotelId:hotelDetails?._id,hotelName:hotelDetails?.hotelName})
   }
 return (

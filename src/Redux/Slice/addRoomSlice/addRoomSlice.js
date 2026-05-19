@@ -14,7 +14,7 @@ export const addRoomAsync = createAsyncThunk(
     
 
       const Responedata = response.data;
-      console.log( 'add room data ',Responedata)
+      // console.log( 'add room data ',Responedata)
       return Responedata
       
     } catch (error) {

@@ -7,11 +7,11 @@ import { useState } from "react"
 import {useDispatch,useSelector} from 'react-redux'
 import { updateMyProfileAsync } from "../../Redux/Slice/updateMyProfileSlice/updateMyProfileSlice";
 const EditProfile=({edit})=>{
-    console.log('edit is',edit)
+    // console.log('edit is',edit)
     const dispatch=useDispatch()
     const navigation=useNavigation()
     const hotelDetailSelector=useSelector((state)=>state.getHotelDetails.getHotelDetailsObj.hotelObj)
-    console.log('hotel selct',hotelDetailSelector)
+    // console.log('hotel selct',hotelDetailSelector)
     const phoneNumber=edit?.params?.formData?.phone
     const address=edit?.params?.formData?.address
     const email=edit?.params?.formData?.email
@@ -67,7 +67,7 @@ const EditProfile=({edit})=>{
     
         if (!result.canceled && result.assets && result.assets.length > 0) {
           const selectedImage = result.assets[0];
-          console.log('selct image',selectedImage)
+          // console.log('selct image',selectedImage)
           setUpdateImage(selectedImage.uri)
          
         } else {
@@ -78,7 +78,7 @@ const EditProfile=({edit})=>{
       }
     };
   
-    console.log('update',updatePhone)
+    // console.log('update',updatePhone)
 
     const updateDataHandler=()=>{
       if (!validate()) return;
@@ -101,7 +101,7 @@ const EditProfile=({edit})=>{
           name: fileName,
         });
       }
-      console.log('form data',formData)
+      // console.log('form data',formData)
       dispatch(updateMyProfileAsync(formData))
       navigation.goBack()
     }

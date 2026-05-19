@@ -6,8 +6,8 @@ import designation from '../../../../assets/profileIcon/designation.png'
 import mail from '../../../../assets/settingIcon/mail.png'
 import { useNavigation } from "@react-navigation/native"
 const ProfileDetails=({profileDetails,hotelId,hierarchyHeading})=>{
-    console.log('profile detail',profileDetails)
-    console.log('profile in hotelid',hotelId)
+    // console.log('profile detail',profileDetails)
+    // console.log('profile in hotelid',hotelId)
     const navigation=useNavigation()
     const editImgHandler=()=>{
         navigation.navigate('EditStaffProfilePage',{formData:profileDetails,heading:'Edit Staff Details',hotelsId:hotelId})

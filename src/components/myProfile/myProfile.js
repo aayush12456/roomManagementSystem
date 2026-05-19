@@ -1,4 +1,4 @@
-import {Card, Text,Button } from "react-native-paper"
+import {Text } from "react-native-paper"
 import { Image,View,Pressable,StatusBar } from "react-native"
 import phone from '../../../assets/profileIcon/phone.png'
 import location from '../../../assets/profileIcon/location.png'
@@ -7,7 +7,7 @@ import designation from '../../../assets/profileIcon/designation.png'
 import mail from '../../../assets/settingIcon/mail.png'
 import { useNavigation } from "@react-navigation/native"
 const MyProfile=({profiles})=>{
-  console.log('my profile',profiles)
+  // console.log('my profile',profiles)
     const navigation=useNavigation()
     const editProfileHandler=()=>{
     navigation.navigate('EditProfilePage',{formData:profiles,heading:'Edit Profile'})
@@ -15,7 +15,6 @@ const MyProfile=({profiles})=>{
 return (
     <>
     <StatusBar backgroundColor="#ffffff" barStyle="dark-content" />
-        {/* <Card style={{ borderRadius: 6,marginLeft:6,marginRight:6,marginTop:50 }}> */}
          <Pressable onPress={editProfileHandler}>
          <View style={{ flexDirection: 'row', justifyContent: 'flex-end',marginRight:22 }}>
          <Image source={edit} style={{marginTop:15}} />
@@ -110,7 +109,6 @@ return (
         </View>
             </View>
        
-        {/* </Card> */}
     </>
 )
 }

@@ -15,9 +15,9 @@ import { adminAccessAsync } from '../../Redux/Slice/adminAccessSlice/adminAccess
 const LoginForm=()=>{
   const phoneNameSelectorObj=useSelector((state)=>state?.getHotelNameData?.getHotelNameObj)
   const getPhoneOtpSelectorObj=useSelector((state)=>state.getPhoneOtpData.getPhoneOtpObj)
-  console.log('get phone otp',getPhoneOtpSelectorObj)
+  // console.log('get phone otp',getPhoneOtpSelectorObj)
   const adminAccessObj=useSelector((state)=>state.adminAccess.getAdminAccessObj)
-  console.log('admin access obj',adminAccessObj)
+  // console.log('admin access obj',adminAccessObj)
     const [phoneNumber,setPhoneNumber]=useState('')
     const [isModalVisible, setModalVisible] = useState(false);
     const [isKeyboardVisible, setKeyboardVisible] = useState(false);
@@ -25,7 +25,7 @@ const LoginForm=()=>{
     const [hotelName,setHotelName]=useState('')
     const navigation = useNavigation();
     const dispatch=useDispatch()
-    console.log('phone name selector',phoneNameSelectorObj)
+    // console.log('phone name selector',phoneNameSelectorObj)
    
     useEffect(() => {
       if (phoneNameSelectorObj) {
@@ -56,7 +56,7 @@ const LoginForm=()=>{
             'otpData',
             JSON.stringify(getPhoneOtpSelectorObj)
           );
-          console.log('OTP data saved to SecureStore');
+          // console.log('OTP data saved to SecureStore');
         } catch (error) {
           console.error('Error saving to SecureStore:', error);
         }
@@ -89,9 +89,11 @@ const LoginForm=()=>{
     }
   
     const hotelClickHandler=(phone,hotel)=>{
+      console.log('hotel is',hotel)
       setHotelName(hotel)
     const phoneObj={
-      phone:phoneNumber
+      phone:phoneNumber,
+      id:hotel.hotelId
     }
     dispatch(getPhoneOtpAsync(phoneObj))
     }
@@ -201,7 +203,7 @@ return (
             <ScrollView>
             {
                   phoneNameObj?.matchedNames?.length>0? phoneNameObj?.matchedNames?.map((hotelNameObj,index)=>{
-                    console.log('hotel names',hotelNameObj)
+                    // console.log('hotel names',hotelNameObj)
                 return (
    
      <View key={hotelNameObj?.hotelName} style={{flexDirection:'row',gap:12}}>

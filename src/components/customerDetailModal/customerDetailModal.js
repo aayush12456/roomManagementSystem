@@ -56,7 +56,7 @@ const safeTimeToISOString = (timeStr) => {
 
     return date.toISOString();
   } catch (error) {
-    console.log("safeTimeToISOString error:", error);
+    // console.log("safeTimeToISOString error:", error);
     return "";
   }
 };
@@ -65,8 +65,8 @@ const safeTimeToISOString = (timeStr) => {
 const CustomerDetailModal=({showAlert,setShowAlert,selectedRoomId,customerArray,roomType,floor,roomNo,
   currentDates,planStatus,paymentActiveSelector,profile})=>{
   // console.log('customer array',customerArray)
-  console.log('profile is customer',profile)
-  console.log('plan stat',planStatus)
+  // console.log('profile is customer',profile)
+  // console.log('plan stat',planStatus)
   const BASE_URL = "http://192.168.29.169:4000";
   // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
   const hotelDetailSelector=useSelector((state)=>state.getHotelDetails.getHotelDetailsObj.hotelObj)
@@ -75,7 +75,7 @@ const CustomerDetailModal=({showAlert,setShowAlert,selectedRoomId,customerArray,
   const dispatch=useDispatch()
   // console.log('pass data obj ',passDataSelector)
   // console.log('hotel detail obj',hotelDetailSelector)
-  console.log('recent books',recentBookObj)
+  // console.log('recent books',recentBookObj)
     const screenWidth = Dimensions.get("window").width;
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [showTimePicker, setShowTimePicker] = useState(false);
@@ -169,27 +169,25 @@ const CustomerDetailModal=({showAlert,setShowAlert,selectedRoomId,customerArray,
       }    
 
  
-    console.log('filter customer',filterCustomerObj)
+    // console.log('filter customer',filterCustomerObj)
 return (
     <>
       <Formik  initialValues={{
  customerName: filterCustomerObj?.customerName || recentBookObj?.customerName|| '',
  customerAddress: filterCustomerObj?.customerAddress || recentBookObj?.customerAddress ||'',
  customerPhoneNumber: filterCustomerObj?.customerPhoneNumber || recentBookObj?.customerPhoneNumber|| '',
+ customerEmail:filterCustomerObj?.customerEmail,
  totalCustomer: filterCustomerObj?.totalCustomer || '',
  relation:filterCustomerObj?.relation || '',
  customerIdProof: filterCustomerObj?.customerIdProof || '',
-//  customerAadharNumber: filterCustomerObj?.customerAadharNumber || '',
 customerIdDetails: filterCustomerObj?.customerIdDetails || '',
  customerCity: filterCustomerObj?.customerCity || '',
  customerOccupation: filterCustomerObj?.customerOccupation || '',
  customerDestination: filterCustomerObj?.customerDestination || '',
  reasonToStay: filterCustomerObj?.reasonToStay || '',
  checkInDate: filterCustomerObj?.checkInDate || recentBookObj?.checkInDate|| '',
-//  checkInTime: filterCustomerObj?.checkInTime || '',
  checkOutDate: filterCustomerObj?.checkOutDate || '',
  checkOutTime: filterCustomerObj?.checkOutTime || '',
-//  personalCheckOutTime:filterCustomerObj?.personalCheckOutTime || '',
 checkInTime: safeTimeToISOString(filterCustomerObj?.checkInTime),
 personalCheckOutTime: safeTimeToISOString(
   filterCustomerObj?.personalCheckOutTime
@@ -208,15 +206,12 @@ personalCheckOutTime: safeTimeToISOString(
       )
     : ""
 )|| '',
-//  executiveName: filterCustomerObj?.frontDeskExecutiveName || '',
 executiveName: filterCustomerObj?.frontDeskExecutiveName || profile?.name || '',
  customerSignature: filterCustomerObj?.customerSignature || '',
-//  extraCustomers: [] 
 extraCustomers: filterCustomerObj?.extraCustomers?.map(item => ({
   customerName: item.customerName || "",
   customerAddress: item.customerAddress || "",
   customerPhoneNumber: item.customerPhoneNumber || "",
-  // customerAadharNumber: item.customerAadharNumber || "",
   customerIdProof: item.customerIdProof || "",
   customerIdDetails: item.customerIdDetails || "",
 })) || [],
@@ -252,7 +247,6 @@ extraCustomers: filterCustomerObj?.extraCustomers?.map(item => ({
           customerName: item.customerName,
           customerAddress: item.customerAddress,
           customerPhoneNumber: item.customerPhoneNumber,
-          // customerAadharNumber: item.customerAadharNumber
           customerIdProof: item.customerIdProof,
           customerIdDetails: item.customerIdDetails
         }));
@@ -268,12 +262,11 @@ extraCustomers: filterCustomerObj?.extraCustomers?.map(item => ({
         customerName:values.customerName,
         customerAddress:values.customerAddress,
         customerPhoneNumber:values.customerPhoneNumber,
+        customerEmail:values.customerEmail,
         totalCustomer:values.totalCustomer,
-        // extraCustomers: values.extraCustomers,
         extraCustomers:formattedExtraCustomers,
         relation: values.relation?.trim() || "NA",
         customerIdProof:values.customerIdProof,
-        // customerAadharNumber:values.customerAadharNumber,
         customerIdDetails:values.customerIdDetails,
         customerCity:values.customerCity,
         customerOccupation: values.customerOccupation?.trim() || "NA",
@@ -290,6 +283,7 @@ extraCustomers: filterCustomerObj?.extraCustomers?.map(item => ({
         frontDeskExecutiveName:values.executiveName,
         customerSignature: values.customerSignature, 
       }
+      console.log('customer obj ',customerDetailsObj)
       try {
         if (matchRoomResponse === true) {
           // 🔹 Agar room already booked hai → Update API
@@ -319,7 +313,6 @@ extraCustomers: filterCustomerObj?.extraCustomers?.map(item => ({
               color: "#E5E7EB",
             },
           });
-          // socket.emit("updateCustomerDetails", response?.data?.getCustomerDetailsArray);
           socket.emit("updateCustomerDetails", response?.data);
         } else {
           // 🔹 Agar room empty hai → Add API
@@ -350,7 +343,6 @@ extraCustomers: filterCustomerObj?.extraCustomers?.map(item => ({
             },
           });
           socket.emit("addCustomerDetails", response?.data);
-          // socket.emit("addReportDetails", response?.data?.reportArray);
         }
       } catch (error) {
         console.error("Error in Add/Update Customer", error);
@@ -359,7 +351,7 @@ extraCustomers: filterCustomerObj?.extraCustomers?.map(item => ({
         setLoading(false);   // ✅ STOP LOADER (always runs)
       }
 
-console.log('customer detailss',customerDetailsObj)
+// console.log('customer detailss',customerDetailsObj)
         resetForm()
         setShowAlert(false)
         setShowTextField(false); 
@@ -372,7 +364,6 @@ console.log('customer detailss',customerDetailsObj)
 
  {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue })=>(
   <>
-   {/* <Modal visible={ showAlert}  transparent animationType="fade"> */}
  <Modal visible={ passDataSelector?.type===true?passDataSelector.type:showAlert}  transparent animationType="fade">
   <View
     style={{
@@ -391,12 +382,6 @@ console.log('customer detailss',customerDetailsObj)
         width: screenWidth * 0.9,
       }}
     >
-      {/* 🔹 Scroll starts from Customer Name */}
-     {/* { matchRoomResponse===false ?<Text style={{textAlign:'center',fontSize:16,fontWeight:'bold'}}>Enter Customer Details</Text>
-       :showTextField === false ?
-       <Text style={{textAlign:'center',fontSize:16,fontWeight:'bold'}}>Customer Details Preview</Text>
-       :<Text style={{textAlign:'center',fontSize:16,fontWeight:'bold'}}>Update Customer Details </Text>    
-    } */}
     {matchRoomResponse === false ? (
   profile?.post !== "Housekeeping Staff" && (
     <Text style={{ textAlign:'center', fontSize:16, fontWeight:'bold' }}>
@@ -445,7 +430,6 @@ Housekeeping staff do not have permission to add guests.
 </View>:null}
        {profile?.post !== "Housekeeping Staff"? <View>
         <TextInput
-          // label="Customer Name"
           label="Full Name"
           mode="outlined"
           style={{ width: screenWidth * 0.75, marginBottom: 10 }}
@@ -458,7 +442,6 @@ Housekeeping staff do not have permission to add guests.
 
         {profile?.post !== "Housekeeping Staff"?<View>
         <TextInput
-          // label="Customer Address"
           label="Address"
           mode="outlined"
           style={{ width: screenWidth * 0.75, marginBottom: 10 }}
@@ -482,10 +465,20 @@ Housekeeping staff do not have permission to add guests.
          {touched.customerPhoneNumber && errors.customerPhoneNumber && <Text style={{ color: 'red', marginLeft: 12 }}>{errors.customerPhoneNumber}</Text>}
         </View>:null}
 
+       {values.customerPhoneNumber?.trim().length > 0? <View>
+        <TextInput
+          label="Email"
+          mode="outlined"
+          style={{ width: screenWidth * 0.75, marginBottom: 10 }}
+          onChangeText={handleChange('customerEmail')}
+          onBlur={handleBlur('customerEmail')}
+          value={values.customerEmail}
+        />
+         {touched.customerEmail && errors.customerEmail && <Text style={{ color: 'red', marginLeft: 12 }}>{errors.customerEmail}</Text>}
+        </View>:null}
       
         {values.customerPhoneNumber?.trim().length > 0?<View>
         <TextInput
-          // label="Customer City"
           label="City"
           mode="outlined"
           style={{ width: screenWidth * 0.75, marginBottom: 10 }}
@@ -549,11 +542,9 @@ Housekeeping staff do not have permission to add guests.
 
         {values.customerPhoneNumber?.trim().length > 0?<View>
         <TextInput
-          // label="Total Customer"
           label="Number of Guests"
           mode="outlined"
           style={{ width: screenWidth * 0.75, marginBottom: 10 }}
-          // onChangeText={handleChange('totalCustomer')}
           keyboardType="phone-pad"
           onChangeText={(text) => {
             handleChange('totalCustomer')(text);
@@ -567,7 +558,6 @@ Housekeeping staff do not have permission to add guests.
       customerName: existing[i]?.customerName || "",
       customerAddress: existing[i]?.customerAddress || "",
       customerPhoneNumber: existing[i]?.customerPhoneNumber || "",
-      // customerAadharNumber: existing[i]?.customerAadharNumber || "",
       customerIdProof: existing[i]?.customerIdProof || "",
       customerIdDetails: existing[i]?.customerIdDetails || "",
     }));
@@ -608,7 +598,6 @@ Housekeeping staff do not have permission to add guests.
 
       {/* ✅ NAME */}
       <TextInput
-        // label={`Customer Name ${index + 1}`}
         label={`Full Name ${index + 1}`}
         mode="outlined"
         style={{ width: screenWidth * 0.75, marginBottom: 5 }}
@@ -622,7 +611,6 @@ Housekeeping staff do not have permission to add guests.
 
       {/* ✅ ADDRESS */}
       <TextInput
-        // label={`Customer Address ${index + 1}`}
         label={`Address ${index + 1}`}
         mode="outlined"
         style={{ width: screenWidth * 0.75, marginBottom: 5 }}
@@ -635,7 +623,6 @@ Housekeeping staff do not have permission to add guests.
 
       {/* ✅ PHONE */}
       <TextInput
-        // label={`Customer Phone Number ${index + 1}`}
         label={`Mobile Number ${index + 1}`}
         mode="outlined"
         keyboardType="phone-pad"
@@ -646,19 +633,6 @@ Housekeeping staff do not have permission to add guests.
         }
       />
       {phoneError && <Text style={{ color: "red" }}>{errors.extraCustomers[index].customerPhoneNumber}</Text>}
-
-      {/* ✅ AADHAR */}
-      {/* <TextInput
-        label={`Customer Aadhar Number ${index + 1}`}
-        mode="outlined"
-        keyboardType="phone-pad"
-        style={{ width: screenWidth * 0.75, marginBottom: 10 }}
-        value={values.extraCustomers[index].customerAadharNumber}
-        onChangeText={(text) =>
-          setFieldValue(`extraCustomers[${index}].customerAadharNumber`, text)
-        }
-      />
-      {aadharError && <Text style={{ color: "red" }}>{errors.extraCustomers[index].customerAadharNumber}</Text>} */}
 
 <View style={{ width: screenWidth * 0.75, marginBottom: 10 ,marginTop:5 }}>
 
@@ -711,44 +685,6 @@ Housekeeping staff do not have permission to add guests.
           {/* {touched.relation && errors.relation && <Text style={{ color: 'red', marginLeft: 12 }}>{errors.relation}</Text>} */}
         </View>:null}
 
-        {/* {values.customerPhoneNumber?.trim().length > 0?<View>
-        <TextInput
-          label="Customer Id Proof"
-          mode="outlined"
-          style={{ width: screenWidth * 0.75, marginBottom: 10 }}
-          onChangeText={handleChange('customerIdProof')}
-          onBlur={handleBlur('customerIdProof')}
-          value={values.customerIdProof}
-        />
-        {touched.customerIdProof && errors.customerIdProof && <Text style={{ color: 'red', marginLeft: 12 }}>{errors.customerIdProof}</Text>}
-        </View>:null} */}
-
-        {/* {values.customerPhoneNumber?.trim().length > 0?<View>
-        <TextInput
-          label="Customer Aadhar Number"
-          mode="outlined"
-          keyboardType="phone-pad"
-          style={{ width: screenWidth * 0.75, marginBottom: 10 }}
-          onChangeText={handleChange('customerAadharNumber')}
-          onBlur={handleBlur('customerAadharNumber')}
-          value={values.customerAadharNumber}
-        />
-        {touched.customerAadharNumber && errors.customerAadharNumber && <Text style={{ color: 'red', marginLeft: 12 }}>{errors.customerAadharNumber}</Text>}
-        </View>:null} */}
-
-{/* 
-        {values.customerPhoneNumber?.trim().length > 0?<View>
-        <TextInput
-          label="Customer City"
-          mode="outlined"
-          style={{ width: screenWidth * 0.75, marginBottom: 10 }}
-          onChangeText={handleChange('customerCity')}
-          onBlur={handleBlur('customerCity')}
-          value={values.customerCity}
-        />
-         {touched.customerCity && errors.customerCity && <Text style={{ color: 'red', marginLeft: 12 }}>{errors.customerCity}</Text>}
-        </View>:null} */}
-       
         {values.customerPhoneNumber?.trim().length > 0?<View>
         <TextInput
           label="Occupation"
@@ -813,16 +749,6 @@ Housekeeping staff do not have permission to add guests.
         <TextInput
           label="Check In Time"
           mode="outlined"
-          // value={
-          //   values.checkInTime
-          //     ? new Date(values.checkInTime).toLocaleTimeString("en-IN", {
-          //         hour: "2-digit",
-          //         minute: "2-digit",
-          //         hour12: true,
-          //         timeZone: "Asia/Kolkata"
-          //       })
-          //     : ""
-          // }
           value={
             values.checkInTime &&
             !isNaN(new Date(values.checkInTime).getTime())
@@ -926,16 +852,6 @@ Housekeeping staff do not have permission to add guests.
       <TextInput
         label="Personal Check Out Time"
         mode="outlined"
-        // value={
-        //   values.personalCheckOutTime
-        //     ? new Date(values.personalCheckOutTime).toLocaleTimeString("en-IN", {
-        //         hour: "2-digit",
-        //         minute: "2-digit",
-        //         hour12: true,
-        //         timeZone: "Asia/Kolkata",
-        //       })
-        //     : ""
-        // }
         value={
           values.personalCheckOutTime &&
           !isNaN(new Date(values.personalCheckOutTime).getTime())
@@ -1002,7 +918,6 @@ Housekeeping staff do not have permission to add guests.
           mode="outlined"
           keyboardType="phone-pad"
           style={{ width: screenWidth * 0.75, marginBottom: 10 }}
-          // onChangeText={handleChange('paymentPaid')}
           onChangeText={(text) => {
             handleChange('paymentPaid')(text);
           
@@ -1032,15 +947,6 @@ Housekeeping staff do not have permission to add guests.
         </View>:null}
 
         {values.customerPhoneNumber?.trim().length > 0?<View>
-        {/* <TextInput
-          label="Amount Due"
-          mode="outlined"
-          keyboardType="phone-pad"
-          style={{ width: screenWidth * 0.75, marginBottom: 10 }}
-          onChangeText={handleChange('paymentDue')}
-          onBlur={handleBlur('paymentDue')}
-          value={values.paymentDue}
-        /> */}
         <TextInput
         label="Amount Due"
         mode="outlined"
@@ -1162,6 +1068,10 @@ Housekeeping staff do not have permission to add guests.
       <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
         <Text>Mobile Number : </Text>
        <Text>{filterCustomerObj.customerPhoneNumber}</Text>
+      </View>
+      <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
+        <Text>Email : </Text>
+       <Text>{filterCustomerObj.customerEmail}</Text>
       </View>
       <View style={{flexDirection:"row",gap:6,paddingTop:15,width: "100%",
     alignItems: "flex-start"}}>

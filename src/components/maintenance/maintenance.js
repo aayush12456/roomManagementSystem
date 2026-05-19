@@ -1,5 +1,4 @@
-
-import { Card, Text } from "react-native-paper";
+import {Text } from "react-native-paper";
 import { View, Pressable, ScrollView} from "react-native";
 import { useSelector } from "react-redux";
 import MaintenanceModal from '../../components/common/maintenanceModal/maintenanceModal'
@@ -10,7 +9,7 @@ import io from "socket.io-client";
 const socket = io.connect("http://192.168.29.169:4000");
 // const socket = io.connect("https://roommanagementsystembackend-1.onrender.com");
 const Maintenance=({roomDetails,floorName,profileName,post})=>{
-    console.log('maintain',roomDetails)
+    // console.log('maintain',roomDetails)
     const BASE_URL = "http://192.168.29.169:4000";
     // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
     const hotelDetailSelector = useSelector(
@@ -33,7 +32,7 @@ const Maintenance=({roomDetails,floorName,profileName,post})=>{
         todayDate: stringToday 
 
      }
-     console.log('shorts',selectData)
+    //  console.log('shorts',selectData)
      setMaintainAlert(true)
      setMaintainObj(selectData)
     }
@@ -60,19 +59,19 @@ const Maintenance=({roomDetails,floorName,profileName,post})=>{
       };
     }, [hotelDetailSelector?._id]);
 
-    console.log('clen',mainCleanObj)
+    // console.log('clen',mainCleanObj)
 
     const maintainCleanRoomArray=mainCleanObj?.maintainCleanRoom
 
     useEffect(()=>{
       if(maintainObj?.roomId){
  const obj=maintainCleanRoomArray?.find((item)=>item.roomId===maintainObj?.roomId)
- console.log('obj is',obj)
+//  console.log('obj is',obj)
 setFinalMainCleanObj(obj)
       }
     },[maintainObj?.roomId,maintainCleanRoomArray])
 
-    console.log('final main obj',finalMainCleanObj)
+    // console.log('final main obj',finalMainCleanObj)
 
     useEffect(() => {
       const fetchRoomDetails = async () => {
@@ -98,7 +97,7 @@ setFinalMainCleanObj(obj)
     }, [hotelDetailSelector._id]);
   
     const customerArray = customerObj?.getCustomerDetailsArray || [];
-    console.log('customr',customerArray)
+    // console.log('customr',customerArray)
 return (
     <>
     <ScrollView>
@@ -111,37 +110,8 @@ return (
               const bedType = roomData.bedType
                 .split(",")
                 .map((item) => item.replace(" Bed", ""));
-            //   const today = moment(todayDate, "DD/MM/YYYY");
-            //   const current = moment(currentDate, "DD/MM/YYYY");
-            //   const isMatched = customerArray?.some((cust) => cust.roomId === roomId);
-            //   const isRoomBooked = customerArray
-            //     ?.filter(
-            //       (cust) =>
-            //         !(
-            //           current.isAfter(moment(cust.checkOutDate, "DD/MM/YYYY")) &&
-            //           cust.roomId === roomId
-            //         )
-            //     )
-            //     ?.some(
-            //       (cust) =>
-            //         cust.roomId === roomId &&
-            //         today.isBetween(
-            //           moment(cust.checkInDate, "DD/MM/YYYY"),
-            //           moment(cust.checkOutDate, "DD/MM/YYYY"),
-            //           undefined,
-            //           "[]"
-            //         )
-            //     );
-
-            //   const isAdvanceMatched = customerArrayAdvance.some(
-            //     (cust) => cust.roomId === roomId && cust.selectedDate === currentDate
-            //   );
-            //   console.log('advance match',isAdvanceMatched)
-            //   console.log('is match',isMatched)
-
-            //   const hasAdvanceBooking = isAdvanceMatched;
+         
               const roomType = roomData.roomType;
-              // const isRoomMatched=maintainCleanRoomArray?.some((item)=>item?.roomId===roomId)
               const cleanMatched=maintainCleanRoomArray?.some((item)=>item?.roomId===roomId && item.type==="Clean Room")
               const maintenanceMatched=maintainCleanRoomArray?.some((item)=>item?.roomId===roomId && item.type==="Maintenance Room")
               return (
@@ -150,20 +120,6 @@ return (
                     <View
                       style={{
                         borderWidth: cleanMatched || maintenanceMatched? 0 : 1,
-
-                        // borderColor: `${
-                        //   isAdvanceMatched && todayDate !== currentDate
-                        //     ? "pink"
-                        //     : isMatched && todayDate === currentDate
-                        //     ? "red"
-                        //     : isRoomBooked
-                        //     ? "red"
-                        //     : roomType === "Ac"
-                        //     ? "blue"
-                        //     : roomType === "Non Ac"
-                        //     ? "green"
-                        //     : ""
-                        // }`,
                         borderRadius: 12,
                         padding: 12,
                         marginBottom: 5,

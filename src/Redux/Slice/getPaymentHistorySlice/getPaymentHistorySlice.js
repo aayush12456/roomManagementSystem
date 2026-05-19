@@ -14,7 +14,7 @@ export const getPaymentHistoryAsync = createAsyncThunk(
     
 
       const Responedata = response.data;
-      console.log( 'get payment history data ',Responedata)
+      // console.log( 'get payment history data ',Responedata)
       return Responedata
       
     } catch (error) {

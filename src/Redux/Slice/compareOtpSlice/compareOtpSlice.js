@@ -14,7 +14,7 @@ export const compareOtpAsync = createAsyncThunk(
     
 
       const Responedata = response.data;
-      console.log( 'compare otp data ',Responedata)
+      // console.log( 'compare otp data ',Responedata)
       return Responedata
       
     } catch (error) {

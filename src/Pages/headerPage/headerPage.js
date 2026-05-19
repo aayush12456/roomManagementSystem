@@ -25,7 +25,7 @@ const HeaderPage=({route})=>{
   const { paymentData} = route.params || {};
   console.log("Payment Data 👉", paymentData);
   const profileData = route?.params?.profileData;
-  console.log("profile Data header 👉", profileData);
+  // console.log("profile Data header 👉", profileData);
 
   const slideAnim = useRef(new Animated.Value(-100)).current;
 
@@ -57,8 +57,8 @@ const HeaderPage=({route})=>{
     const deleteId=useSelector((state)=>state?.deleteSwitchProfileData?.
     deleteSwitchProfileObj?.deleteId)
     console.log('delete switch profile',deleteSwitchProfileArray)
-    console.log('hotel update',updateHotelDetailSelector)
-    console.log('hotel details',hotelDetailSelector)
+    // console.log('hotel update',updateHotelDetailSelector)
+    // console.log('hotel details',hotelDetailSelector)
 
     const oldNumber=useSelector((state)=>state?.updateMyProfiles?.updateMyProfileObj?.oldPhone)
     const newNumber=useSelector((state)=>state?.updateMyProfiles?.updateMyProfileObj?.newPhone)
@@ -73,7 +73,7 @@ navigation.navigate('LoginPage')
     const removeLoginData = async () => {
       try {
         await SecureStore.deleteItemAsync('loginOtpObj');
-        console.log('login obj removed from SecureStore');
+        // console.log('login obj removed from SecureStore');
       } catch (error) {
         console.error('Error removing login obj:', error);
       }
@@ -84,7 +84,7 @@ navigation.navigate('LoginPage')
           if (data) {
             const parsedData = JSON.parse(data);
             setLoginObj(parsedData)
-            console.log('Retrieved login obj Data:', parsedData);
+            // console.log('Retrieved login obj Data:', parsedData);
             // You can also set it to local state if needed
           } else {
             console.log('No login obj data found in SecureStore');
@@ -104,7 +104,7 @@ navigation.navigate('LoginPage')
       }, []);
       //  console.log('login obj is',loginObj)
       const phone=loginObj?.phone
-      console.log('phone is',phone)
+      // console.log('phone is',phone)
       const id=loginObj?.matchedHotels[0]?._id
 
       useEffect(()=>{
@@ -132,7 +132,7 @@ navigation.navigate('LoginPage')
             ? updateHotelDetailSelector
             : hotelDetailSelector;
           
-            console.log('final hotel',finalHotelDetailSelector)
+            // console.log('final hotel',finalHotelDetailSelector)
           useEffect(() => {
             if (finalHotelDetailSelector && phone) {
               const matchedObj = findByPhone(finalHotelDetailSelector, phone);
@@ -144,8 +144,6 @@ navigation.navigate('LoginPage')
               }
             }
           }, [finalHotelDetailSelector, phone]);  
-          console.log('profile obj is',profileObj)
-          console.log('profile obj is',profileObj)
 
           useEffect(() => {
             const fetchAllStaffDetails = async () => {
@@ -154,11 +152,11 @@ navigation.navigate('LoginPage')
                   const response = await axios.get(
                     `${BASE_URL}/hotel/getStaffPlusOwner/${finalHotelDetailSelector?._id}`
                   );
-                  console.log('visitor user in response',response?.data)
+                  // console.log('visitor user in response',response?.data)
                   setAllStaffOwnerObj(response?.data || {} )
                 }
               } catch (error) {
-                // console.error("Error fetching visitors:", error);
+                console.error("Error fetching visitors:", error);
               }
             };
           
@@ -172,10 +170,10 @@ navigation.navigate('LoginPage')
               socket.off("getStaffOwnerObj");
             };
           }, [finalHotelDetailSelector?._id]);
-          console.log('all staff',allStaffOwnerObj)
+          // console.log('all staff',allStaffOwnerObj)
           
           const hotelId=finalHotelDetailSelector?._id
-          console.log('hotelid',hotelId)
+          // console.log('hotelid',hotelId)
           const profileArray=finalHotelDetailSelector?.profileArray
 
           useEffect(()=>{
@@ -222,7 +220,7 @@ navigation.navigate('LoginPage')
           }, [deleteId]);
           
           
-          console.log('final profile',finalProfileArray)
+          // console.log('final profile',finalProfileArray)
 
           //report
           useEffect(() => {
@@ -232,11 +230,11 @@ navigation.navigate('LoginPage')
                   const response = await axios.get(
                     `${BASE_URL}/hotel/getCustomerDetails/${hotelId}`
                   );
-                  console.log('report detail response in header',response?.data)
+                  // console.log('report detail response in header',response?.data)
                   setReportObj(response?.data || {} )
                 }
               } catch (error) {
-                // console.error("Error fetching visitors:", error);
+                console.error("Error fetching visitors:", error);
               }
             };
           
@@ -280,7 +278,7 @@ navigation.navigate('LoginPage')
             }
         
             const { status } = await Notifications.requestPermissionsAsync();
-            console.log('status is',status)
+            // console.log('status is',status)
             if (status !== "granted") return null;
         
             return (await Notifications.getExpoPushTokenAsync()).data;
@@ -363,11 +361,11 @@ navigation.navigate('LoginPage')
                       },
                     }
                   );
-                  console.log('notify detail response in header',response?.data)
+                  // console.log('notify detail response in header',response?.data)
                   setNotifyTokenObj(response?.data || {} )
                 }
               } catch (error) {
-                // console.error("Error fetching visitors:", error);
+                console.error("Error fetching visitors:", error);
               }
             };
           
@@ -380,7 +378,7 @@ navigation.navigate('LoginPage')
             };
           }, [hotelId]);
 
-          console.log('token obj',notifyTokenObj)
+          // console.log('token obj',notifyTokenObj)
 
          
         const reportArray=reportObj?.reportArray
@@ -390,9 +388,9 @@ navigation.navigate('LoginPage')
         const hotelName=finalHotelDetailSelector?.hotelName
 
         const tokenArray=notifyTokenObj.notifyTokenArray?.map((item)=>item.token)
-        console.log('token array',tokenArray)
+        // console.log('token array',tokenArray)
         const finalTokenArray=tokenArray?.filter((token)=>token!==expoPushToken)
-        console.log('final token array',finalTokenArray)
+        // console.log('final token array',finalTokenArray)
         // // console.log('filter token array',filteredTokenArray)
 
 //         const loadSubscription = async()=>{
@@ -466,7 +464,7 @@ useEffect(() => {
 
   return () => clearTimeout(timer);
 }, [timeEnd?.status]);
-console.log('time nds',timeEnd)
+// console.log('time nds',timeEnd)
 const formatISTDate = (dateString) => {
   if (!dateString) return "";
 
@@ -532,7 +530,7 @@ const fetchDetailSelector =
   finalHotelDetailSelector && Object.keys(finalHotelDetailSelector).length > 0
     ? finalHotelDetailSelector
     : loginObj?.matchedHotels[0];
-    console.log('fetch detais',fetchDetailSelector)
+    // console.log('fetch detais',fetchDetailSelector)
 
 useEffect(() => {
   const fetchName = async () => {
@@ -556,12 +554,35 @@ useEffect(() => {
   };
 }, [fetchDetailSelector?._id]);
 
-console.log('all hotel obj',nameList)
+// console.log('all hotel obj',nameList)
 
 useEffect(() => {
-  if (nameList?.names && profileObj?.name) {
+  if (nameList?.names) {
 
-    const isExist = nameList.names.includes(profileObj.name);
+    // ❗ agar name null/undefined hai → direct alert
+    if (!profileObj) {
+      Alert.alert(
+        "Access Revoked",
+        "Your account access has been removed.\nPlease contact your administrator for assistance.",
+        [
+          {
+            text: "OK",
+            onPress: async () => {
+              await removeLoginData();
+              navigation.reset({
+                index: 0,
+                routes: [{ name: "LoginPage" }],
+              });
+            },
+          },
+        ],
+        { cancelable: false }
+      );
+      return;
+    }
+
+    // ✅ normal case (name exist hai but list me nahi hai)
+    const isExist = nameList.names.includes(profileObj?.name);
 
     if (!isExist) {
       Alert.alert(
@@ -579,7 +600,7 @@ useEffect(() => {
             },
           },
         ],
-        { cancelable: false } // ❗ user back press se avoid nahi kar payega
+        { cancelable: false }
       );
     }
   }
@@ -644,7 +665,7 @@ useEffect(() => {
   }
 }, [hotelNameList,fetchDetailSelector, alertShown]);
 
-console.log('all hotel name obj',hotelNameList)
+// console.log('all hotel name obj',hotelNameList)
 return (
   
     <>

@@ -1,7 +1,7 @@
 import { ScrollView,View } from "react-native"
 import { Text,Card } from "react-native-paper"
 const Arrival=({arrivalArray})=>{
-    console.log('arrival array in arrive',arrivalArray)
+    // console.log('arrival array in arrive',arrivalArray)
 return (
     <>
     <ScrollView>

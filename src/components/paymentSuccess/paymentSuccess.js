@@ -1,21 +1,12 @@
-import React, { useEffect,useMemo,useState } from "react";
+import React, { useEffect,useMemo } from "react";
 import { View, Text, Image } from "react-native";
 import successImg from '../../../assets/AllIcons/successImg.gif'
-import money from '../../../assets/premiumIcon/Money.gif'
 import { useNavigation } from "@react-navigation/native";
 const PaymentSuccess=({amount,objData})=>{
     const navigation = useNavigation();
-    // useEffect(() => {
-    //     const timer = setTimeout(() => {
-    //       navigation.replace("HeaderPage");
-    //     }, 7000);
-    
-    //     return () => clearTimeout(timer);
-    //   }, []);
     useEffect(() => {
       
         const t2 = setTimeout(() => {
-          // navigation.replace("HeaderPage");
           navigation.replace("HeaderPage", {
             paymentData: objData,
           });

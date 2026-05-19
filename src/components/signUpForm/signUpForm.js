@@ -9,7 +9,7 @@ import hotel from '../../../assets/AllIcons/hotel.png'
 
 import successImg from '../../../assets/AllIcons/successImg.gif'
 import {Picker} from '@react-native-picker/picker';
-import { HotelImages, bedType, pickerList, roomType, staffPostList } from '../../utils/signUpData';
+import {bedType, pickerList, roomType, staffPostList } from '../../utils/signUpData';
 import avatar from '../../../assets/AllIcons/avatar.png'
 import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from '@react-navigation/native';
@@ -22,7 +22,7 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
   const dispatch=useDispatch()
   const navigation = useNavigation();
   const registerFormSelector=useSelector((state)=>state?.hotelRegisterData?.registerDataObj?.registerData)
-  console.log('register form selector in signup',registerFormSelector)
+  // console.log('register form selector in signup',registerFormSelector)
   const [showAlert, setShowAlert] = useState(false);
   const [selectedOwnerList, setSelectedOwnerList] = useState('Hotel Owner');
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
@@ -157,11 +157,11 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
     }
     updated[roomKey][type] = value; // update the specific field
   
-    console.log('📦 Updated roomData:', updated);
+    // console.log('📦 Updated roomData:', updated);
     setRoomNamesArray(updated); // update state
   };
-  console.log('staff name array',staffNamesArray)
-  console.log('room name array',roomNamesArray)
+  // console.log('staff name array',staffNamesArray)
+  // console.log('room name array',roomNamesArray)
   const uploadImage = async (ownerKey,setFieldValue) => {
     try {
       const maxFileSize = 5 * 1024 * 1024; // 5MB
@@ -182,7 +182,7 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
   
       if (!result.canceled && result.assets && result.assets.length > 0) {
         const selectedImage = result.assets[0];
-        console.log(`Owner ${ownerKey} Image URI:`,selectedImage.uri); // 👈 Console log
+        // console.log(`Owner ${ownerKey} Image URI:`,selectedImage.uri); // 👈 Console log
         setOwnerNames((prev) => ({
           ...prev,
           [ownerKey]: {
@@ -243,7 +243,7 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
       },
     }));
     }
-    console.log('floor obj',floorObj)
+    // console.log('floor obj',floorObj)
 
  
     useEffect(() => {
@@ -275,8 +275,8 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
       });
     }, [floorObj]);
     
-    console.log('total floor array',totalFloorArray)
-  console.log('floor data is',floorData)
+  //   console.log('total floor array',totalFloorArray)
+  // console.log('floor data is',floorData)
  
 
  
@@ -514,7 +514,7 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
   
     formData.append("totalRoom", totalRooms);
     formData.append("totalFloor", totalFloors);
-    console.log('form data is',formData)
+    // console.log('form data is',formData)
     // ----------------------------
     // 📤 API CALL
     // ----------------------------
@@ -543,7 +543,7 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
   setFloorObj({});
 
     } catch (error) {
-      console.log("❌ Error submitting form:", error.response?.data || error.message);
+      // console.log("❌ Error submitting form:", error.response?.data || error.message);
       alert("Something went wrong");
     }
     finally {
@@ -1003,8 +1003,8 @@ return (
 
       {
         Object.entries(totalFloorArray).map(([roomKey,values],index)=>{
-          console.log('data is',roomKey)
-          console.log('data obj is',values)
+          // console.log('data is',roomKey)
+          // console.log('data obj is',values)
           return (
       <View 
       key={roomKey}
@@ -1031,7 +1031,7 @@ return (
            >
            {
             roomType.map((roomItem,index)=>{
-              console.log('room item',roomItem)
+              // console.log('room item',roomItem)
               return (
                <Picker.Item 
                 key={roomItem.value}
@@ -1064,7 +1064,7 @@ return (
            >
            {
             bedType.map((bedItem,index)=>{
-              console.log('room item',bedItem)
+              // console.log('room item',bedItem)
               return (
                <Picker.Item 
                 key={bedItem.value}

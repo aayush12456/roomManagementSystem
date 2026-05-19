@@ -4,8 +4,8 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { View,Pressable } from "react-native";
 import Graph from "../common/graph/graph";
 const Daily=({policeReport,totalRoom})=>{
-    console.log('police',policeReport)
-    console.log('total room',totalRoom)
+    // console.log('police',policeReport)
+    // console.log('total room',totalRoom)
 const [showDatePicker, setShowDatePicker] = useState(false); 
 const [selectedDate, setSelectedDate] = useState(new Date());  
 const [dailyReportArray,setDailyReportArray]=useState([])
@@ -20,7 +20,7 @@ const handleDateChange = (event, date) => {
     }
   };
   const currentDate=selectedDate.toLocaleDateString("en-GB")
-  console.log('selected date',currentDate)
+  // console.log('selected date',currentDate)
 
   useEffect(()=>{
     if(currentDate){
@@ -29,7 +29,7 @@ setDailyReportArray(arr)
     }
   },[currentDate,policeReport])
   
-  console.log('daily report',dailyReportArray)
+  // console.log('daily report',dailyReportArray)
 
   const occupiedRooms = dailyReportArray.length;
   const availableRooms = Math.max(totalRoom - occupiedRooms, 0);

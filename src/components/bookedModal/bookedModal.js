@@ -1,6 +1,5 @@
-import { View,Pressable,Modal,Dimensions, ScrollView } from "react-native";
+import { View,Modal,Dimensions, ScrollView } from "react-native";
 import { Text,Button } from "react-native-paper";
-import { useEffect } from "react";
 const BookedModal=({showBookedAlert,setShowBookedAlert,customerArray,customerArrayAdvance, todayDate,currentDate,room})=>{
   // console.log('customer array in booked',customerArray)
     const screenWidth = Dimensions.get("window").width;
@@ -27,7 +26,7 @@ const BookedModal=({showBookedAlert,setShowBookedAlert,customerArray,customerArr
       return nonAc;
     }, {});
 // console.log('grouped datas',groupedDatas)
-console.log('grouped data',groupedData)
+// console.log('grouped data',groupedData)
     return (
         <>
          <Modal visible={showBookedAlert} transparent animationType="fade">

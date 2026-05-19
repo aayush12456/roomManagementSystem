@@ -1,13 +1,13 @@
 import { View,Modal,Dimensions,Image } from "react-native";
 import { Button,Text } from "react-native-paper";
 import deleteImg from '../../../../assets/roomIcon/noDelete.png'
-const MessageModal=({messageAlert,setMessageAlert,label,messageObj,currentDate,todayDate,advanceMessageObj,
+const MessageModal=({messageAlert,setMessageAlert,label,messageObj,currentDate,advanceMessageObj,
   floorMessageAlert,setFloorMessageAlert,floorLabel,setFloorLabel
 })=>{
     const screenWidth = Dimensions.get("window").width;
-    console.log('message obj',messageObj)
-    console.log('advance message obj',advanceMessageObj)
-    console.log('current date in message modal',currentDate)
+    // console.log('message obj',messageObj)
+    // console.log('advance message obj',advanceMessageObj)
+    // console.log('current date in message modal',currentDate)
 return (
 <>
 <Modal visible={messageAlert || floorMessageAlert} transparent animationType="fade"   avoidKeyboard={true} >

@@ -14,7 +14,7 @@ export const getMessageNotifyAsync = createAsyncThunk(
     
 
       const Responedata = response.data;
-      console.log( 'get message notify data ',Responedata)
+      // console.log( 'get message notify data ',Responedata)
       return Responedata
       
     } catch (error) {

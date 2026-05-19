@@ -4,11 +4,10 @@ import { Button } from "react-native-paper"
 import * as ImagePicker from 'expo-image-picker';
 import { useDispatch,useSelector } from "react-redux";
 import { updateHotelImgAsync } from "../../Redux/Slice/updateHotelImgSlice/updateHotelImgSlice";
-import PlanScreen from "../common/planScreen/planScreen";
-const HotelGallery=({hotelImg,hotelId,notifyTokenArray})=>{
-    console.log('hotel img',hotelImg)
+const HotelGallery=({hotelImg,hotelId})=>{
+    // console.log('hotel img',hotelImg)
     const updateHotelImgSelector=useSelector((state)=>state?.updateHotelImg?.updateHotelImgObj?.updatedData)
-    console.log('hotel upf',updateHotelImgSelector)
+    // console.log('hotel upf',updateHotelImgSelector)
     const dispatch=useDispatch()
     const [hotelShow,setHotelShow]=useState(false)
     const [selectHotelImage,setSelectHotelImage]=useState("")
@@ -19,11 +18,6 @@ const hotelImgs=updateHotelImgSelector?updateHotelImgSelector.hotelImg:hotelImg
     }
     const pickHotelImage = async () => {
       try {
-        // const result = await ImagePicker.launchImageLibraryAsync({
-        //   mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        //   allowsMultipleSelection: false, // 👈 only single image
-        //   quality: 0.7,
-        // });
         let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
     
         if (!permissionResult.granted) {
@@ -46,7 +40,7 @@ const hotelImgs=updateHotelImgSelector?updateHotelImgSelector.hotelImg:hotelImg
         console.log(err);
       }
     };
-    console.log('hotel slect',selectHotelImage)
+    // console.log('hotel slect',selectHotelImage)
 
     const imgSubmitHandler=()=>{
       setLoading(true);
@@ -63,7 +57,7 @@ const hotelImgs=updateHotelImgSelector?updateHotelImgSelector.hotelImg:hotelImg
           name: fileName,
         });
       }
-      console.log('form data',formData)
+      // console.log('form data',formData)
       dispatch(updateHotelImgAsync(formData))
     }
     useEffect(()=>{

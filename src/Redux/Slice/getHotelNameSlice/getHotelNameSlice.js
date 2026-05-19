@@ -14,7 +14,7 @@ export const getHotelNameAsync = createAsyncThunk(
     
 
       const Responedata = response.data;
-      console.log( 'get hotel data ',Responedata)
+      // console.log( 'get hotel data ',Responedata)
       return Responedata
       
     } catch (error) {

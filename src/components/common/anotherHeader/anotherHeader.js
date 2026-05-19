@@ -3,7 +3,7 @@ import { View, Text, StatusBar, Platform,Image, Pressable } from 'react-native';
 import back from '../../../../assets/profileIcon/back.png'
 import { useNavigation } from "@react-navigation/native"
 const AnotherHeader=({edit})=>{
-    console.log('edit',edit)
+    // console.log('edit',edit)
     const navigation=useNavigation()
     const STATUS_BAR_HEIGHT = Platform.OS === 'android' ? StatusBar.currentHeight || 24 : 44;
     const backHandler=()=>{

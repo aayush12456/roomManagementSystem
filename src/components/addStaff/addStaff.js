@@ -13,8 +13,8 @@ import { planScreenActions } from "../../Redux/Slice/planScreenSlice/planScreenS
 const socket = io.connect("http://192.168.29.169:4000")
 // const socket = io.connect("https://roommanagementsystembackend-1.onrender.com")
 const AddStaff=({profile,notifyTokenArray, hotelId,planStatus,paymentActiveSelector,hotelName})=>{
-  console.log('payment select',paymentActiveSelector)
-  console.log('plan status',planStatus)
+  // console.log('payment select',paymentActiveSelector)
+  // console.log('plan status',planStatus)
   const BASE_URL = "http://192.168.29.169:4000";
   // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
   const dispatch=useDispatch()
@@ -127,7 +127,7 @@ const AddStaff=({profile,notifyTokenArray, hotelId,planStatus,paymentActiveSelec
     formData.append("imgUrl", profile.image);
     formData.append("message", "added new staff");
   
-    console.log("form", formData);
+    // console.log("form", formData);
   
     try {
       // ✅ MAIN API CALL (Same)
@@ -141,7 +141,7 @@ const AddStaff=({profile,notifyTokenArray, hotelId,planStatus,paymentActiveSelec
         }
       );
   
-      console.log("response in staff", response.data);
+      // console.log("response in staff", response.data);
   
       // ✅ FAST USER FEEL: Toast instantly
       Toast.show({
@@ -226,7 +226,7 @@ const AddStaff=({profile,notifyTokenArray, hotelId,planStatus,paymentActiveSelec
     }
     );
     
-    console.log('✅ Push sent:', response.data);
+    // console.log('✅ Push sent:', response.data);
     const ticketIds = response.data.data
       .filter(item => item.status === "ok")
       .map(item => item.id);
@@ -249,14 +249,14 @@ const receiptRes = await axios.post(
         });
       }
     }
-    console.log('dead token',deadTokens)
+    // console.log('dead token',deadTokens)
     if (deadTokens.length > 0) {
    const deadResponse= await axios.post(
         `${BASE_URL}/hotel/deleteNotificationToken/${hotelId}`,
         {deadToken: deadTokens }
       );
       socket.emit('deleteNotificationToken', deadResponse.data)
-      console.log("🗑 DEAD TOKENS REMOVED:", deadTokens);
+      // console.log("🗑 DEAD TOKENS REMOVED:", deadTokens);
     }
     } catch (error) {
     console.log(

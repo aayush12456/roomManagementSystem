@@ -84,7 +84,7 @@ return (
       }
       if (loading) return; 
       setLoading(true); 
-      console.log("Room Added:", values);
+      // console.log("Room Added:", values);
       const roomObj={
         hotelId:hotelId,
         roomType:values.roomType,
@@ -159,7 +159,7 @@ return (
            >
            {
             roomType.map((roomItem,index)=>{
-              console.log('room item',roomItem)
+              // console.log('room item',roomItem)
               return (
                <Picker.Item 
                 key={roomItem.value}
@@ -193,7 +193,7 @@ return (
            >
            {
             bedType.map((bedItem,index)=>{
-              console.log('room item',bedItem)
+              // console.log('room item',bedItem)
               return (
                <Picker.Item 
                 key={bedItem.value}

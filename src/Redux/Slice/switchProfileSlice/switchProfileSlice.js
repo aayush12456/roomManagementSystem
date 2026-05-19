@@ -14,7 +14,7 @@ export const switchProfileAsync = createAsyncThunk(
     
 
       const Responedata = response.data;
-      console.log( 'switch profile data ',Responedata)
+      // console.log( 'switch profile data ',Responedata)
       return Responedata
       
     } catch (error) {

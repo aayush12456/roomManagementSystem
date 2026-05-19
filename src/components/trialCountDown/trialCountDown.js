@@ -5,7 +5,7 @@ import { View } from 'react-native';
 import { useDispatch,useSelector } from 'react-redux';
 import { getPaymentActiveAsync } from '../../Redux/Slice/getPaymentActiveSlice/getPaymentActiveSlice';
 const TrialCountDown=({hotelId,onLast24HoursChange,setTimeEnd})=>{
-  console.log('hotel id tril',hotelId)
+  // console.log('hotel id tril',hotelId)
   const BASE_URL = "http://192.168.29.169:4000";
   // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com"; 
     const dispatch=useDispatch()
@@ -16,7 +16,7 @@ const TrialCountDown=({hotelId,onLast24HoursChange,setTimeEnd})=>{
 
     const loadSubscription = async()=>{
       const res = await axios.get(`${BASE_URL}/hotel/free-trial/${hotelId}`);
-      console.log('res load',res)
+      // console.log('res load',res)
       setTimeEnd(res.data)
       setSub(res.data);
       const end = new Date(res.data.endDate);   // 🔥 yeh missing tha
@@ -73,28 +73,12 @@ const TrialCountDown=({hotelId,onLast24HoursChange,setTimeEnd})=>{
   };
 // const countDownTime=formatTime(remainingMs)  
 const isLast24Hours = remainingMs > 0 && remainingMs <= ONE_DAY;
-console.log('is lasr',isLast24Hours)
+// console.log('is lasr',isLast24Hours)
 useEffect(() => {
   if (onLast24HoursChange) {
     onLast24HoursChange(isLast24Hours);
   }
 }, [isLast24Hours]);
-
-
-
-
-// const formatISTDate = (dateString) => {
-//   if (!dateString) return "";
-
-//   const date = new Date(dateString);
-
-//   return date.toLocaleString("en-IN", {
-//     timeZone: "Asia/Kolkata",
-//     day: "2-digit",
-//     month: "short",
-//     year: "numeric",
-//   });
-// };
 
 // ✅ Hotel change होते ही पुराने countdown reset कर दो
 useEffect(() => {
@@ -108,7 +92,7 @@ useEffect(()=>{
   }
       },[hotelId])
       const paymentActiveSelector=useSelector((state)=>state.getPaymentActive.getPaymentActiveObj)
-      console.log('pays active',paymentActiveSelector)
+      // console.log('pays active',paymentActiveSelector)
 
       const parseCustomDate = (dateStr) => {
         if (!dateStr) return null;
@@ -134,50 +118,6 @@ useEffect(()=>{
         return new Date(year, months[month], day);
       };
       
-  //     useEffect(() => {
-  //       if (!paymentActiveSelector?.activeSubscription?.endDate) return;
-        
-  // // ✅ Countdown sirf उसी hotel ke liye चले
-  // if (paymentActiveSelector?.activeSubscription?.hotelId !== hotelId) {
-  //   setSubTimerMs(0);
-  //   return;
-  // }
-      
-  //       const rawEndDate =
-  //         paymentActiveSelector.activeSubscription.endDate;
-      
-  //       // ✅ Parse Date Properly
-  //       const end = parseCustomDate(rawEndDate);
-      
-  //       console.log("📌 End Date String:", rawEndDate);
-  //       console.log("✅ Parsed Date Object:", end);
-      
-  //       if (!end || isNaN(end.getTime())) {
-  //         console.log("❌ Invalid Date Format");
-  //         return;
-  //       }
-      
-  //       // ✅ Countdown Timer
-  //       const timer = setInterval(() => {
-  //         const now = new Date();
-  //         const diff = end - now;
-      
-  //         if (diff <= 0) {
-  //           setSubTimerMs(0);
-  //           console.log("❌ Subscription Expired");
-  //           clearInterval(timer);
-  //           return;
-  //         }
-  //         if (diff > ONE_DAY) {
-  //           return;
-  //         }
-  //         // const finalTimer=formatTime(diff)
-  //         setSubTimerMs(diff);
-  //         console.log("⏳ Subscription Countdown:", formatTime(diff));
-  //       }, 1000);
-      
-  //       return () => clearInterval(timer);
-  //     }, [paymentActiveSelector?.activeSubscription?.endDate,paymentActiveSelector?.activeSubscription?.hotelId]);
 
   useEffect(() => {
     if (!paymentActiveSelector?.activeSubscription?.endDate) return;
@@ -193,11 +133,11 @@ useEffect(()=>{
   
     const end = parseCustomDate(rawEndDate);
   
-    console.log("📌 End Date String:", rawEndDate);
-    console.log("✅ Parsed Date Object:", end);
+    // console.log("📌 End Date String:", rawEndDate);
+    // console.log("✅ Parsed Date Object:", end);
   
     if (!end || isNaN(end.getTime())) {
-      console.log("❌ Invalid Date Format");
+      // console.log("❌ Invalid Date Format");
       setSubTimerMs(0);
       return;
     }
@@ -209,7 +149,7 @@ useEffect(()=>{
       // 🔴 Expired
       if (diff <= 0) {
         setSubTimerMs(0);
-        console.log("❌ Subscription Expired");
+        // console.log("❌ Subscription Expired");
         clearInterval(timer);
         return;
       }
@@ -222,7 +162,7 @@ useEffect(()=>{
   
       // ✅ Only last 24 hours me countdown चले
       setSubTimerMs(diff);
-      console.log("⏳ Subscription Countdown:", formatTime(diff));
+      // console.log("⏳ Subscription Countdown:", formatTime(diff));
   
     }, 1000);
   
@@ -246,23 +186,6 @@ useEffect(()=>{
       }, [anotherIsLast24Hours]);
 return (
   <>
-
- {/* {isLast24Hours || anotherIsLast24Hours?<View
-  style={{
-    marginTop: -12,
-    marginHorizontal: 12,
-    paddingVertical: 10,
-    paddingHorizontal: 12,
-    borderRadius: 12,
-    backgroundColor: "#5F2EEA",
-    borderWidth: 1,
-    borderColor: "#4C9AFF",
-    shadowColor: "#4C9AFF",
-    shadowOpacity: 0.6,
-    shadowRadius: 8,
-    elevation: 8
-  }}
-> */}
  {(remainingMs > 0 && remainingMs <= ONE_DAY) ||
  (subTimerMs > 0 && subTimerMs <= ONE_DAY)?<View
   style={{

@@ -12,7 +12,7 @@ import { useState } from "react";
 import axios from "axios";
 import { planScreenActions } from "../../../Redux/Slice/planScreenSlice/planScreenSlice";
 const PlanScreen=({hotelId,profile})=>{
-console.log('profile is',profile)
+// console.log('profile is',profile)
 const dispatch=useDispatch()
 const navigation=useNavigation()
 const [selectedPlan, setSelectedPlan] = useState(999);
@@ -42,7 +42,7 @@ let plan=""
 // else{
 //   plan="plan_SZkCMWZR7eGAUo"
 // }
-
+   //test
     if(planType=="single"){
       plan="plan_S2Vj0VT1CEKM5a"
     }
@@ -54,7 +54,7 @@ let plan=""
         `${BASE_URL}/hotel/create/${hotelId}`,
         { planId:plan,amount:`₹${selectedPlan}` },
       );
-console.log('respose razor',res)
+// console.log('respose razor',res)
       const options = {
         key: "rzp_test_RzIR2c4u7D5T00", // Test  key
         // key: "rzp_live_S9NrL4vhEbFG4M",            //Live key
@@ -66,7 +66,7 @@ console.log('respose razor',res)
 
  RazorpayCheckout.open(options)
         .then((data) => {
-          console.log('data pay',data)
+          // console.log('data pay',data)
           dispatch(planScreenActions.planScreenVisibleToggle())
           // Alert.alert(
           //   "Payment Success",
@@ -82,14 +82,14 @@ console.log('respose razor',res)
         .catch((err) => {
           // Alert.alert("Payment failed", err.description);
           if (err.code === 2) {
-            console.log("⚠️ Payment Cancelled by User");
+            // console.log("⚠️ Payment Cancelled by User");
             return; // No Alert
           }
           
         });
     
     } catch (err) {
-      console.log(err);
+      // console.log(err);
       Alert.alert("Error creating subscription");
     }
   }  
@@ -100,16 +100,6 @@ console.log('respose razor',res)
 return (
     <>
      <View style={{ flex: 1, backgroundColor: "#000" }}>
-
-{/* 🎥 VIDEO SECTION */}
-{/* <View style={{ height: 280, backgroundColor: "#000" }}>
-  <Video
-    source={{ uri: "https://www.w3schools.com/html/mov_bbb.mp4" }}
-    useNativeControls
-    resizeMode="contain"
-    style={{ width: "100%", height: "100%" }}
-  />
-</View> */}
 <TouchableOpacity
   onPress={() => {
     dispatch(planScreenActions.planScreenVisibleToggle())
@@ -152,7 +142,7 @@ return (
   <YoutubePlayer
     height={220}
     play={false}
-    videoId="kAtdMrxovcI"
+    videoId="BdZjE1i1lVc"
   />
 </View>
 

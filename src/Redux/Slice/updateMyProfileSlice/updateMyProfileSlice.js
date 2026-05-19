@@ -14,7 +14,7 @@ export const updateMyProfileAsync = createAsyncThunk(
     
 
       const Responedata = response.data;
-      console.log( 'profile response data ',Responedata)
+      // console.log( 'profile response data ',Responedata)
         //     const token = response.data.token;
         //  const personalSignUpData={
         //   firstName:response.data.user.firstName,

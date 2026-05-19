@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef,useCallback } from 'react';
+import React, { useEffect, useState, useRef} from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Provider } from 'react-redux';
@@ -11,7 +11,6 @@ import LoginPage from './src/Pages/loginPage/loginPage';
 import GetOtpPage from './src/Pages/getOtpPage/getOtpPage';
 import DashboardPage from './src/Pages/dashboardPage/dashboardPage';
 import HeaderPage from './src/Pages/headerPage/headerPage';
-// import ReportPage from './src/Pages/reportPage/reportPage';
 import EditProfilePage from './src/Pages/editProfilePage/editProfilePage';
 import ProfileDetailsPage from './src/Pages/profileDetailsPage/profileDetailsPage';
 import EditStaffProfilePage from './src/Pages/editStaffProfilePage/editStaffProfilePage';
@@ -65,17 +64,14 @@ export default function App() {
         if (data) {
           const parsedData = JSON.parse(data);
           setLoginObj(parsedData);
-          console.log('Retrieved login obj Data:', parsedData);
+          // console.log('Retrieved login obj Data:', parsedData);
         } else {
-          console.log('No login obj data found in SecureStore');
+          // console.log('No login obj data found in SecureStore');
           setLoginObj({});
         }
       } catch (error) {
         console.error('Error retrieving SecureStore data:', error);
         setLoginObj({});
-      // } finally {
-      //   setLoading(false);
-      // }
       }
       finally {
         setTimeout(() => {
@@ -146,12 +142,12 @@ export default function App() {
     const subscription =
       Notifications.addNotificationResponseReceivedListener((response) => {
         const data = response.notification.request.content.data;
-        console.log("🔔 Notification clicked:", data);
+        // console.log("🔔 Notification clicked:", data);
   
         if (data?.type === "ROOM_ADDED"||data?.type === "FLOOR_ADDED" 
         ||data?.type === "ROOM_DELETE"||data?.type === "PROFILE_ADDED" || 
         data?.type === "PROFILE_DELETE") {
-          console.log("🔄 Reloading app on THIS device only");
+          // console.log("🔄 Reloading app on THIS device only");
   
           if (__DEV__) {
             DevSettings.reload();     // dev build
@@ -204,14 +200,8 @@ export default function App() {
               name="HeaderPage"
               component={HeaderPage}
               options={{ headerShown: false }}
-              // initialParams={{ expoPushToken }}
             />
                
-              {/* <Stack.Screen
-              name="ReportPage"
-              component={ReportPage}
-              options={{ headerShown: false }}
-            /> */}
                <Stack.Screen
               name="ProfilePage"
               component={ProfilePage}

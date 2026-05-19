@@ -14,7 +14,7 @@ export const updateHotelImgAsync = createAsyncThunk(
     
 
       const Responedata = response.data;
-      console.log( 'hotel img response data ',Responedata)
+      // console.log( 'hotel img response data ',Responedata)
         //     const token = response.data.token;
         //  const personalSignUpData={
         //   firstName:response.data.user.firstName,

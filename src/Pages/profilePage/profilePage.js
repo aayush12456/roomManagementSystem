@@ -9,38 +9,20 @@ import AddOwner from "../../components/addOwner/addOwner"
 import { useDispatch,useSelector } from "react-redux"
 import { getPaymentActiveAsync } from "../../Redux/Slice/getPaymentActiveSlice/getPaymentActiveSlice"
 const ProfilePage=({profile,allStaffOwner,hotelIds,notifyTokenArray,planStatus,hotelName})=>{
-  console.log('staff profile',allStaffOwner)
-  console.log('id is',hotelIds)
+  // console.log('staff profile',allStaffOwner)
+  // console.log('id is',hotelIds)
   const dispatch=useDispatch()
-    console.log('pofile page',profile)
+    // console.log('pofile page',profile)
     const allStaffArray = allStaffOwner?.staff ? Object.values(allStaffOwner.staff) : [];
-    console.log('staff array',allStaffArray)
+    // console.log('staff array',allStaffArray)
     const allOwnerArray=[allStaffOwner.owner1,allStaffOwner.owner2,allStaffOwner.owner3,allStaffOwner.owner4]
-    console.log('owner array',allOwnerArray)
+    // console.log('owner array',allOwnerArray)
     const screenHeight = Dimensions.get("window").height;
     // console.log('screen height',screenHeight)
     const isSmallScreen = screenHeight <= 640;
 
     const [index, setIndex] = useState(0);
-    // const routes = useMemo(() => {
-    //   if (profile?.post) {
-    //     // If user has a "post", show only MyProfile & Hierarchy
-    //     return [
-    //       { key: "myProfile", title: "My Profile", focusedIcon: "account-circle" },
-    //       { key: "hierarchy", title: "Hierarchy", focusedIcon: "family-tree" },
-    //     ];
-    //   } else {
-    //     // If no post, show all options
-    //     return [
-    //       { key: "myProfile", title: "My Profile", focusedIcon: "account-circle" },
-    //       { key: "hierarchy", title: "Hierarchy", focusedIcon: "family-tree" },
-    //       { key: "allStaff", title: "All Staff", focusedIcon: "account-group" },
-    //       { key: "addStaff", title: "Add Staff", focusedIcon: "account-plus" },
-    //       { key: "addOwner", title: "Add Owner", focusedIcon: "account-tie" },
-    //     ];
-    //   }
-    // }, [profile?.post]);
-
+   
     const routes = useMemo(() => {
 
       // Owner (no post)
@@ -71,40 +53,7 @@ const ProfilePage=({profile,allStaffOwner,hotelIds,notifyTokenArray,planStatus,h
       ];
     
     }, [profile?.post]);
-//   const MyProfileRoute = () => (
-//     <View style={{ flex: 1 }}>
-//       <MyProfile profiles={profile}/> 
-//     </View>
-//   );
-//   const HierarchyRoute = () => (
-//     <View style={{ flex: 1 }}>
-// <Hierarchy/>
-//     </View>
-//   );
-//   const AddStaffRoute = () => (
-//     <View style={{ flex: 1 }}>
-// <AddStaff/>
-//     </View>
-//   );
-//   const AllStaffRoute = () => (
-//     <View style={{ flex: 1 }}>
-// <AllStaff allStaff={allStaffArray} />
-//     </View>
-//   );
-//   const AddOwnerRoute = () => (
-//     <View style={{ flex: 1 }}>
-// <AddOwner/>
-//     </View>
-//   );
 
-
-    // const renderScene = BottomNavigation.SceneMap({
-    //     myProfile: MyProfileRoute,
-    //     hierarchy: HierarchyRoute,
-    //     addStaff:AddStaffRoute,
-    //     allStaff:AllStaffRoute,
-    //     addOwner:AddOwnerRoute
-    //   });
     useEffect(()=>{
       if(hotelIds){
       dispatch(getPaymentActiveAsync(hotelIds))

@@ -34,7 +34,7 @@ const floorSchema = Yup.object().shape({
 
 const AddFloorModal = ({ floorAlert, setFloorAlert,hotelId,notifyTokenArray,profile,
   planStatus,paymentActiveSelector,hotelName }) => {
-  console.log('notify token in floor',notifyTokenArray)
+  // console.log('notify token in floor',notifyTokenArray)
   const dispatch=useDispatch()
   const [loading, setLoading] = useState(false);
   const chunkArray = (array, size) => {
@@ -75,7 +75,7 @@ const AddFloorModal = ({ floorAlert, setFloorAlert,hotelId,notifyTokenArray,prof
     }
     );
     
-    console.log('✅ Push sent:', response.data);
+    // console.log('✅ Push sent:', response.data);
     }
     
 
@@ -104,7 +104,7 @@ const AddFloorModal = ({ floorAlert, setFloorAlert,hotelId,notifyTokenArray,prof
         const floorName = values.floorName?.trim();
       
         if (!floorName) {
-          console.log("⚠️ Floor name missing");
+          // console.log("⚠️ Floor name missing");
           return;
         }
       
@@ -131,15 +131,8 @@ const AddFloorModal = ({ floorAlert, setFloorAlert,hotelId,notifyTokenArray,prof
 
         };
       
-        console.log("✅ Final Submitted Data:", finalData);
-        // setTimeout(() => {
-        //   dispatch(addFloorAsync(finalData));
-        // }, 100);
-        // sendNotificationToAll()
-        // setFloorAlert(false);
-        // resetForm();
-
-        
+        // console.log("✅ Final Submitted Data:", finalData);
+  
         try {
           // ✅ 1. Add floor (wait till backend finishes)
           await dispatch(addFloorAsync(finalData)).unwrap();

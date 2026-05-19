@@ -10,7 +10,7 @@ import { planScreenActions } from "../../Redux/Slice/planScreenSlice/planScreenS
 const socket = io.connect("http://192.168.29.169:4000")
 // const socket = io.connect("https://roommanagementsystembackend-1.onrender.com")
 const StaffCard=({staffObj,hotelId,profile,notifyTokenArray,planStatus,paymentActiveSelector,hotelName})=>{
-console.log('staff hotel',hotelId)
+// console.log('staff hotel',hotelId)
   const BASE_URL = "http://192.168.29.169:4000";
   // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
   const navigation=useNavigation()
@@ -18,36 +18,9 @@ console.log('staff hotel',hotelId)
   const [deletingId, setDeletingId] = useState(null);
 
   const cardClickHandler=()=>{
-    // console.log('hello')
     navigation.navigate('ProfileDetailsPage',{formData:staffObj,heading:'Staff Details',hotelId:hotelId})
   }
-  // const deleteStaffHandler=async(staffObj)=>{
-  //   if (planStatus !== "free" && paymentActiveSelector.activeSubscription==null) {
-  //     dispatch(planScreenActions.planScreenVisibleToggle())
-  //     return
-  //   }
-  //   const staffObject={
-  //     id:hotelId,
-  //     staffId:staffObj?._id,
-  //     personName:profile?.name,
-  //     imgUrl:profile?.image,
-  //     message:'delete a staff'
-  //   }
-  //   console.log('staff',staffObject)
-  //   try {
-  //     const response = await axios.post(`${BASE_URL}/hotel/deleteStaffOwner/${staffObject.id}`,staffObject);
-  //     console.log('response in delete obj is',response?.data)
-  //     Toast.show({
-  //       type: ALERT_TYPE.SUCCESS,
-  //       title: "staff Details Deleted Successfully",
-  //       autoClose: 10000, // 10 sec me band hoga
-  //     });
-  //     sendNotificationToAll()
-  //     socket.emit('deleteStaffOwnerObj', response?.data)
-  // } catch (error) {
-  //     // console.error('Error sending activate', error);
-  // }
-  // }
+ 
 
   const deleteStaffHandler = async (staffObj) => {
 
@@ -102,7 +75,7 @@ console.log('staff hotel',hotelId)
     }
     try {
       const response = await axios.post(`${BASE_URL}/hotel/deleteName/${deleteNameObj.id}`,deleteNameObj);
-      console.log('response in delete obj is',response?.data)
+      // console.log('response in delete obj is',response?.data)
       
       socket.emit('deleteName', response?.data)
     } catch (error) {
@@ -148,7 +121,7 @@ console.log('staff hotel',hotelId)
     }
     );
     
-    console.log('✅ Push sent:', response.data);
+    // console.log('✅ Push sent:', response.data);
     const ticketIds = response.data.data
     .filter(item => item.status === "ok")
     .map(item => item.id);
@@ -171,14 +144,14 @@ console.log('staff hotel',hotelId)
       });
     }
     }
-    console.log('dead token',deadTokens)
+    // console.log('dead token',deadTokens)
     if (deadTokens.length > 0) {
    const deadResponse= await axios.post(
         `${BASE_URL}/hotel/deleteNotificationToken/${hotelId}`,
         {deadToken: deadTokens }
       );
       socket.emit('deleteNotificationToken', deadResponse.data)
-      console.log("🗑 DEAD TOKENS REMOVED:", deadTokens);
+      // console.log("🗑 DEAD TOKENS REMOVED:", deadTokens);
     }
 
     } catch (error) {
@@ -204,14 +177,7 @@ return (
           }}
         />
         <Text style={{ fontWeight: "500",paddingTop:20}}>{staffObj?.name}</Text>
-        {/* <Button
-          mode="contained"
-          buttonColor="#28a745"
-          style={{ borderRadius: 25, height: 50, paddingTop: 4, fontSize: 16,marginTop:6 }}
-          onPress={()=>deleteStaffHandler(staffObj)}
-        >
-Delete
-        </Button> */}
+      
         <Button
   mode="contained"
   buttonColor="#DC3545"

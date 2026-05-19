@@ -24,9 +24,10 @@ import { useNavigation } from "@react-navigation/native";
 // plan_S9mzyclsUgcKX8 -->699 Rs plan 6 months
 //plan_SZkCMWZR7eGAUo -->999 Rs plan 6 month
 const socket = io.connect("http://192.168.29.169:4000")
+// const socket = io.connect("https://roommanagementsystembackend-1.onrender.com")
 const Payment=({hotelId,profile})=>{
-  console.log('pto',profile)
-  console.log('hotels',hotelId)
+  // console.log('pto',profile)
+  // console.log('hotels',hotelId)
 const BASE_URL = "http://192.168.29.169:4000";
 // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
 const navigation=useNavigation()
@@ -55,7 +56,7 @@ let plan=""
     //   plan="plan_SZkCMWZR7eGAUo"
     // }
 
-
+  //test
     if(planType=="single"){
       plan="plan_S2Vj0VT1CEKM5a"
     }
@@ -70,7 +71,7 @@ let plan=""
         `${BASE_URL}/hotel/create/${hotelId}`,
         { planId:plan,amount:planAmount },
       );
-console.log('respose razor',res)
+// console.log('respose razor',res)
       const options = {
         key: "rzp_test_RzIR2c4u7D5T00", // Test  key
         // key: "rzp_live_S9NrL4vhEbFG4M",            //Live key
@@ -82,11 +83,7 @@ console.log('respose razor',res)
 
       RazorpayCheckout.open(options)
         .then((data) => {
-          console.log('data pay',data)
-          // Alert.alert(
-          //   "Payment Success",
-          //   "Invoice & subscription will be updated automatically via webhook."
-          // );
+          // console.log('data pay',data)
           navigation.navigate("PaymentSuccessPage", {
             formData: {
               obj: data,          // Razorpay response
@@ -95,15 +92,14 @@ console.log('respose razor',res)
           });
         })
         .catch((err) => {
-          // Alert.alert("Payment failed", err.description);
           if (err.code === 2) {
-            console.log("⚠️ Payment Cancelled by User");
+            // console.log("⚠️ Payment Cancelled by User");
             return; // No Alert
           }
           
         });
     } catch (err) {
-      console.log(err);
+      // console.log(err);
       Alert.alert("Error creating subscription");
     }
   }
@@ -130,7 +126,7 @@ console.log('respose razor',res)
       socket.off("getAccessAmount");
     };
   }, [hotelId]);
-console.log('Access obj',accessObj)
+// console.log('Access obj',accessObj)
 useEffect(() => {
   if (accessObj?.accessData?.length > 0) {
     const check = accessObj.accessData.find(
@@ -144,7 +140,7 @@ useEffect(() => {
     setCheckStatus({});
   }
 }, [accessObj?.accessData, hotelId, profile]); // 🔥 ONLY THIS
-console.log('check state',checkStatus)
+// console.log('check state',checkStatus)
 return (
     <>
      <View style={{ flex: 1, backgroundColor: "#f5f5f5" }}>
@@ -271,7 +267,7 @@ return (
       : planType === "sevenDays"
       ? "Pay ₹1"
       :planType==="monthPlan"
-      ? "Pay ₹11"
+      ? "Pay ₹21"
       : planType === "Six"
       ? "Pay ₹999"
       : "Pay"}

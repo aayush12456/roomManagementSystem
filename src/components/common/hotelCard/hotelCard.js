@@ -8,9 +8,11 @@ import { deleteHotelAsync } from "../../../Redux/Slice/deleteHotelSlice/deleteHo
 import { useDispatch } from "react-redux";
 
 const socket = io.connect("http://192.168.29.169:4000")
+// const socket = io.connect("https://roommanagementsystembackend-1.onrender.com")
 const HotelCard=({hotelCard})=>{
     const BASE_URL = "http://192.168.29.169:4000";
-    console.log('hotel cards',hotelCard)
+    // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com"; 
+    // console.log('hotel cards',hotelCard)
     const navigation = useNavigation();
     const dispatch=useDispatch()
 const [paymentStatus,setPaymentStatus] = useState(null)
@@ -27,7 +29,7 @@ const [deletingId, setDeletingId] = useState(null);
      },[hotelCard?._id])
     
      const cardClickHandler=(hotelCard)=>{
-     console.log('hotel cs',hotelCard)
+    //  console.log('hotel cs',hotelCard)
      navigation.navigate('AllHotelDetailsPage',{formData:hotelCard,heading:hotelCard?.hotelName,hotelName:hotelCard?.hotelName})
      }
      const deleteHotelHandler=async(hotelCard)=>{
@@ -37,7 +39,7 @@ const [deletingId, setDeletingId] = useState(null);
     ]
       try {
         const response = await axios.post(`${BASE_URL}/hotel/deleteHotelName/${hotelCard._id}`,deleteHotelNameObj);
-        console.log('response in delete obj is',response?.data)
+        // console.log('response in delete obj is',response?.data)
         
         socket.emit('deleteHotelName', response?.data)
       } catch (error) {

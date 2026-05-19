@@ -2,7 +2,7 @@ import { Text } from "react-native-paper";
 import { View, ScrollView, Image } from "react-native";
 
 const Notification = ({ message,hotelId }) => {
-  console.log('messagr is',message)
+  // console.log('messagr is',message)
     const timeAgo = (createdAt) => {
         const now = new Date();
         const past = new Date(createdAt);

@@ -107,7 +107,7 @@ const AddOwner=({hotelsId,profile,notifyTokenArray,planStatus,paymentActiveSelec
             formData.append('imgUrl',profile.image)
             formData.append('message','added new owner')
         }
-        console.log('form',formData)
+        // console.log('form',formData)
         try {
           const response = await axios.post(
             `${BASE_URL}/hotel/addOwner`,
@@ -118,7 +118,7 @@ const AddOwner=({hotelsId,profile,notifyTokenArray,planStatus,paymentActiveSelec
               },
             }
           );
-          console.log("response in staff", response.data);
+          // console.log("response in staff", response.data);
           Toast.show({
             type: ALERT_TYPE.SUCCESS,
             title: `New owner added`,
@@ -189,7 +189,7 @@ const AddOwner=({hotelsId,profile,notifyTokenArray,planStatus,paymentActiveSelec
         }
         );
         
-        console.log('✅ Push sent:', response.data);
+        // console.log('✅ Push sent:', response.data);
         }
         
     

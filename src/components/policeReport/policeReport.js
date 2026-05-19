@@ -2,7 +2,7 @@
 //new one
 import { Card, Text, Button } from "react-native-paper";
 import { ScrollView, View, Pressable, Dimensions } from "react-native";
-import { useSelector, useDispatch } from "react-redux";
+import {useDispatch } from "react-redux";
 import { filterReport, reportArray } from "../../utils/reportData";
 import { useEffect, useState } from "react";
 import { ALERT_TYPE, Toast } from "react-native-alert-notification";
@@ -37,26 +37,14 @@ const PoliceReport = ({ policeReport, dateSelector, isSmallScreen ,hotelDetailSe
   const containerHeight = windowHeight * 0.2;
   const finalDate = new Date();
   const todayDate = finalDate.toLocaleDateString("en-GB");
-  console.log('today s',todayDate)
+  // console.log('today s',todayDate)
   const staffArray = Object.values(hotelDetailSelector.staff || {});
-console.log('staff arry',staffArray)
+// console.log('staff arry',staffArray)
 
 useEffect(() => {
   const postObj = staffArray?.find((staff) => staff?.post === "Hotel Supervisor");
   setStaffObj(postObj || {});
 }, []);
-  // useEffect(() => {
-  //   const postObj = staffArray?.find((staff) => staff?.post === "Hotel Supervisor");
-  //   setStaffObj(postObj || {});
-  // }, [staffArray]);
-
-  // useEffect(() => {
-  //   if (dateSelector?.type) {
-  //     setFilterDate(dateSelector.type);
-  //   }
-  // }, [dateSelector?.type]);
-  
- 
 
   const moreDetailsHandler = (id) => {
     setOpenRowId(prev => (prev === id ? null : id)); // toggle
@@ -86,7 +74,7 @@ useEffect(() => {
   };
 
   const filterReportHandler = (value) => {
-    console.log('value is',value)
+    // console.log('value is',value)
     if (value === "yesterday") {
       const today = new Date();
       today.setDate(today.getDate() - 1);
@@ -629,9 +617,6 @@ style={{
                     }}>
                       <Text style={{ minWidth: 120, textAlign: "center", paddingHorizontal: 8 }}>{index + 1}</Text>
                       <Text style={{ minWidth: 120, textAlign: "center", paddingHorizontal: 8 }}>{item.roomNo}</Text>
-                      {/* <Text style={{ minWidth: 120, textAlign: "center", paddingHorizontal: 8 }}>{item.customerName}</Text> */}
-                      {/* <Text style={{ minWidth: 120, textAlign: "center", paddingHorizontal: 8 }}>{item.customerAddress}</Text> */}
-                      {/* <Text style={{ minWidth: 120, textAlign: "center", paddingHorizontal: 8 }}>{item.customerPhoneNumber}</Text> */}
                       <View style={{ minWidth: 120 }}>
                 <Text style={{ textAlign: "center" }}>
                   {item.customerName}

@@ -14,7 +14,7 @@ export const hotelRegisterAsync = createAsyncThunk(
     
 
       const Responedata = response.data;
-      console.log( 'register response data ',Responedata)
+      // console.log( 'register response data ',Responedata)
         //     const token = response.data.token;
         //  const personalSignUpData={
         //   firstName:response.data.user.firstName,

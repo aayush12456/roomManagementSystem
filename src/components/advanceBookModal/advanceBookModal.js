@@ -1,4 +1,4 @@
-import { View,Pressable,Modal,Dimensions, ScrollView,  KeyboardAvoidingView,Platform ,ActivityIndicator,Image} from "react-native";
+import { View,Modal,Dimensions, ScrollView ,Image,ActivityIndicator} from "react-native";
 import { Text,TextInput,Button } from "react-native-paper"
 import { Formik } from 'formik';
 import { useState,useRef ,useEffect } from "react";
@@ -121,6 +121,7 @@ return (
         customerName: filterCustomerObjAdvance?.customerName || '',
         customerAddress:filterCustomerObjAdvance?.customerAddress || '',
         customerPhoneNumber:filterCustomerObjAdvance?.customerPhoneNumber || '',
+        customerEmail:filterCustomerObjAdvance?.customerEmail || '',
         totalPayment:filterCustomerObjAdvance?.totalPayment || '',
         advancePayment:filterCustomerObjAdvance?.advancePayment || '',
         executiveName:filterCustomerObjAdvance?.frontDeskExecutiveName || '',
@@ -145,6 +146,7 @@ return (
             customerName:values.customerName,
             customerAddress:values.customerAddress,
             customerPhoneNumber:values.customerPhoneNumber,
+            customerEmail:values.customerEmail,
             totalPayment:values.totalPayment,
             advancePayment:values.advancePayment,
             frontDeskExecutiveName:values.executiveName,
@@ -253,13 +255,6 @@ return (
       width: screenWidth * 0.9,
     }}
     >
-        {/* <Text>hello world</Text> */}
-        {/* { matchRoomResponseAdvance===false?<Text style={{textAlign:'center',fontSize:16,fontWeight:'bold'}}>Enter Advance Customer Details</Text>
-       :showTextFieldAdvance === false ?
-       <Text style={{textAlign:'center',fontSize:16,fontWeight:'bold'}}>Advance Customer Details Preview</Text>
-       :<Text style={{textAlign:'center',fontSize:16,fontWeight:'bold'}}>Update Advance Customer Details </Text>    
-    } */}
-
 {matchRoomResponseAdvance === false ? (
   profile?.post !== "Housekeeping Staff" && (
     <Text style={{ textAlign:'center', fontSize:16, fontWeight:'bold' }}>
@@ -372,6 +367,29 @@ Housekeeping staff can only view room status. Advance booking is not permitted.
                             </Text>
                           )}
                       </View>}
+
+                      {values.customerPhoneNumber?.trim().length > 0?<View>
+                        <TextInput
+                          label="Email"
+                          mode="outlined"
+                          style={{
+                            width: screenWidth * 0.75,
+                            marginBottom: 10,
+                          }}
+                          onChangeText={handleChange("customerEmail")}
+                          onBlur={handleBlur("customerEmail")}
+                          value={values.customerEmail}
+                        />
+                        {touched.customerEmail &&
+                          errors.customerEmail && (
+                            <Text
+                              style={{ color: "red", marginLeft: 12 }}
+                            >
+                              {errors.customerEmail}
+                            </Text>
+                          )}
+                      </View>:null
+  }
 
                       {values.customerPhoneNumber?.trim().length > 0 && (
                         <>
@@ -513,6 +531,10 @@ Housekeeping staff can only view room status. Advance booking is not permitted.
       <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
         <Text>Mobile Number : </Text>
        <Text>{filterCustomerObjAdvance.customerPhoneNumber}</Text>
+      </View>
+      <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
+        <Text>Email : </Text>
+       <Text>{filterCustomerObjAdvance.customerEmail}</Text>
       </View>
       <View style={{flexDirection:"row",gap:6,paddingTop:15}}>
         <Text>Total Amount : </Text>

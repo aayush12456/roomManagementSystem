@@ -1,13 +1,13 @@
 import * as React from 'react';
-import { BottomNavigation,Text} from "react-native-paper"
+import { BottomNavigation} from "react-native-paper"
 import { View,Dimensions } from "react-native"
 import { useState,useEffect } from "react"
 import PoliceReport from "../policeReport/policeReport"
 import { useSelector } from "react-redux"
 import PersonalReport from '../personalReport/personalReport';
 const Report=({totalReportArray,personalReportArray,planStatus})=>{
-  console.log('total report array',totalReportArray)
-  console.log('personal report',personalReportArray)
+  // console.log('total report array',totalReportArray)
+  // console.log('personal report',personalReportArray)
     const finalDate=new Date()
     const todayDate=finalDate?.toLocaleDateString("en-GB") 
     // console.log('today date report',todayDate)
@@ -15,7 +15,7 @@ const Report=({totalReportArray,personalReportArray,planStatus})=>{
     const [filterPersonalReportArray,setFilterPersonalReportArray]=useState([])
 
     const dateSelector=useSelector((state)=>state.passReportObj.passReportObj)
-    console.log('date selector',dateSelector)
+    // console.log('date selector',dateSelector)
 
     const hotelDetailSelector = useSelector((state) => state.getHotelDetails.getHotelDetailsObj.hotelObj);
 
@@ -71,10 +71,10 @@ const Report=({totalReportArray,personalReportArray,planStatus})=>{
       }
           }
     },[todayDate,totalReportArray,dateSelector?.dates,dateSelector.type,dateSelector.startDate, dateSelector.endDate,personalReportArray,dateSelector.report])
-    console.log('filter report',filterReportArray)
+    // console.log('filter report',filterReportArray)
 
     const screenHeight = Dimensions.get("window").height;
-    console.log('screen height',screenHeight)
+    // console.log('screen height',screenHeight)
     const isSmallScreen = screenHeight <= 640;
 
     const [index, setIndex] = useState(0);
@@ -104,7 +104,7 @@ hotelDetailSelector={hotelDetailSelector} dateSelector={dateSelector}
     normalReport: NormalReportRoute,
   });
   // console.log('filter report personal',filterReportArray)
-  console.log('total report',filterReportArray)
+  // console.log('total report',filterReportArray)
 return (
     <>
   <View style={{ flex: 1 }}>

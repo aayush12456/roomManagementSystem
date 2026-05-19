@@ -1,6 +1,5 @@
-import { Text,TextInput,Button, Icon } from "react-native-paper"
+import { Text,TextInput,Button } from "react-native-paper"
 import {Image,View,ScrollView} from 'react-native'
-import success from '../../../assets/AllIcons/success.png'
 import appIcon from '../../../assets/icon.png'
 import Modal from 'react-native-modal';
 import * as SecureStore from 'expo-secure-store';
@@ -39,7 +38,7 @@ const ExistingAccount=()=>{
               'otpData',
               JSON.stringify(getPhoneOtpSelectorObj)
             );
-            console.log('OTP data saved to SecureStore');
+            // console.log('OTP data saved to SecureStore');
           } catch (error) {
             console.error('Error saving to SecureStore:', error);
           }
@@ -65,7 +64,8 @@ const ExistingAccount=()=>{
       const hotelClickHandler=(phone,hotel)=>{
         setHotelName(hotel)
       const phoneObj={
-        phone:phoneNumber
+        phone:phoneNumber,
+        id:hotel.hotelId
       }
       dispatch(getPhoneOtpAsync(phoneObj))
       }

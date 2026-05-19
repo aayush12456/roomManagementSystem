@@ -2,11 +2,11 @@ import AllHotel from "../../components/allHotel/allHotel"
 import { useEffect } from "react"
 import { useDispatch,useSelector } from "react-redux"
 import { getAllHotelDetailsAsync } from "../../Redux/Slice/getAllHotelSlice/getAllHotelSlice"
-import { View, Text, StatusBar, Platform,Image, Pressable } from 'react-native';
+import { View, Text, StatusBar, Platform} from 'react-native';
 const AllHotelPage=()=>{
     const dispatch=useDispatch()
     const allHotelSelector=useSelector((state)=>state.getAllHotelData.getAllHotelDetailsObj)
-    console.log('all hotels',allHotelSelector)
+    // console.log('all hotels',allHotelSelector)
     const id='1'
     useEffect(()=>{
     if(id){
@@ -14,7 +14,7 @@ const AllHotelPage=()=>{
     }
     },[id])
     const hotelArray=allHotelSelector.getAllHotelArray
-    console.log('hotel array',hotelArray)
+    // console.log('hotel array',hotelArray)
 
     const STATUS_BAR_HEIGHT = Platform.OS === 'android' ? StatusBar.currentHeight || 24 : 44;
 return (

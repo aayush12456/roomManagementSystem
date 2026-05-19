@@ -44,7 +44,7 @@ const sendMessageObj={
   hotelNames:hotelName
 
 }
-console.log('send mess',sendMessageObj)
+// console.log('send mess',sendMessageObj)
 dispatch(replyMailAsync(sendMessageObj))
   }
 return (
@@ -73,11 +73,6 @@ keyboardShouldPersistTaps="handled">
           onChangeText={(text) => setMessage(text)}
           value={message}
 />
-{/* {touched.message && errors.message && (
-                  <Text style={{ color: "red", fontSize: 12, marginTop: 4 }}>
-                    {errors.message}
-                  </Text>
-                )} */}
       </View>
       <View style={{ width: '100%', overflow: 'hidden' }}>
 <Button

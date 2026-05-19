@@ -1,8 +1,8 @@
 import { Card, Text, Button } from "react-native-paper";
 import { ScrollView, View, Pressable, Dimensions,Image } from "react-native";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { filterReport, personalReportArray} from "../../utils/reportData";
-import { useEffect, useState } from "react";
+import {useState } from "react";
 import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 import io from "socket.io-client";
 import axios from "axios";
@@ -19,8 +19,8 @@ const socket = io.connect("http://192.168.29.169:4000");
 // const socket = io.connect("https://roommanagementsystembackend-1.onrender.com");
 const PersonalReport=({personalReport,isSmallScreen,hotelDetailSelector,dateSelector,planStatus
 , paymentActiveSelector})=>{
-    console.log('hotel detail',hotelDetailSelector)
-    console.log('personal report',personalReport)
+    // console.log('hotel detail',hotelDetailSelector)
+    // console.log('personal report',personalReport)
     const BASE_URL = "http://192.168.29.169:4000";
     // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
     const dispatch=useDispatch()
@@ -38,7 +38,7 @@ const PersonalReport=({personalReport,isSmallScreen,hotelDetailSelector,dateSele
     const todayDate = finalDate.toLocaleDateString("en-GB");
 
     const filterReportHandler = (value) => {
-        console.log('value is',value)
+        // console.log('value is',value)
         if (value === "yesterday" ) {
           const today = new Date();
           today.setDate(today.getDate() - 1);
@@ -92,15 +92,6 @@ const PersonalReport=({personalReport,isSmallScreen,hotelDetailSelector,dateSele
         }
       };
     
-
-      // useEffect(() => {
-      //   if (dateSelector?.type && dateSelector.report==="personal") {
-      //     setPersonalFilterDate(dateSelector.type);
-      //   }
-      // }, [dateSelector?.type,dateSelector.report]);
-     
-      
-
       const generatePersonalAndDownloadPDF = async () => {
         try {
           const chunkSize = 6;
@@ -569,9 +560,6 @@ style={{
                     }}>
                       <Text style={{ minWidth: 120, textAlign: "center", paddingHorizontal: 8 }}>{index + 1}</Text>
                       <Text style={{ minWidth: 120, textAlign: "center", paddingHorizontal: 8 }}>{item.roomNo}</Text>
-                      {/* <Text style={{ minWidth: 120, textAlign: "center", paddingHorizontal: 8 }}>{item.customerName}</Text>
-                      <Text style={{ minWidth: 120, textAlign: "center", paddingHorizontal: 8 }}>{item.customerAddress}</Text>
-                      <Text style={{ minWidth: 120, textAlign: "center", paddingHorizontal: 8 }}>{item.customerPhoneNumber}</Text> */}
                       <View style={{ minWidth: 120 }}>
                 <Text style={{ textAlign: "center" }}>
                   {item.customerName}

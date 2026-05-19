@@ -2,8 +2,10 @@ import io from "socket.io-client";
 import axios from "axios";
 import { useState,useEffect } from "react"
 const socket = io.connect("http://192.168.29.169:4000")
+// const socket = io.connect("https://roommanagementsystembackend-1.onrender.com")
 const AdminAccess=()=>{
 const BASE_URL = "http://192.168.29.169:4000";
+// const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
 const id=1
 const [adminAccessObj,setAdminAccessObj]=useState({})
 useEffect(() => {
@@ -28,7 +30,7 @@ useEffect(() => {
     //   socket.off("getAccessAmount");
     // };
   }, [id]);
-  console.log('admin access obj',adminAccessObj)
+  // console.log('admin access obj',adminAccessObj)
 return (
     <>
     </>

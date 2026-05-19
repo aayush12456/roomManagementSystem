@@ -11,7 +11,7 @@ const ContactUs=({profile,hotelName,hotelId})=>{
   const [loading, setLoading] = useState(false);
   const [formReset, setFormReset] = useState(null);
   const contactSelector=useSelector((state)=>state.contactUs.contactUsObj)
-  console.log('contadr',contactSelector)
+  // console.log('contadr',contactSelector)
   useEffect(() => {
     if (contactSelector?.mssg === "Email sent successfully") {
 

@@ -80,31 +80,6 @@ const SwitchAccountSheet = ({ profileArray,profileClickHandler,deleteSwitchProfi
       }}
     />
 
-    {/* {profileArray && profileArray.length > 0 ? (
-      profileArray.map((item, index) => (
-        <Pressable
-          key={index}
-          onPress={() => onSelectAccount(item)}
-          style={{
-            paddingVertical: 10,
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 15,
-              fontWeight: "500",
-              textAlign: "center",
-            }}
-          >
-            {item.name}
-          </Text>
-        </Pressable>
-      ))
-    ) : (
-      <Text style={{ textAlign: "center", color: "gray" }}>
-        No accounts available
-      </Text>
-    )} */}
 <ScrollView  
 contentContainerStyle={{
   paddingBottom: 100, // last card ke liye space
@@ -155,15 +130,15 @@ contentContainerStyle={{
 
 
 const Settings = ({profileArray, hotelId,phone,hotelImgFirst,hotelName,profile}) => {
-  console.log('profile array',profileArray)
-  console.log('profiles is',profile)
+  // console.log('profile array',profileArray)
+  // console.log('profiles is',profile)
 const profileSelector=useSelector((state)=>state.switchProfileData.switchProfileObj)
 const deleteHotelSelector=useSelector((state)=>state.deleteHotel.deleteHotelObj)
 const paymentActiveSelector=useSelector((state)=>state.getPaymentActive.getPaymentActiveObj)
 const paymentHistorySelector=useSelector((state)=>state.getPaymentHistory.getPaymentHistoryObj)
-console.log('delete hotel select',deleteHotelSelector)
-console.log('profile select',profileSelector)
-console.log('pay active',paymentActiveSelector)
+// console.log('delete hotel select',deleteHotelSelector)
+// console.log('profile select',profileSelector)
+// console.log('pay active',paymentActiveSelector)
   const refRBSheet = useRef();
   const switchRBSheet=useRef()
   const dispatch=useDispatch()
@@ -203,19 +178,19 @@ const profileObj={
   profileName:profile?.name,
   profileImage:profile?.image,
 }
-console.log('profile obj',profileObj)
+// console.log('profile obj',profileObj)
 dispatch(switchProfileAsync(profileObj))
 }
 
 const deleteSwitchProfileHandler=(profile)=>{
-  console.log('profile',profile)
+  // console.log('profile',profile)
   const deleteProfileObj={
     hotelId:hotelId,
     phone:phone,
     anotherHotelId:profile?.hotelId,
     anotherPhone:profile?.phone
   }
-  console.log('delete switch',deleteProfileObj)
+  // console.log('delete switch',deleteProfileObj)
   dispatch(deleteSwitchProfileAsync(deleteProfileObj))
 }
 
@@ -227,7 +202,7 @@ useEffect(() => {
         'loginOtpObj',
         JSON.stringify(profileSelector)
       );
-      console.log('OTP obj saved to SecureStore');
+      // console.log('OTP obj saved to SecureStore');
     } catch (error) {
       console.error('Error saving to SecureStore:', error);
     }
@@ -259,7 +234,7 @@ const deleteHotelHandler=()=>{
 const removeLoginData = async () => {
   try {
     await SecureStore.deleteItemAsync('loginOtpObj');
-    console.log('login obj removed from SecureStore');
+    // console.log('login obj removed from SecureStore');
   } catch (error) {
     console.error('Error removing login obj:', error);
   }

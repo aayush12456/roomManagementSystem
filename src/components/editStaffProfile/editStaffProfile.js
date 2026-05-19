@@ -13,7 +13,7 @@ import axios from "axios";
 const socket = io.connect("http://192.168.29.169:4000")
 // const socket = io.connect("https://roommanagementsystembackend-1.onrender.com")
 const EditStaffProfile=({editStaff,hotelId})=>{
-  console.log('hotelId staff',hotelId)
+  // console.log('hotelId staff',hotelId)
   const BASE_URL = "http://192.168.29.169:4000";
   // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
   const navigation=useNavigation()
@@ -77,7 +77,7 @@ const EditStaffProfile=({editStaff,hotelId})=>{
       
           if (!result.canceled && result.assets && result.assets.length > 0) {
             const selectedImage = result.assets[0];
-            console.log('selct image',selectedImage)
+            // console.log('selct image',selectedImage)
             setUpdateImage(selectedImage.uri)
            
           } else {
@@ -108,7 +108,7 @@ const EditStaffProfile=({editStaff,hotelId})=>{
             name: fileName,
           });
         }
-        console.log('form data in staff',formData)
+        // console.log('form data in staff',formData)
         try {
           const response = await axios.post(
             `${BASE_URL}/hotel/updateStaff`,
@@ -119,7 +119,7 @@ const EditStaffProfile=({editStaff,hotelId})=>{
               },
             }
           );
-          console.log("response in staff", response.data);
+          // console.log("response in staff", response.data);
           Toast.show({
             type: ALERT_TYPE.SUCCESS,
             title: "Staff Details Updated Successfully",
@@ -215,14 +215,7 @@ keyboardShouldPersistTaps="handled"
       />
       {errors.staffEmail && <Text style={{ color: "red" }}>{errors.staffEmail}</Text>}
     </View>
-    {/* <View style={{ paddingHorizontal: 16, marginTop: 16 }}>
-      <TextInput
-        label="Post"
-        mode="outlined"
-        value={updatePost}
-        onChangeText={(text) => setUpdatePost(text)}
-      />
-    </View> */}
+   
 <View style={{
         borderWidth: 1,
         borderColor: '#888',

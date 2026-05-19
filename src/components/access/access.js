@@ -8,8 +8,10 @@ import io from "socket.io-client";
 import axios from "axios";
 import { useState,useEffect } from "react"
 const socket = io.connect("http://192.168.29.169:4000")
+// const socket = io.connect("https://roommanagementsystembackend-1.onrender.com")
 const Access=({profile,hotelName,hotelId})=>{
     const BASE_URL = "http://192.168.29.169:4000";
+    // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
     const [amount, setAmount] = useState(null);
     const [accessObj,setAccessObj]=useState({})
     const [accessDataObj,setAccessDataObj]=useState({})
@@ -21,13 +23,13 @@ const Access=({profile,hotelName,hotelId})=>{
             phoneNumber:profile.phone,
             amounts:`₹${amount}`
         }
-        console.log('access ds',accessObj)
+        // console.log('access ds',accessObj)
         try {
             const response = await axios.post(
               `${BASE_URL}/hotel/accessAmount/${accessObj.id}`,
               accessObj ,
             );
-            console.log("response in amount", response.data);
+            // console.log("response in amount", response.data);
            
             socket.emit('accessAmount', response?.data)
           } catch (error) {
@@ -58,7 +60,7 @@ const Access=({profile,hotelName,hotelId})=>{
         socket.off("getAccessAmount");
       };
     }, [hotelId]);
-console.log('Access obj',accessObj)
+// console.log('Access obj',accessObj)
 
 useEffect(()=>{
   if(accessObj?.accessData?.length>0){
@@ -67,8 +69,9 @@ useEffect(()=>{
   }
 },[accessObj,hotelId,profile])
 
-console.log('access data',accessDataObj)
+// console.log('access data',accessDataObj)
 const showAccessObj=accessDataObj[0]
+// console.log('show access objs',showAccessObj)
 
 const revokeAccessHandler=async(id)=>{
   try {
@@ -76,13 +79,17 @@ const revokeAccessHandler=async(id)=>{
         `${BASE_URL}/hotel/revokeAccessAmount/${id}`,
         accessObj ,
       );
-      console.log("response in amount", response.data);
+      // console.log("response in amount", response.data);
      
       socket.emit('deleteAccessAmount', response?.data)
     } catch (error) {
       console.error("Error in Add/Update Staff", error.message);
     }
 }
+
+const formattedAmount = showAccessObj?.amount
+  ? showAccessObj.amount.replace("₹", "")
+  : "";
 return (
     <>
 
@@ -162,13 +169,13 @@ return (
   }}
 >
   <Picker
-    selectedValue={amount || showAccessObj?.amount}
+    selectedValue={amount || formattedAmount}
     onValueChange={(itemValue) => setAmount(itemValue)}
     style={{ height: 50, width: "100%" }} // 👈 IMPORTANT
   >
     <Picker.Item label="Select Amount" value="" />
     <Picker.Item label="₹1" value="1" />
-    <Picker.Item label="₹11" value="11" />
+    <Picker.Item label="₹21" value="21" />
   </Picker>
 </View>
           <View style={{ width: '100%', overflow: 'hidden' }}>
