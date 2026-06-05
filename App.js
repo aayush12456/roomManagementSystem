@@ -33,6 +33,10 @@ import AllHotelDetailsPage from './src/Pages/allHotelDetailsPage/allHotelDetails
 import ContactUsPage from './src/Pages/contactUsPage/contactUsPage';
 import ReplyPage from './src/Pages/replyPage/replyPage';
 import AccessPage from './src/Pages/accessPage/accessPage';
+import WelcomePage from './src/Pages/welcomePage/welcomePage';
+import RoomBookingPage from './src/Pages/roomBookingPage/roomBookingPage';
+import MultiHotelPage from './src/Pages/multiHotelPage/multiHotelPage';
+import SmartFeaturesPage from './src/Pages/smartFeaturesPage/smartFeaturesPage';
 
 
 
@@ -53,7 +57,7 @@ export default function App() {
   const [loginObj, setLoginObj] = useState(null);
   const [loading, setLoading] = useState(true);
   const socketRef = useRef(null);
-
+  const [flag, setFlag] = useState(null);
 
 
   // ✅ SecureStore se login data lana
@@ -68,6 +72,13 @@ export default function App() {
         } else {
           // console.log('No login obj data found in SecureStore');
           setLoginObj({});
+        }
+        const storedFlag = await SecureStore.getItemAsync('flag');
+
+        if (storedFlag) {
+          setFlag(storedFlag);
+        } else {
+          setFlag(null);
         }
       } catch (error) {
         console.error('Error retrieving SecureStore data:', error);
@@ -175,7 +186,27 @@ export default function App() {
           <SplashScreen/>
         ) : (
           // ✅ Navigation tab render hoga
-          <Stack.Navigator initialRouteName={isLoggedIn ? "HeaderPage" : "LoginPage"}>
+          <Stack.Navigator initialRouteName={isLoggedIn ? "HeaderPage" : flag=='1'?'LoginPage':'WelcomePage'}>
+              <Stack.Screen
+              name="WelcomePage"
+              component={WelcomePage}
+              options={{ headerShown: false }}
+            />
+                <Stack.Screen
+              name="RoomBookingPage"
+              component={RoomBookingPage}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="MultiHotelPage"
+              component={MultiHotelPage}
+              options={{ headerShown: false }}
+            />
+             <Stack.Screen
+              name="SmartFeaturesPage"
+              component={SmartFeaturesPage}
+              options={{ headerShown: false }}
+            />
             <Stack.Screen
               name="DashboardPage"
               component={DashboardPage}
