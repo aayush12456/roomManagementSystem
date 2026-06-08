@@ -17,9 +17,11 @@ import { BlurView } from "expo-blur";
 
 const socket = io.connect("http://192.168.29.169:4000")
 // const socket = io.connect("https://roommanagementsystembackend-1.onrender.com")
+// const socket = io.connect("http://16.16.224.95:4000")
 const HeaderPage=({route})=>{
   const BASE_URL = "http://192.168.29.169:4000";
   // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
+  // const BASE_URL = "http://16.16.224.95:4000";
   const [nameList,setNameList]=useState({})
   const [hotelNameList,setHotelNameList]=useState({})
   const { paymentData} = route.params || {};

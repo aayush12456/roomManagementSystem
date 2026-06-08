@@ -19,6 +19,7 @@ const [selectedPlan, setSelectedPlan] = useState(999);
 const [planType,setPlanType]=useState('')
 const BASE_URL = "http://192.168.29.169:4000"; 
 // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com"; 
+// const BASE_URL = "http://16.16.224.95:4000"; 
 //test key
 // plan_RziUw1NAukBSo5 ->1 Rs plan
 // plan_Rzu3d5Zlg3vI3A ->50 Rs plan

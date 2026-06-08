@@ -123,7 +123,17 @@ export default function App() {
     //     pingTimeout: 60000,
     //     pingInterval: 25000,
     //   });
-
+    // if (!socketRef.current) {
+    //   socketRef.current = io('http://16.16.224.95:4000', {
+    //     transports: ['websocket'],
+    //     reconnection: true,
+    //     reconnectionAttempts: 10,
+    //     reconnectionDelay: 1000,
+    //     reconnectionDelayMax: 5000,
+    //     timeout: 20000,
+    //     pingTimeout: 60000,
+    //     pingInterval: 25000,
+    //   });
 
       socketRef.current.emit('setup', hotelId);
 

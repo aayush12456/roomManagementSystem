@@ -18,10 +18,12 @@ import { planScreenActions } from "../../Redux/Slice/planScreenSlice/planScreenS
 
 const socket = io.connect("http://192.168.29.169:4000");
 // const socket = io.connect("https://roommanagementsystembackend-1.onrender.com");
+// const socket = io.connect("http://16.16.224.95:4000");
 const PoliceReport = ({ policeReport, dateSelector, isSmallScreen ,hotelDetailSelector,
   planStatus,paymentActiveSelector }) => {
   const BASE_URL = "http://192.168.29.169:4000";
   // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
+  // const BASE_URL = "http://16.16.224.95:4000";
   const dispatch = useDispatch();
   const [staffObj, setStaffObj] = useState({});
   const [filterDate, setFilterDate] = useState('default');

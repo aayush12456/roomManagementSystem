@@ -12,11 +12,13 @@ import { passDataObjSliceAcions } from "../../Redux/Slice/passDataSliceObj/passD
 import { planScreenActions } from "../../Redux/Slice/planScreenSlice/planScreenSlice";
 const socket = io.connect("http://192.168.29.169:4000")
 // const socket = io.connect("https://roommanagementsystembackend-1.onrender.com")
+// const socket = io.connect("http://16.16.224.95:4000")
 const AdvanceBookModal=({floor,roomType,roomNo,advanceAlert,selectedRoomId,roomNum,customerArrayAdvance
   ,todayDate,currentDates,setAdvanceAlert,planStatus,paymentActiveSelector,profile})=>{
   // console.log('customer array advance modal',customerArrayAdvance)
 const BASE_URL = "http://192.168.29.169:4000";  
 // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";  
+// const BASE_URL = "http://16.16.224.95:4000";  
 const hotelDetailSelector=useSelector((state)=>state.getHotelDetails.getHotelDetailsObj.hotelObj)    
 const screenWidth = Dimensions.get("window").width;   
 const formikRef = useRef(null);

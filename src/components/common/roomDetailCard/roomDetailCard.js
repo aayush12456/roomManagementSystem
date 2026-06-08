@@ -21,6 +21,7 @@ import { planScreenActions } from "../../../Redux/Slice/planScreenSlice/planScre
 
 const socket = io.connect("http://192.168.29.169:4000");
 // const socket = io.connect("https://roommanagementsystembackend-1.onrender.com");
+// const socket = io.connect("http://16.16.224.95:4000");
 const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDeleted,notifyTokenArray,
   planStatus,paymentActiveSelector,hotelName }) => {
 //  console.log('profile in card',profile)
@@ -30,6 +31,7 @@ const RoomDetailCard = ({ roomTitle, roomDetails, currentDate, profile,onFloorDe
   const navigation = useNavigation();
   const BASE_URL = "http://192.168.29.169:4000";
   // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
+  // const BASE_URL = "http://16.16.224.95:4000";
   const [showAlert, setShowAlert] = useState(false);
   const [selectedRoomId, setSelectedRoomId] = useState(null);
   const [customerObj, setCustomerObj] = useState({});

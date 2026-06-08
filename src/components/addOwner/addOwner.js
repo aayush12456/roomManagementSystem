@@ -10,9 +10,11 @@ import { useDispatch } from "react-redux";
 import { planScreenActions } from "../../Redux/Slice/planScreenSlice/planScreenSlice";
 const socket = io.connect("http://192.168.29.169:4000")
 // const socket = io.connect("https://roommanagementsystembackend-1.onrender.com")
+// const socket = io.connect("http://16.16.224.95:4000")
 const AddOwner=({hotelsId,profile,notifyTokenArray,planStatus,paymentActiveSelector,hotelName})=>{
     const BASE_URL = "http://192.168.29.169:4000";
     // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
+    // const BASE_URL = "http://16.16.224.95:4000";
     const dispatch=useDispatch()
     const [ownerName,setOwnerName]=useState('')
     const [ownerPhoneNumber,setOwnerPhoneNumber]=useState('')

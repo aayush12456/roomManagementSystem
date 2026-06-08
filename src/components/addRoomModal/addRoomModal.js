@@ -14,7 +14,7 @@ const AddRoomModal=({roomAlert,setRoomAlert,hotelId,floorSelect,profile,notifyTo
 ,paymentActiveSelector,hotelName})=>{
   console.log('token in room',notifyTokenArray)
     const screenWidth = Dimensions.get("window").width;
-    console.log('profile in room',profile)
+    // console.log('profile in room',profile)
     const dispatch=useDispatch()
     const [loading, setLoading] = useState(false);
 

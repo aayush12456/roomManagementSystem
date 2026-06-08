@@ -8,6 +8,7 @@ const TrialCountDown=({hotelId,onLast24HoursChange,setTimeEnd})=>{
   // console.log('hotel id tril',hotelId)
   const BASE_URL = "http://192.168.29.169:4000";
   // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com"; 
+  // const BASE_URL = "http://16.16.224.95:4000";
     const dispatch=useDispatch()
     const [sub,setSub] = useState(null);
     const [remainingMs, setRemainingMs] = useState(0);
