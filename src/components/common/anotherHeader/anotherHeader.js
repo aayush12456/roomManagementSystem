@@ -2,10 +2,18 @@ import React from 'react';
 import { View, Text, StatusBar, Platform,Image, Pressable } from 'react-native';
 import back from '../../../../assets/profileIcon/back.png'
 import { useNavigation } from "@react-navigation/native"
+import { UseSelector, useSelector } from 'react-redux';
 const AnotherHeader=({edit})=>{
     // console.log('edit',edit)
+    const currentDate = new Date();
+
+    const day = currentDate.getDate();
+    const month = currentDate.getMonth() + 1; // Month 0 se start hota hai
+    const year = currentDate.getFullYear();
     const navigation=useNavigation()
     const STATUS_BAR_HEIGHT = Platform.OS === 'android' ? StatusBar.currentHeight || 24 : 44;
+    const collageNameSelector=useSelector((state)=>state?.collageName?.passCollageName)
+    console.log('collage names',collageNameSelector)
     const backHandler=()=>{
     if(edit?.params?.heading==="Edit Profile"){
     navigation.goBack();
@@ -46,6 +54,15 @@ const AnotherHeader=({edit})=>{
               else if(edit?.params?.heading===edit?.params?.hotelName){
                 navigation.goBack();
                 }
+                else if(edit?.params?.heading==="Collage"){
+                  navigation.goBack();
+                  }
+                else if(edit?.params?.heading===`New Doc ${day} - ${month} - ${year}`){
+                  navigation.goBack();
+                  }
+                  else if(edit?.params?.heading===collageNameSelector){
+                    navigation.goBack();
+                    }
     }
 return (
     <>

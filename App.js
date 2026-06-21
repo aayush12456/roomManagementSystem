@@ -37,6 +37,10 @@ import WelcomePage from './src/Pages/welcomePage/welcomePage';
 import RoomBookingPage from './src/Pages/roomBookingPage/roomBookingPage';
 import MultiHotelPage from './src/Pages/multiHotelPage/multiHotelPage';
 import SmartFeaturesPage from './src/Pages/smartFeaturesPage/smartFeaturesPage';
+import DocumentScannerPage from './src/Pages/documentScannerPage/docimentScannerPage';
+import PreviewDocumentScreenPage from './src/Pages/previewDocumentScreenPage/previewDocumentScreenPage';
+import CollagePage from './src/Pages/collagepPage/collagePage';
+
 
 
 
@@ -318,7 +322,22 @@ export default function App() {
               component={AccessPage}
               options={{ headerShown: false }}
             />
-   
+
+<Stack.Screen
+              name="documentScanner"
+              component={DocumentScannerPage}
+              options={{ headerShown: false }}
+            />
+   <Stack.Screen
+              name="PreviewDocumentScreen"
+              component={PreviewDocumentScreenPage}
+              options={{ headerShown: false }}
+            />
+              <Stack.Screen
+              name="CollagePageScreen"
+              component={CollagePage}
+              options={{ headerShown: false }}
+            />
           </Stack.Navigator>
         )}
       </NavigationContainer>

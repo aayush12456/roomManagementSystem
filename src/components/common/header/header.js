@@ -15,6 +15,7 @@ import premiumIcon from '../../../../assets/sidebarIcons/premium.png'
 import departureIcon from '../../../../assets/sidebarIcons/departure.png'
 import arrivalIcon from '../../../../assets/sidebarIcons/arrival.png'
 import notifyIcon from '../../../../assets/notification.png'
+import scanIcon from '../../../../assets/sidebarIcons/scan.png'
 import ProfilePage from '../../../Pages/profilePage/profilePage';
 import SettingsPage from '../../../Pages/settingsPage/settingsPage';
 import PerformancePage from '../../../Pages/performancePage/performancePage';
@@ -29,6 +30,7 @@ import { useState } from 'react';
 import PlanScreen from '../planScreen/planScreen';
 import DeparturePage from '../../../Pages/departurePage/departurePage';
 import ArrivalPage from '../../../Pages/arrivalPage/arrivalPage';
+import DocumentScannerPage from '../../../Pages/documentScannerPage/docimentScannerPage';
 const socket = io.connect("http://192.168.29.169:4000")
 // const socket = io.connect("https://roommanagementsystembackend-1.onrender.com")
 // const socket = io.connect("http://16.16.224.95:4000")
@@ -263,9 +265,22 @@ showsVerticalScrollIndicator={true}
       >
       {(props) =><PaymentPage hotelId={hotelId} profile={profile}   />}
         </Drawer.Screen>:null}
+
+        { <Drawer.Screen
+        name="Document scanner"
+        options={{
+          drawerIcon:()=>(
+            <Image  source={scanIcon}
+            style={{ width: 20, height: 20 }}/>
+        ),
+        }}
+      >
+      {(props) =><DocumentScannerPage/>}
+        </Drawer.Screen>}
      </Drawer.Navigator>
     :
     <PlanScreen hotelId={hotelId} profile={profile}/> 
+    
     }
      
     </>
