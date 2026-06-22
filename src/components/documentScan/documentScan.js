@@ -10,8 +10,11 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialCommunityIcons, Feather } from "@expo/vector-icons";
 import DocumentScanner from "react-native-document-scanner-plugin";
 import { useNavigation } from "@react-navigation/native";
-const DocumentScan=()=>{
+import { useDispatch,useSelector } from "react-redux";
+import { planScreenActions } from "../../Redux/Slice/planScreenSlice/planScreenSlice";
+const DocumentScan=({planStatus,paymentActiveSelector})=>{
   const navigation=useNavigation()
+  const dispatch=useDispatch()
   const currentDate = new Date();
   const { width, height } = useWindowDimensions();
   const day = currentDate.getDate();
@@ -22,6 +25,10 @@ const DocumentScan=()=>{
   console.log("Month:", month);
   console.log("Year:", year);
     const scanDocument = async () => {
+      if (planStatus !== "free" && paymentActiveSelector.activeSubscription == null) {
+        dispatch(planScreenActions.planScreenVisibleToggle());
+        return;
+      }
         const { scannedImages } = await DocumentScanner.scanDocument();
         if (scannedImages.length > 0) {
           console.log('screen images screen',scannedImages)

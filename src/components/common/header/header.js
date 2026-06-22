@@ -254,6 +254,19 @@ showsVerticalScrollIndicator={true}
       {(props) =><ArrivalPage hotelId={hotelId} />}
         </Drawer.Screen>}
 
+
+        {profile?.post === "Housekeeping Staff"?null: <Drawer.Screen
+        name="Document scanner"
+        options={{
+          drawerIcon:()=>(
+            <Image  source={scanIcon}
+            style={{ width: 20, height: 20 }}/>
+        ),
+        }}
+      >
+      {(props) =><DocumentScannerPage  planStatus={planStatus} paymentActiveSelector={paymentActiveSelector}/>}
+        </Drawer.Screen>}
+
        { !profile?.post && planStatus !== "free" && paymentActiveSelector.activeSubscription==null?<Drawer.Screen
         name='Premium'
         options={{
@@ -266,17 +279,7 @@ showsVerticalScrollIndicator={true}
       {(props) =><PaymentPage hotelId={hotelId} profile={profile}   />}
         </Drawer.Screen>:null}
 
-        { <Drawer.Screen
-        name="Document scanner"
-        options={{
-          drawerIcon:()=>(
-            <Image  source={scanIcon}
-            style={{ width: 20, height: 20 }}/>
-        ),
-        }}
-      >
-      {(props) =><DocumentScannerPage/>}
-        </Drawer.Screen>}
+      
      </Drawer.Navigator>
     :
     <PlanScreen hotelId={hotelId} profile={profile}/> 

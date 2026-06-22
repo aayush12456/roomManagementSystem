@@ -1,9 +1,9 @@
 import DocumentScan from "../../components/documentScan/documentScan"
 
-const DocumentScannerPage=()=>{
+const DocumentScannerPage=({planStatus,paymentActiveSelector})=>{
 return (
     <>
-    <DocumentScan/>
+    <DocumentScan planStatus={planStatus} paymentActiveSelector={paymentActiveSelector}/>
     </>
 )
 }
