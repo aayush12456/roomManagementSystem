@@ -24,11 +24,13 @@ const DocumentScan=({planStatus,paymentActiveSelector})=>{
   console.log("Date:", day);
   console.log("Month:", month);
   console.log("Year:", year);
+
+  const collageNameSelector=useSelector((state)=>state?.collageName?.passCollageName)
     const scanDocument = async () => {
-      if (planStatus !== "free" && paymentActiveSelector.activeSubscription == null) {
-        dispatch(planScreenActions.planScreenVisibleToggle());
-        return;
-      }
+      // if (planStatus !== "free" && paymentActiveSelector.activeSubscription == null) {
+      //   dispatch(planScreenActions.planScreenVisibleToggle());
+      //   return;
+      // }
         const { scannedImages } = await DocumentScanner.scanDocument();
         if (scannedImages.length > 0) {
           console.log('screen images screen',scannedImages)

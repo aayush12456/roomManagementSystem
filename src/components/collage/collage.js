@@ -223,6 +223,7 @@ const Collage = ({collageImgUrlArray = []}) => {
 
 const saveCollageHandler=()=>{
   dispatch(passCollageNameSliceActions.passCollageName(collageText))
+  setShowModal(false)
   navigation.navigate("PreviewDocumentScreen", {
     images:collageImgUrlArray,
     heading:collageText,
@@ -230,6 +231,7 @@ const saveCollageHandler=()=>{
     finalImg:imgUrl
     
   });
+  
 }
 
   return (
@@ -261,7 +263,7 @@ const saveCollageHandler=()=>{
             <View
               style={{
                 width: PAGE_WIDTH,
-                height: PAGE_HEIGHT,
+                height: PAGE_HEIGHT+60,
                 backgroundColor: "#fff",
                 borderWidth: 1,
                 borderColor: "#ccc",
@@ -277,6 +279,7 @@ const saveCollageHandler=()=>{
                   />
                 )
               )}
+               
             </View>
           </ViewShot>
         </View>

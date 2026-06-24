@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StatusBar, Platform,Image, Pressable } from 'react-native';
 import back from '../../../../assets/profileIcon/back.png'
 import { useNavigation } from "@react-navigation/native"
-import { UseSelector, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 const AnotherHeader=({edit})=>{
     // console.log('edit',edit)
     const currentDate = new Date();
