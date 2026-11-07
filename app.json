@@ -42,7 +42,10 @@
         {
           "icon": "./assets/notification.png"
         }
-      ]
+      ],
+      "@react-native-community/datetimepicker",
+      "expo-asset",
+      "expo-secure-store"
     ],
     "extra": {
       "eas": {

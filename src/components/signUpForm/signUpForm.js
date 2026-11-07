@@ -6,9 +6,9 @@ import { View, ScrollView,Text,KeyboardAvoidingView, Platform, Keyboard,Modal, D
 import { SafeAreaView } from 'react-native-safe-area-context';
 import SignUpImage from '../../../assets/AllIcons/signupImage.jpeg'
 import hotel from '../../../assets/AllIcons/hotel.png'
-
+import { Dropdown } from 'react-native-paper-dropdown';
 import successImg from '../../../assets/AllIcons/successImg.gif'
-import {Picker} from '@react-native-picker/picker';
+
 import {bedType, pickerList, roomType, staffPostList } from '../../utils/signUpData';
 import avatar from '../../../assets/AllIcons/avatar.png'
 import * as ImagePicker from 'expo-image-picker';
@@ -39,7 +39,6 @@ const SignUpForm=()=>{ // safe-area context use ho rha status bar se apne view k
   const [hotelAddress,setHotelAddress]=useState('')
   const [hotelRegistrationNumber,setHotelRegistrationNumber]=useState('')
   const [checkOutTime,setCheckOutTime]=useState('')
-  const [selectedStaffList, setSelectedStaffList] = useState('Designation');
   const [hotelImagesList, setHotelImagesList] = useState('Hotel Images');
   const [formErrors,setFormErrors]=useState({})
   const [floorData, setFloorData] = useState({});
@@ -594,32 +593,17 @@ return (
       paddingHorizontal: 15,
       marginTop:15
     }}>
-      <View style={{
-        borderWidth: 1,
-        borderColor: '#888',
-        borderRadius: 8,
-        backgroundColor: '#fff',
-        overflow: 'hidden'
-      }}>
-        <Picker
-          selectedValue={selectedOwnerList}
-          onValueChange={(itemValue, itemIndex) =>
-            setSelectedOwnerList(itemValue)
-          }>
-         {
-          pickerList.map((item)=>{
-            return (
-              <Picker.Item 
-              key={item.value} 
-              label={item.label} 
-              value={item.value} 
-              onValueChange={(itemValue) => setSelectedOwnerList(itemValue)}
-            />
-            )
-          })
-         }
-        </Picker>
-      </View>
+      <View>
+  <Dropdown
+    label="Select Owner"
+    options={pickerList}
+    value={selectedOwnerList}
+    onSelect={(itemValue) => {
+      setSelectedOwnerList(itemValue);
+    }}
+    mode="outlined"
+  />
+</View>
     </View> 
     <View style={{ marginTop: 10 }}>
   {Object.keys(ownerNames).map((key, index) => (
@@ -861,45 +845,30 @@ return (
 )}
         </View>
 
-      <View style={{
-      flex: 1,
-      justifyContent: 'center',
-      paddingHorizontal: 15,
-      marginTop:15
-    }}>
-      <View style={{
-        borderWidth: 1,
-        borderColor: '#888',
-        borderRadius: 8,
-        backgroundColor: '#fff',
-        overflow: 'hidden'
-      }}>
-        <Picker
-          selectedValue={staffNamesArray[key].post}
-          onValueChange={(itemValue) =>
-            handleStaffDataChange('post', itemValue, index)
-        }
-        >
-         {
-          staffPostList.map((item)=>{
-            return (
-              <Picker.Item 
-              key={item.value} 
-              label={item.label} 
-              value={item.value} 
-              onValueChange={(itemValue) => setSelectedStaffList(itemValue)}
-            />
-            )
-          })
-         }
-        </Picker>
-      </View>
-      {formErrors[`staffPost_${key}`] && (
-  <Text style={{ color: 'red', marginTop: 4 }}>
-    {formErrors[`staffPost_${key}`]}
-  </Text>
-)}
-    </View> 
+        <View
+  style={{
+    flex: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 15,
+    marginTop: 15
+  }}
+>
+  <Dropdown
+    label="Designation"
+    options={staffPostList}
+    value={staffNamesArray[key].post}
+    onSelect={(itemValue) => {
+      handleStaffDataChange('post', itemValue, index);
+    }}
+    mode="outlined"
+  />
+
+  {formErrors[`staffPost_${key}`] && (
+    <Text style={{ color: 'red', marginTop: 4 }}>
+      {formErrors[`staffPost_${key}`]}
+    </Text>
+  )}
+</View>
       <View style={{ paddingHorizontal: 16, marginTop: 16 }}>
   <View style={{ flexDirection: 'row', gap: 20, alignItems: 'center' }}>
     {staffNamesArray[key]?.image ? (
@@ -1017,65 +986,34 @@ return (
              <Text style={{ fontWeight: '400', fontSize: 16, marginBottom: 5 }}>
           {roomKey}
         </Text>
-      <View style={{
-        borderWidth: 1,
-        borderColor: '#888',
-        borderRadius: 8,
-        backgroundColor: '#fff',
-        overflow: 'hidden'
-      }}>
-           <Picker
-           label={roomKey}
-           selectedValue={roomNamesArray[roomKey]?.roomType || ''}
-           onValueChange={(itemValue) => handleRoomDataChange(roomKey, 'roomType', itemValue)}
-           >
-           {
-            roomType.map((roomItem,index)=>{
-              // console.log('room item',roomItem)
-              return (
-               <Picker.Item 
-                key={roomItem.value}
-                label={roomItem.label}
-                value={roomItem.value}
-            />
-              )
-            })
-           }
-           </Picker>
-            </View>
+        <View>
+  <Dropdown
+    label="Room Type"
+    options={roomType}
+    value={roomNamesArray[roomKey]?.roomType || ''}
+    onSelect={(itemValue) => {
+      handleRoomDataChange(roomKey, 'roomType', itemValue);
+    }}
+    mode="outlined"
+  />
+</View>
             {formErrors[`roomType_${roomKey}`] && (
   <Text style={{ color: 'red', marginTop: 4 }}>
     {formErrors[`roomType_${roomKey}`]}
   </Text>
 )}
-
-            <View style={{
-        borderWidth: 1,
-        borderColor: '#888',
-        borderRadius: 8,
-        backgroundColor: '#fff',
-        overflow: 'hidden',
-        marginTop:8
-      }}>
-           <Picker
-           label={roomKey}
-           selectedValue={roomNamesArray[roomKey]?.bedType || ''}
-           onValueChange={(itemValue) => handleRoomDataChange(roomKey, 'bedType', itemValue)}
-           >
-           {
-            bedType.map((bedItem,index)=>{
-              // console.log('room item',bedItem)
-              return (
-               <Picker.Item 
-                key={bedItem.value}
-                label={bedItem.label}
-                value={bedItem.value}
-            />
-              )
-            })
-           }
-           </Picker>
-            </View>
+<View style={{ marginTop: 8 }}>
+  <Dropdown
+    label="Bed Type"
+    options={bedType}
+    value={roomNamesArray[roomKey]?.bedType || ''}
+    onSelect={(itemValue) => {
+      handleRoomDataChange(roomKey, 'bedType', itemValue);
+    }}
+    mode="outlined"
+  />
+</View>
+          
             {formErrors[`bedType_${roomKey}`] && (
   <Text style={{ color: 'red', fontSize: 12, marginTop: 4 }}>
     {formErrors[`bedType_${roomKey}`]}

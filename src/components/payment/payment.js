@@ -6,6 +6,7 @@ import io from "socket.io-client";
 import { premiumDetails } from "../../utils/premiumData";
 import { useState,useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
+import { BASE_URL } from "../../Redux/axios/config";
 
 //test key
 // plan_RziUw1NAukBSo5 ->1 Rs plan
@@ -23,15 +24,10 @@ import { useNavigation } from "@react-navigation/native";
 // plan_S9mz77K7uN4Mhm -->299 Rs plan monthly
 // plan_S9mzyclsUgcKX8 -->699 Rs plan 6 months
 //plan_SZkCMWZR7eGAUo -->999 Rs plan 6 month
-const socket = io.connect("http://192.168.29.169:4000")
-// const socket = io.connect("https://roommanagementsystembackend-1.onrender.com")
-// const socket = io.connect("http://16.16.224.95:4000")
+const socket = io.connect(BASE_URL)
 const Payment=({hotelId,profile})=>{
   // console.log('pto',profile)
   // console.log('hotels',hotelId)
-const BASE_URL = "http://192.168.29.169:4000";
-// const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
-// const BASE_URL = "http://16.16.224.95:4000";
 const navigation=useNavigation()
 const [planType,setPlanType]=useState('')
 const [planAmount,setPlanAmount]=useState('')
@@ -45,29 +41,29 @@ setPlanAmount(amount)
 let plan=""
   const subscribe = async () => {
     //live
-    // if(planType=="single"){
-    //   plan="plan_S9mz77K7uN4Mhm"
-    // }
-    // else if(planType=="sevenDays"){
-    //   plan="plan_S9OCXHRMG6W5ng"
-    // }
-    // else if(planType=="monthPlan"){
-    //   plan="plan_SZkU4c3g5WbN4e"
-    // }
-    // else{
-    //   plan="plan_SZkCMWZR7eGAUo"
-    // }
-
-  //test
     if(planType=="single"){
-      plan="plan_S2Vj0VT1CEKM5a"
+      plan="plan_S9mz77K7uN4Mhm"
     }
     else if(planType=="sevenDays"){
-      plan="plan_RziUw1NAukBSo5"
+      plan="plan_S9OCXHRMG6W5ng"
+    }
+    else if(planType=="monthPlan"){
+      plan="plan_SZkU4c3g5WbN4e"
     }
     else{
-      plan="plan_SZlNb6a8dqJ2BG"
+      plan="plan_SZkCMWZR7eGAUo"
     }
+
+  //test
+    // if(planType=="single"){
+    //   plan="plan_S2Vj0VT1CEKM5a"
+    // }
+    // else if(planType=="sevenDays"){
+    //   plan="plan_RziUw1NAukBSo5"
+    // }
+    // else{
+    //   plan="plan_SZlNb6a8dqJ2BG"
+    // }
     try {
       const res = await axios.post(
         `${BASE_URL}/hotel/create/${hotelId}`,
@@ -75,8 +71,8 @@ let plan=""
       );
 // console.log('respose razor',res)
       const options = {
-        key: "rzp_test_RzIR2c4u7D5T00", // Test  key
-        // key: "rzp_live_S9NrL4vhEbFG4M",            //Live key
+        // key: "rzp_test_RzIR2c4u7D5T00", // Test  key
+        key: "rzp_live_S9NrL4vhEbFG4M",            //Live key
         subscription_id: res.data.subscription.id ,  
         name: "Hotel App",
         description: "Monthly subscription",

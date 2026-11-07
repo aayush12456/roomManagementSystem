@@ -5,9 +5,9 @@ import cleanImg from '../../../../assets/roomIcon/cleaning_2.png'
 import personImg from '../../../../assets/roomIcon/mechanic.png'
 import axios from "axios";
 import io from "socket.io-client";
-const socket = io.connect("http://192.168.29.169:4000");
-// const socket = io.connect("https://roommanagementsystembackend-1.onrender.com");
-// const socket = io.connect("http://16.16.224.95:4000");
+import { BASE_URL } from "../../../Redux/axios/config";
+
+const socket = io.connect(BASE_URL);
 import { useNavigation } from "@react-navigation/native"
 const screenWidth = Dimensions.get("window").width;
 const MaintenanceModal=({ maintainAlert,setMaintainAlert,maintainObj,finalMainCleanObj,customerArray,post})=>{
@@ -15,9 +15,6 @@ const MaintenanceModal=({ maintainAlert,setMaintainAlert,maintainObj,finalMainCl
     // console.log('maintain obj',maintainObj)
     // console.log('final main',finalMainCleanObj)
     // console.log('customer modal',customerArray)
-    const BASE_URL = "http://192.168.29.169:4000";
-    // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
-    // const BASE_URL = "http://16.16.224.95:4000";
     const maintainCleanHandler=async(type)=>{
       const finalMaintainObj={
         ...maintainObj,

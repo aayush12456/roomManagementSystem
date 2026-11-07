@@ -13,15 +13,12 @@ import { deleteSwitchProfileData } from "../../Redux/Slice/deleteSwitchProfileSl
 import FreeTrialModal from "../../components/common/freeTrialModal/freeTrialModal";
 import money from '../../../assets/premiumIcon/Money.gif'
 import { BlurView } from "expo-blur";
+import { BASE_URL } from "../../Redux/axios/config";
 
+const socket = io.connect(BASE_URL)
 
-const socket = io.connect("http://192.168.29.169:4000")
-// const socket = io.connect("https://roommanagementsystembackend-1.onrender.com")
-// const socket = io.connect("http://16.16.224.95:4000")
 const HeaderPage=({route})=>{
-  const BASE_URL = "http://192.168.29.169:4000";
-  // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
-  // const BASE_URL = "http://16.16.224.95:4000";
+
   const [nameList,setNameList]=useState({})
   const [hotelNameList,setHotelNameList]=useState({})
   const { paymentData} = route.params || {};
@@ -557,7 +554,7 @@ useEffect(() => {
 }, [fetchDetailSelector?._id]);
 
 // console.log('all hotel obj',nameList)
-
+// console.log('profile objs',profileObj)
 useEffect(() => {
   if (nameList?.names) {
 
@@ -584,7 +581,7 @@ useEffect(() => {
     }
 
     // ✅ normal case (name exist hai but list me nahi hai)
-    const isExist = nameList.names.includes(profileObj?.name);
+    const isExist = nameList?.names?.includes(profileObj?.name);
 
     if (!isExist) {
       Alert.alert(

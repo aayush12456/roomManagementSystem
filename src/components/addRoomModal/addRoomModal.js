@@ -1,10 +1,11 @@
-import { View,Pressable,Modal,Dimensions, ScrollView,  KeyboardAvoidingView,Platform,Text,ActivityIndicator } from "react-native";
-import { Button,TextInput } from "react-native-paper";
+import { View,Modal,Dimensions, ScrollView,Text,ActivityIndicator } from "react-native";
+import { Button,TextInput,Portal } from "react-native-paper";
 import { Formik } from 'formik';
 import { useDispatch } from "react-redux";
 import { useState } from "react";
 import { bedType, roomType } from "../../utils/signUpData";
-import {Picker} from '@react-native-picker/picker';
+import { Dropdown } from 'react-native-paper-dropdown';
+
 import { roomAdd } from "../../schemas";
 import { addRoomAsync } from "../../Redux/Slice/addRoomSlice/addRoomSlice";
 import axios from "axios"
@@ -78,10 +79,10 @@ return (
      }}
      validationSchema={roomAdd}
      onSubmit={async(values, { resetForm }) => {
-      if (planStatus !== "free" && paymentActiveSelector.activeSubscription==null) {
-        dispatch(planScreenActions.planScreenVisibleToggle())
-        return
-      }
+      // if (planStatus !== "free" && paymentActiveSelector.activeSubscription==null) {
+      //   dispatch(planScreenActions.planScreenVisibleToggle())
+      //   return
+      // }
       if (loading) return; 
       setLoading(true); 
       // console.log("Room Added:", values);
@@ -117,7 +118,7 @@ return (
         {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue,resetForm })=>(
          <>
  <Modal visible={roomAlert} transparent animationType="fade"   avoidKeyboard={true} >
-
+ <Portal.Host>
   <View
     style={{
       flex: 1,
@@ -143,68 +144,34 @@ return (
                 }}
                 showsVerticalScrollIndicator={false}
               >
-                  <View style={{
-        borderWidth: 1,
-        borderColor: '#888',
-        borderRadius: 8,
-        backgroundColor: '#fff',
-        overflow: 'hidden',
-        marginTop:12
-      }}>
-           <Picker
-  selectedValue={values.roomType}
-  onValueChange={(itemValue) =>
-    setFieldValue("roomType", itemValue)
-  }
-           >
-           {
-            roomType.map((roomItem,index)=>{
-              // console.log('room item',roomItem)
-              return (
-               <Picker.Item 
-                key={roomItem.value}
-                label={roomItem.label}
-                value={roomItem.value}
-            />
-              )
-            })
-           }
-           </Picker>
-            </View>
+                  <View style={{ marginTop: 12, marginBottom: 5 }}>
+  <Dropdown
+    label="Room Type"
+    options={roomType}
+    value={values.roomType}
+    onSelect={(itemValue) => {
+      setFieldValue("roomType", itemValue);
+    }}
+    mode="outlined"
+  />
+</View>
             {touched.roomType && errors.roomType && (
                 <Text style={{ color: "red", fontSize: 12, marginTop: 4 }}>
                   {errors.roomType}
                 </Text>
               )}
 
-            <View style={{
-        borderWidth: 1,
-        borderColor: '#888',
-        borderRadius: 8,
-        backgroundColor: '#fff',
-        overflow: 'hidden',
-        marginTop:12
-      }}>
-           <Picker
-  selectedValue={values.bedType}
-  onValueChange={(itemValue) =>
-    setFieldValue("bedType", itemValue)
-  }
-           >
-           {
-            bedType.map((bedItem,index)=>{
-              // console.log('room item',bedItem)
-              return (
-               <Picker.Item 
-                key={bedItem.value}
-                label={bedItem.label}
-                value={bedItem.value}
-            />
-              )
-            })
-           }
-           </Picker>
-            </View>
+<View style={{ marginTop: 12, marginBottom: 5 }}>
+  <Dropdown
+    label="Bed Type"
+    options={bedType}
+    value={values.bedType}
+    onSelect={(itemValue) => {
+      setFieldValue("bedType", itemValue);
+    }}
+    mode="outlined"
+  />
+</View>
             {touched.bedType && errors.bedType && (
                 <Text style={{ color: "red", fontSize: 12, marginTop: 4 }}>
                   {errors.bedType}
@@ -281,7 +248,7 @@ Cancel
         </View>
 
 
-     
+        </Portal.Host>
         
        </Modal>
          </>

@@ -7,13 +7,11 @@ import {Picker} from '@react-native-picker/picker';
 import io from "socket.io-client";
 import axios from "axios";
 import { useState,useEffect } from "react"
-const socket = io.connect("http://192.168.29.169:4000")
-// const socket = io.connect("https://roommanagementsystembackend-1.onrender.com")
-// const socket = io.connect("http://16.16.224.95:4000")
+import { BASE_URL } from "../../Redux/axios/config";
+
+const socket = io.connect(BASE_URL)
 const Access=({profile,hotelName,hotelId})=>{
-    const BASE_URL = "http://192.168.29.169:4000";
-    // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
-    // const BASE_URL = "http://16.16.224.95:4000";
+
     const [amount, setAmount] = useState(null);
     const [accessObj,setAccessObj]=useState({})
     const [accessDataObj,setAccessDataObj]=useState({})

@@ -3,22 +3,20 @@ import { TextInput,Button } from 'react-native-paper';
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import { useSelector,useDispatch } from "react-redux";
 import { useState } from "react";
-import {Picker} from '@react-native-picker/picker';
+import { Dropdown } from 'react-native-paper-dropdown';
 import {  staffPostList } from "../../utils/signUpData";
 import avatar from '../../../assets/AllIcons/avatar.png'
 import * as ImagePicker from 'expo-image-picker';
 import io from "socket.io-client";
 import axios from "axios";
 import { planScreenActions } from "../../Redux/Slice/planScreenSlice/planScreenSlice";
-const socket = io.connect("http://192.168.29.169:4000")
-// const socket = io.connect("https://roommanagementsystembackend-1.onrender.com")
-// const socket = io.connect("http://16.16.224.95:4000")
+import { BASE_URL } from "../../Redux/axios/config";
+
+const socket = io.connect(BASE_URL)
 const AddStaff=({profile,notifyTokenArray, hotelId,planStatus,paymentActiveSelector,hotelName})=>{
   // console.log('payment select',paymentActiveSelector)
   // console.log('plan status',planStatus)
-  const BASE_URL = "http://192.168.29.169:4000";
-  // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
-  // const BASE_URL = "http://16.16.224.95:4000";
+
   const dispatch=useDispatch()
   const hotelDetailSelector=useSelector((state)=>state.getHotelDetails.getHotelDetailsObj.hotelObj)
   const [staffName,setStaffName]=useState('')
@@ -317,35 +315,24 @@ keyboardShouldPersistTaps="handled"
         />
          {errors.staffEmail && <Text style={{ color: "red" }}>{errors.staffEmail}</Text>}
         </View>
-
-        <View style={{
-        borderWidth: 1,
-        borderColor: '#888',
-        borderRadius: 8,
-        backgroundColor: '#fff',
-        overflow: 'hidden',
-        marginTop:16,
-        marginLeft:17,
-        marginRight:17
-      }}>
-          <Picker
-          selectedValue={staffPost}
-          onValueChange={(itemValue) => setStaffPost(itemValue)}
-        >
-         {
-          staffPostList.map((item)=>{
-            return (
-              <Picker.Item 
-              key={item.value} 
-              label={item.label} 
-              value={item.value} 
-              onValueChange={(itemValue) => setStaffPost(itemValue)}
-            />
-            )
-          })
-         }
-        </Picker>
-        </View>
+        <View
+  style={{
+    marginTop: 16,
+    marginLeft: 17,
+    marginRight: 17,
+  }}
+>
+  <Dropdown
+    label="Designation"
+    options={staffPostList}
+    value={staffPost}
+    onSelect={(itemValue) => {
+      setStaffPost(itemValue);
+    }}
+    mode="outlined"
+  />
+</View>
+       
         {errors.staffPost && (
             <Text style={{ color: "red", marginLeft: 20 }}>{errors.staffPost}</Text>
           )}

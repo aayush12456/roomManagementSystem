@@ -1,9 +1,10 @@
 import { View, Modal, Dimensions, ScrollView,ActivityIndicator } from "react-native";
-import { Text, Button, TextInput } from "react-native-paper";
+import { Text, Button, TextInput,Portal } from "react-native-paper";
+import { Dropdown } from "react-native-paper-dropdown";
 import { useState } from "react";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import { Picker } from "@react-native-picker/picker";
+
 import { roomType,bedType } from "../../utils/signUpData";
 import {useDispatch} from 'react-redux'
 import { addFloorAsync } from "../../Redux/Slice/addFloorSlice/addFloorSlice";
@@ -180,6 +181,7 @@ const AddFloorModal = ({ floorAlert, setFloorAlert,hotelId,notifyTokenArray,prof
 
         return (
           <Modal visible={floorAlert} transparent animationType="fade">
+              <Portal.Host>
             <View
               style={{
                 flex: 1,
@@ -246,65 +248,48 @@ const AddFloorModal = ({ floorAlert, setFloorAlert,hotelId,notifyTokenArray,prof
                           : `Room ${index + 1}`}
                       </Text>
 
-                      <View
-                        style={{
-                          borderWidth: 1,
-                          borderColor: "#888",
-                          borderRadius: 8,
-                          backgroundColor: "#fff",
-                          overflow: "hidden",
-                          width: screenWidth * 0.75,
-                        }}
-                      >
-                        <Picker
-                          selectedValue={room.roomType}
-                          onValueChange={(itemValue) => {
-                            const updated = [...values.roomDetails];
-                            updated[index].roomType = itemValue;
-                            setFieldValue("roomDetails", updated);
-                            setFieldTouched(`roomDetails[${index}].roomType`, true, false);
-                          }}
-                        >
-                          {roomType.map((r) => (
-                            <Picker.Item
-                              key={r.value}
-                              label={r.label}
-                              value={r.value}
-                            />
-                          ))}
-                        </Picker>
-                      </View>
+                      <View style={{ width: screenWidth * 0.75, marginTop: 5 }}>
+  <Dropdown
+    label="Room Type"
+    options={roomType}
+    value={room.roomType}
+    onSelect={(itemValue) => {
+      const updated = [...values.roomDetails];
+
+      updated[index] = {
+        ...updated[index],
+        roomType: itemValue,
+      };
+
+      setFieldValue("roomDetails", updated);
+      setFieldTouched(`roomDetails[${index}].roomType`, true, false);
+    }}
+    mode="outlined"
+  />
+</View>
 
                       {touched.roomDetails?.[index]?.roomType && errors.roomDetails?.[index]?.roomType && (
   <Text style={{ color: "red" }}>{errors.roomDetails[index].roomType}</Text>
 )}
-                         <View
-                        style={{
-                          borderWidth: 1,
-                          borderColor: "#888",
-                          borderRadius: 8,
-                          backgroundColor: "#fff",
-                          marginTop:12
-                        }}
-                      >
-                        <Picker
-                          selectedValue={room.bedType}
-                          onValueChange={(itemValue) => {
-                            const updated = [...values.roomDetails];
-                            updated[index].bedType = itemValue;
-                            setFieldValue("roomDetails", updated);
-                            setFieldTouched(`roomDetails[${index}].bedType`, true, false);
-                          }}
-                        >
-                          {bedType.map((b) => (
-                            <Picker.Item
-                              key={b.value}
-                              label={b.label}
-                              value={b.value}
-                            />
-                          ))}
-                        </Picker>
-                      </View>
+                       <View style={{ width: screenWidth * 0.75, marginTop: 12 }}>
+  <Dropdown
+    label="Bed Type"
+    options={bedType}
+    value={room.bedType}
+    onSelect={(itemValue) => {
+      const updated = [...values.roomDetails];
+
+      updated[index] = {
+        ...updated[index],
+        bedType: itemValue,
+      };
+
+      setFieldValue("roomDetails", updated);
+      setFieldTouched(`roomDetails[${index}].bedType`, true, false);
+    }}
+    mode="outlined"
+  />
+</View>
                   
 {touched.roomDetails?.[index]?.bedType && errors.roomDetails?.[index]?.bedType && (
   <Text style={{ color: "red" }}>{errors.roomDetails[index].bedType}</Text>
@@ -381,6 +366,7 @@ const AddFloorModal = ({ floorAlert, setFloorAlert,hotelId,notifyTokenArray,prof
                 </View>
               </View>
             </View>
+            </Portal.Host>
           </Modal>
         );
       }}

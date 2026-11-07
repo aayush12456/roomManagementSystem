@@ -31,16 +31,13 @@ import PlanScreen from '../planScreen/planScreen';
 import DeparturePage from '../../../Pages/departurePage/departurePage';
 import ArrivalPage from '../../../Pages/arrivalPage/arrivalPage';
 import DocumentScannerPage from '../../../Pages/documentScannerPage/docimentScannerPage';
-const socket = io.connect("http://192.168.29.169:4000")
-// const socket = io.connect("https://roommanagementsystembackend-1.onrender.com")
-// const socket = io.connect("http://16.16.224.95:4000")
+import { BASE_URL } from "../../../Redux/axios/config";
+
+const socket = io.connect(BASE_URL)
 
 const Header=({profile,allStaffPlusOwner,hotelId,profileArrays,policeReport,totalRoom,
   hotelImgFirst,hotelName,notifyTokenArray,notifyToken,setTimeEnd,planStatus})=>{
 
-    const BASE_URL = "http://192.168.29.169:4000";
-    // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
-    // const BASE_URL = "http://16.16.224.95:4000";
     const Drawer = createDrawerNavigator();
     const navigation = useNavigation();
     const planSlice=useSelector((state)=>state.planScreenData.planScreenToggle)

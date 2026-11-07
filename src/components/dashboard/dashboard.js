@@ -16,14 +16,12 @@ import BookedModal from "../bookedModal/bookedModal";
 import AddFloorModal from "../addFloorModal/addFloorModal";
 import { getPaymentActiveAsync } from "../../Redux/Slice/getPaymentActiveSlice/getPaymentActiveSlice";
 import SkeletonCard from "../common/skeletonCard/skeletonCard";
+import { BASE_URL } from "../../Redux/axios/config";
 
-const socket = io.connect("http://192.168.29.169:4000")
-// const socket = io.connect("https://roommanagementsystembackend-1.onrender.com")
-// const socket = io.connect("http://16.16.224.95:4000")
+const socket = io.connect(BASE_URL)
 const Dashboard=({hotelDetails,profile,notifyTokenArray,planStatus,hotelName})=>{
-  const BASE_URL = "http://192.168.29.169:4000";
-  // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
-  // const BASE_URL = "http://16.16.224.95:4000";
+
+
   // console.log('hotel details is',hotelDetails)
   // console.log('notify tokens',notifyTokenArray)
   const [customerObj,setCustomerObj]=useState({})

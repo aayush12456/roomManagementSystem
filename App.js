@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef} from 'react';
 import { NavigationContainer } from '@react-navigation/native';
+import { PaperProvider } from 'react-native-paper';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Provider } from 'react-redux';
 import * as SecureStore from 'expo-secure-store';
@@ -40,7 +41,7 @@ import SmartFeaturesPage from './src/Pages/smartFeaturesPage/smartFeaturesPage';
 import DocumentScannerPage from './src/Pages/documentScannerPage/docimentScannerPage';
 import PreviewDocumentScreenPage from './src/Pages/previewDocumentScreenPage/previewDocumentScreenPage';
 import CollagePage from './src/Pages/collagepPage/collagePage';
-
+import { BASE_URL } from "./src/Redux/axios/config";
 
 
 
@@ -104,9 +105,8 @@ export default function App() {
  
   useEffect(() => {
     if (!hotelId) return;
-
     if (!socketRef.current) {
-      socketRef.current = io('http://192.168.29.169:4000', {
+      socketRef.current = io(BASE_URL, {
         transports: ['websocket'],
         reconnection: true,
         reconnectionAttempts: 10,
@@ -116,28 +116,6 @@ export default function App() {
         pingTimeout: 60000,
         pingInterval: 25000,
       });
-    // if (!socketRef.current) {
-    //   socketRef.current = io('https://roommanagementsystembackend-1.onrender.com', {
-    //     transports: ['websocket'],
-    //     reconnection: true,
-    //     reconnectionAttempts: 10,
-    //     reconnectionDelay: 1000,
-    //     reconnectionDelayMax: 5000,
-    //     timeout: 20000,
-    //     pingTimeout: 60000,
-    //     pingInterval: 25000,
-    //   });
-    // if (!socketRef.current) {
-    //   socketRef.current = io('http://16.16.224.95:4000', {
-    //     transports: ['websocket'],
-    //     reconnection: true,
-    //     reconnectionAttempts: 10,
-    //     reconnectionDelay: 1000,
-    //     reconnectionDelayMax: 5000,
-    //     timeout: 20000,
-    //     pingTimeout: 60000,
-    //     pingInterval: 25000,
-    //   });
 
       socketRef.current.emit('setup', hotelId);
 
@@ -189,6 +167,7 @@ export default function App() {
   return (
 
     <Provider store={store}>
+         <PaperProvider>
       <AlertNotificationRoot theme='dark'>
       <NavigationContainer>
       <InternetChecker />
@@ -342,6 +321,7 @@ export default function App() {
         )}
       </NavigationContainer>
       </AlertNotificationRoot>
+      </PaperProvider>
     </Provider>
 
 

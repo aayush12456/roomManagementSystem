@@ -11,15 +11,14 @@ import RazorpayCheckout from "react-native-razorpay";
 import { useState } from "react";
 import axios from "axios";
 import { planScreenActions } from "../../../Redux/Slice/planScreenSlice/planScreenSlice";
+import { BASE_URL } from "../../../Redux/axios/config";
 const PlanScreen=({hotelId,profile})=>{
 // console.log('profile is',profile)
 const dispatch=useDispatch()
 const navigation=useNavigation()
 const [selectedPlan, setSelectedPlan] = useState(999);
 const [planType,setPlanType]=useState('')
-const BASE_URL = "http://192.168.29.169:4000"; 
-// const BASE_URL = "https://roommanagementsystembackend-1.onrender.com"; 
-// const BASE_URL = "http://16.16.224.95:4000"; 
+
 //test key
 // plan_RziUw1NAukBSo5 ->1 Rs plan
 // plan_Rzu3d5Zlg3vI3A ->50 Rs plan
@@ -37,19 +36,19 @@ const BASE_URL = "http://192.168.29.169:4000";
 let plan=""
   const subscribe = async (planType) => {
 //live
-// if(planType=="single"){
-//   plan="plan_S9mz77K7uN4Mhm"
-// }
-// else{
-//   plan="plan_SZkCMWZR7eGAUo"
-// }
+if(planType=="single"){
+  plan="plan_S9mz77K7uN4Mhm"
+}
+else{
+  plan="plan_SZkCMWZR7eGAUo"
+}
    //test
-    if(planType=="single"){
-      plan="plan_S2Vj0VT1CEKM5a"
-    }
-    else{
-      plan="plan_SZlNb6a8dqJ2BG"
-    }
+    // if(planType=="single"){
+    //   plan="plan_S2Vj0VT1CEKM5a"
+    // }
+    // else{
+    //   plan="plan_SZlNb6a8dqJ2BG"
+    // }
     try {
       const res = await axios.post(
         `${BASE_URL}/hotel/create/${hotelId}`,
@@ -57,8 +56,8 @@ let plan=""
       );
 // console.log('respose razor',res)
       const options = {
-        key: "rzp_test_RzIR2c4u7D5T00", // Test  key
-        // key: "rzp_live_S9NrL4vhEbFG4M",            //Live key
+        // key: "rzp_test_RzIR2c4u7D5T00", // Test  key
+        key: "rzp_live_S9NrL4vhEbFG4M",            //Live key
         subscription_id: res.data.subscription.id ,  
         name: "Hotel App",
         description: "Weekly subscription",

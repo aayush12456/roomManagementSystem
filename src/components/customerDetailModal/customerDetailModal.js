@@ -1,8 +1,8 @@
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useState,useRef ,useEffect } from "react";
-import { Text,TextInput,Button } from "react-native-paper"
+import { Text,TextInput,Button,Portal } from "react-native-paper"
 import { Formik } from 'formik';
-import {Picker} from '@react-native-picker/picker';
+import { Dropdown } from 'react-native-paper-dropdown';
 import { ALERT_TYPE, Toast } from 'react-native-alert-notification';
 import accessImg from '../../../assets/roomIcon/noDelete.png'
 import { customerDetailsSchema } from "../../schemas";
@@ -14,9 +14,9 @@ import axios from "axios";
 import { passDataObjSliceAcions } from "../../Redux/Slice/passDataSliceObj/passDataSliceObj";
 import { planScreenActions } from "../../Redux/Slice/planScreenSlice/planScreenSlice";
 import { documentList } from "../../utils/signUpData";
-const socket = io.connect("http://192.168.29.169:4000")
-// const socket = io.connect("https://roommanagementsystembackend-1.onrender.com")
-// const socket = io.connect("http://16.16.224.95:4000")
+import { BASE_URL } from "../../Redux/axios/config";
+
+const socket = io.connect(BASE_URL)
 
 const safeTimeToISOString = (timeStr) => {
   // ✅ FULL SAFETY
@@ -69,9 +69,7 @@ const CustomerDetailModal=({showAlert,setShowAlert,selectedRoomId,customerArray,
   // console.log('customer array',customerArray)
   // console.log('profile is customer',profile)
   // console.log('plan stat',planStatus)
-  const BASE_URL = "http://192.168.29.169:4000";
-  // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
-  // const BASE_URL = "http://16.16.224.95:4000";
+ 
   const hotelDetailSelector=useSelector((state)=>state.getHotelDetails.getHotelDetailsObj.hotelObj)
   const passDataSelector=useSelector((state)=>state.passDataObj.passDataObj)
   const recentBookObj=passDataSelector.obj
@@ -368,6 +366,7 @@ extraCustomers: filterCustomerObj?.extraCustomers?.map(item => ({
  {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue })=>(
   <>
  <Modal visible={ passDataSelector?.type===true?passDataSelector.type:showAlert}  transparent animationType="fade">
+ <Portal.Host>
   <View
     style={{
       flex: 1,
@@ -493,24 +492,17 @@ Housekeeping staff do not have permission to add guests.
         </View>:null}
 
         {values.customerPhoneNumber?.trim().length > 0 && (
-  <View style={{ width: screenWidth * 0.75, marginBottom: 10,marginTop:5 }}>
-    <View style={{
-      borderWidth: 1,
-      borderRadius: 5
-    }}>
-      <Picker
-        selectedValue={values.customerIdProof}
-        onValueChange={(itemValue) => setFieldValue('customerIdProof', itemValue)}
-      >
-    {documentList.map((item, index) => (
-          <Picker.Item
-            key={index}
-            label={item.label}
-            value={item.value}
-          />
-        ))}
-      </Picker>
-    </View>
+  <View style={{ width: screenWidth * 0.75, marginBottom: 10, marginTop: 5 }}>
+
+    <Dropdown
+      label="ID Type"
+      options={documentList}
+      onSelect={(itemValue) =>
+        setFieldValue('customerIdProof', itemValue)
+      }
+      value={values.customerIdProof}
+      mode="outlined"
+    />
 
     {touched.customerIdProof && errors.customerIdProof && (
       <Text style={{ color: 'red', marginLeft: 5 }}>
@@ -638,24 +630,25 @@ Housekeeping staff do not have permission to add guests.
       {phoneError && <Text style={{ color: "red" }}>{errors.extraCustomers[index].customerPhoneNumber}</Text>}
 
 <View style={{ width: screenWidth * 0.75, marginBottom: 10 ,marginTop:5 }}>
+<Dropdown
+  label="ID Type"
+  options={documentList}
+  onSelect={(itemValue) => {
+    setFieldValue(
+      `extraCustomers[${index}].customerIdProof`,
+      itemValue
+    );
 
+    setFieldValue(
+      `extraCustomers[${index}].customerIdDetails`,
+      ""
+    );
+  }}
+  value={values.extraCustomers[index].customerIdProof}
+  mode="outlined"
+/>
 
-  <View style={{
-    borderWidth: 1,
-    borderRadius: 5
-  }}>
-    <Picker
-      selectedValue={values.extraCustomers[index].customerIdProof}
-      onValueChange={(itemValue) => {
-        setFieldValue(`extraCustomers[${index}].customerIdProof`, itemValue);
-        setFieldValue(`extraCustomers[${index}].customerIdDetails`, ""); // reset
-      }}
-    >
-      {documentList.map((item, i) => (
-        <Picker.Item key={i} label={item.label} value={item.value} />
-      ))}
-    </Picker>
-  </View>
+ 
 </View>
 
 {values.extraCustomers[index].customerIdProof !== '' && (
@@ -1321,7 +1314,7 @@ Housekeeping staff do not have permission to add guests.
        
     </View>
   </View>
- 
+ </Portal.Host>
   
 </Modal>
 

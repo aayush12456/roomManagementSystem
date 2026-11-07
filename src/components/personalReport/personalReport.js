@@ -7,24 +7,21 @@ import { ALERT_TYPE, Toast } from "react-native-alert-notification";
 import io from "socket.io-client";
 import axios from "axios";
 import * as Print from 'expo-print';
-import * as FileSystem from 'expo-file-system';
+import * as FileSystem from 'expo-file-system/legacy';
 import * as Sharing from 'expo-sharing';
-import { Picker } from '@react-native-picker/picker';
+import { Dropdown } from "react-native-paper-dropdown";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { passReportObjSliceActions } from "../../Redux/Slice/passReportObjSlice/passReportObjSlice";
 import HeaderReportCard from "../common/headerReportCard/headerReportCard";
 import { planScreenActions } from "../../Redux/Slice/planScreenSlice/planScreenSlice";
+import { BASE_URL } from "../../Redux/axios/config";
 
-const socket = io.connect("http://192.168.29.169:4000");
-// const socket = io.connect("https://roommanagementsystembackend-1.onrender.com");
-// const socket = io.connect("http://16.16.224.95:4000");
+const socket = io.connect(BASE_URL);
 const PersonalReport=({personalReport,isSmallScreen,hotelDetailSelector,dateSelector,planStatus
 , paymentActiveSelector})=>{
     // console.log('hotel detail',hotelDetailSelector)
     // console.log('personal report',personalReport)
-    const BASE_URL = "http://192.168.29.169:4000";
-    // const BASE_URL = "https://roommanagementsystembackend-1.onrender.com";
-    // const BASE_URL = "http://16.16.224.95:4000";
+
     const dispatch=useDispatch()
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [selectedPersonalFromDate, setSelectedPersonalFromDate] = useState(null);
@@ -393,44 +390,35 @@ const PersonalReport=({personalReport,isSmallScreen,hotelDetailSelector,dateSele
         return (
           <Card style={{ margin: 10, borderRadius: 10 }}>
             <Card.Content>
-            <HeaderReportCard hotelDetailSelector={hotelDetailSelector} dateSelector={dateSelector} />
-            <Text style={{ paddingTop: 5 }}>Date</Text>
-        
-        <View 
-style={{
-  borderWidth: 1,
-  borderColor: '#888',
-  borderRadius: 8,
-  backgroundColor: '#fff',
-  overflow: 'hidden',
-  marginTop:12
-}}
->
-  
-<Picker
-  selectedValue={personalFilterDate === 'Custom'?personalFilterDate: dateSelector.type}
-  onValueChange={(itemValue) => {
-   
-    if (itemValue !== "default") filterReportHandler(itemValue);
-  }}
->
-<Picker.Item 
-    label="Select your date" 
-    value="default"
-  />
-           {
-     filterReport.map((item)=>{
+            <HeaderReportCard
+  hotelDetailSelector={hotelDetailSelector}
+  dateSelector={dateSelector}
+/>
 
-            return (
-              <Picker.Item 
-              key={item.id} 
-              label={item.name} 
-              value={item.name} 
-            />
-            )
-          })
-         }
-            </Picker>
+<Text style={{ paddingTop: 5 }}>Date</Text>
+
+<View style={{ marginTop: 12 }}>
+  <Dropdown
+    label="Select your date"
+    options={[
+      { label: "Select your date", value: "default" },
+      ...filterReport.map((item) => ({
+        label: item.name,
+        value: item.name,
+      })),
+    ]}
+    value={
+      personalFilterDate === 'Custom'
+        ? personalFilterDate
+        : dateSelector.type || "default"
+    }
+    onSelect={(itemValue) => {
+      if (itemValue !== "default") {
+        filterReportHandler(itemValue);
+      }
+    }}
+    mode="outlined"
+  />
 </View>
 {personalFilterDate === 'Custom' ? (
   <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>

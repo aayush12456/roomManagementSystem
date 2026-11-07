@@ -159,7 +159,7 @@ return (
       />
     </View>
     {/* <Text>otp is {recieveOtpObj.otp}</Text> */}
-    <Text style={{textAlign:'center',paddingBottom:15,color: '#6B7280'}}>otp send to {recieveOtpObj?.email} </Text>
+    <Text style={{textAlign:'center',paddingBottom:15,color: '#6B7280'}}>otp send to {recieveOtpObj?.email?recieveOtpObj?.email:'admin'} </Text>
     <View style={{ paddingHorizontal: 16 }}>
     <OtpInput numberOfDigits={5} onTextChange={(text) => setMyOtp(text)} />
       </View> 
