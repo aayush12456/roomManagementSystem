@@ -21,6 +21,7 @@ const HeaderPage=({route})=>{
 
   const [nameList,setNameList]=useState({})
   const [hotelNameList,setHotelNameList]=useState({})
+  const [canCheckAccess, setCanCheckAccess] = useState(false);
   const { paymentData} = route.params || {};
   console.log("Payment Data 👉", paymentData);
   const profileData = route?.params?.profileData;
@@ -102,6 +103,14 @@ navigation.navigate('LoginPage')
         getLoginDataToSecureStore(); // ✅ function called on screen mount
       }, []);
       //  console.log('login obj is',loginObj)
+      useEffect(() => {
+        const timer = setTimeout(() => {
+          setCanCheckAccess(true);
+        }, 1 * 60 * 1000); // 2 minute = 120000 ms
+      
+        return () => clearTimeout(timer);
+      }, []);
+
       const phone=loginObj?.phone
       // console.log('phone is',phone)
       const id=loginObj?.matchedHotels[0]?._id
@@ -283,71 +292,54 @@ navigation.navigate('LoginPage')
             return (await Notifications.getExpoPushTokenAsync()).data;
           };
         
-          // useEffect(() => {
-          //   if (!hotelId) return;
-        
-          //   const initPush = async () => {
-          //     const token = await registerForPushNotificationsAsync();
-          //     if (token) {
-          //       await axios.post(`${BASE_URL}/hotel/addNotificationToken/${hotelId}`,  {
-          //         notifyToken: token,   // ✅ backend ke according
-          //         phone:phone,   // ✅ jo phone save karna ho
-          //       });
-          //       setExpoPushToken(token)
-          //       console.log("🔥 EXPO PUSH TOKEN:", token);
-          //     }
-          //   };
-        
-          //   initPush();
-          // }, [hotelId]);
-          // const savePushToken = async (token) => {
-          //   try {
-          //     await SecureStore.setItemAsync("expoPushToken", token);
-          //   } catch (e) {
-          //     console.log("Token save error", e);
-          //   }
-          // };
-
-          // const getSavedPushToken = async () => {
-          //   try {
-          //     return await SecureStore.getItemAsync("expoPushToken");
-          //   } catch (e) {
-          //     console.log("Token fetch error", e);
-          //     return null;
-          //   }
-          // };
-
           useEffect(() => {
             if (!hotelId) return;
-          
+
             const initPush = async () => {
               try {
                 const token = await registerForPushNotificationsAsync();
                 if (!token) return;
-          
+
                 const response = await axios.post(
                   `${BASE_URL}/hotel/addNotificationToken/${hotelId}`,
-                  {
-                    notifyToken: token,
-                    phone,
-                  }
+                  { notifyToken: token, phone }
                 );
-          
+
                 setExpoPushToken(token);
                 console.log("🔥 EXPO PUSH TOKEN:", token);
-          
-                // 🔥 YAHIN EMIT CHALANA HAI
                 socket.emit("addNotifyToken", response?.data);
-          
+
+                // POST ke baad hi GET chalao
+                try {
+                  const res = await axios.get(
+                    `${BASE_URL}/hotel/getNotificationToken/${hotelId}`,
+                    { params: { token } }
+                  );
+                  setNotifyTokenObj(res?.data || {});
+                } catch (e) {
+                  if (e?.response?.status !== 404) {
+                    console.log("notify get error", e);
+                  }
+                }
               } catch (err) {
                 console.log("addNotificationToken error", err);
               }
             };
-          
+
             initPush();
           }, [hotelId]);
-          
 
+          // sirf socket listener
+          useEffect(() => {
+            socket.on("getNotifyToken", (newUser) => {
+              setNotifyTokenObj(newUser);
+            });
+            return () => {
+              socket.off("getNotifyToken");
+            };
+          }, []);
+
+        
           useEffect(() => {
             const fetchNotifyToken = async () => {
               try {
@@ -556,6 +548,7 @@ useEffect(() => {
 // console.log('all hotel obj',nameList)
 // console.log('profile objs',profileObj)
 useEffect(() => {
+  if (!canCheckAccess) return; 
   if (nameList?.names) {
 
     // ❗ agar name null/undefined hai → direct alert
@@ -603,7 +596,7 @@ useEffect(() => {
       );
     }
   }
-}, [nameList, profileObj]);
+}, [nameList, profileObj,canCheckAccess]);
 
 
 useEffect(() => {
